@@ -1,8 +1,63 @@
+# Dependencies and generated output
 node_modules/
 dist/
+coverage/
 .netlify/
-.env*
-!.env.example
-*.log
+.vite/
 *.tsbuildinfo
+
+# Local environments and credentials, including backup copies
+.env*
+!/.env.example
+.dev.vars*
+.demo-accounts*
+demo-accounts*.json*
+.secrets/
+secrets/
+credentials.json*
+credentials.*.json*
+service-account*.json*
+*-service-account*.json*
+.netrc
+.npmrc.local
+.aws/
+.ssh/
+
+# Private key material
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.keystore
+id_rsa*
+id_ed25519*
+
+# Local data, uploads, backups and diagnostic captures
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.sql.gz
+*.sql.zip
+*.har
+backups/
+dumps/
+uploads/
+private/
+*.log
+logs/
+
+# Host-specific identity and tool state
+.openai/
+.wrangler/
+.sites-runtime/
+.agents/
+.codex/
+
+# Operating system metadata
 .DS_Store
+Thumbs.db
