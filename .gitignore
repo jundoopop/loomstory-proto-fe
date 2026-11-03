@@ -25,11 +25,52 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+logs/
 
-# Local environment and keys
+# Local environment and credentials, including copies in subdirectories
 .env*
 .dev.vars*
+.demo-accounts*
+demo-accounts*.json*
+.secrets/
+secrets/
+credentials.json*
+credentials.*.json*
+service-account*.json*
+*-service-account*.json*
+.netrc
+.npmrc.local
+.aws/
+.ssh/
+
+# Private keys and certificate bundles
 *.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.keystore
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# Local databases, exports, uploads, and private evidence
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.dump
+*.sql.gz
+*.sql.zip
+*.har
+/backups/
+/dumps/
+/uploads/
+/private/
 
 # Checkout-local tool state
 /.wrangler/
@@ -44,7 +85,7 @@ yarn-error.log*
 # OS metadata
 .DS_Store
 
-/.demo-accounts.json
 /tests/artifacts/
 
-!.env.example
+# Keep only the reviewed, placeholder-only environment template in source.
+!/.env.example
