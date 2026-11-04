@@ -5,6 +5,7 @@
  */
 import { useEffect, useId, useRef, useState } from 'react';
 import type { OutfitLook, Region } from '../types';
+import './outfit-magazine.css';
 
 interface Props {
   looks: OutfitLook[];
@@ -28,6 +29,8 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
   const dialog = useRef<HTMLDialogElement>(null);
   const sentinel = useRef<HTMLDivElement>(null);
   const headingId = useId();
+  // Only the shopping sidebar gets the magazine treatment; the trends board keeps its own design.
+  const magazine = contextual && itemContext;
   const filtered = region === 'All' ? looks : looks.filter(look => look.region === region);
   // Reveal local records in batches near the sentinel; no service request occurs here.
   // Disabling or unmounting this board also disconnects dynamic feed injection.
@@ -45,9 +48,24 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     else dialog.current?.close();
   }, [selected]);
 
-  return <div className={`fs-outfits${contextual ? ' fs-outfits-contextual' : ''}${itemContext ? ' fs-outfits-item' : ''}`}>
-    <div className="fs-feed-heading"><div><div className="fs-section-kicker">{itemContext ? (contextName ?? 'THE PIECE').toUpperCase() + ' / STYLE REFERENCES' : contextual ? 'THE CULTURAL THREAD' : 'THE WORLD IS YOUR MOODBOARD'}</div><h2>{itemContext ? 'Style, in context.' : contextual ? 'Ways to wear the feeling.' : 'Good style travels.'}</h2></div><span className="fs-look-count">{looks.length} looks<br /><span>worth a closer look</span></span></div>
-    <p className="fs-feed-description">{itemContext ? 'A few ways to see the silhouette anew. Selected photographs to inspire your next chapter.' : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.' : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
+  return <div className={`fs-outfits${contextual ? ' fs-outfits-contextual' : ''}${itemContext ? ' fs-outfits-item' : ''}${magazine ? ' fs-outfits-magazine' : ''}`}>
+    {magazine && <div className="fs-magazine-masthead">
+      <span>The Style Journal</span><span>{looks.length} looks</span>
+    </div>}
+    <div className="fs-feed-heading">
+      <div>
+        <div className="fs-section-kicker">{itemContext
+          ? (contextName ?? 'THE PIECE').toUpperCase() + ' / STYLE REFERENCES'
+          : contextual ? 'THE CULTURAL THREAD' : 'THE WORLD IS YOUR MOODBOARD'}</div>
+        <h2>{itemContext ? 'Style, in context.' : contextual ? 'Ways to wear the feeling.' : 'Good style travels.'}</h2>
+      </div>
+      {!magazine && <span className="fs-look-count">{looks.length} looks<br /><span>worth a closer look</span></span>}
+    </div>
+    <p className="fs-feed-description">{magazine
+      ? 'One detail, a different point of view. Explore the looks and save what speaks to you.'
+      : itemContext ? 'A few ways to see the silhouette anew. Selected photographs to inspire your next chapter.'
+      : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.'
+      : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
     {!itemContext && <div className="fs-filters" role="group" aria-label="Filter outfits by region">
       {regions.map(value => <button type="button" key={value} aria-pressed={region === value} onClick={() => { setRegion(value); setLimit(12); }}>{value === 'All' ? 'All looks' : value}</button>)}
     </div>}
@@ -60,21 +78,33 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     <div className="fs-masonry">
       {filtered.slice(0, limit).map((look, index) => <article className="fs-look" key={look.id}>
         <div className="fs-look-image-wrap">
-          <button className="fs-look-open" type="button" aria-label={`View ${look.celebrity}: ${look.title}`} onClick={() => { setSelected(look); }}>
+          <button className="fs-look-open" type="button" aria-label={`View look: ${look.celebrity}. ${look.title}`} onClick={() => { setSelected(look); }}>
             <LookImage look={look} eager={index < 4} />
-            <span className="fs-look-region">{itemContext ? look.kind : look.region}</span><span className="fs-look-peek">View look ↗</span>
+            <span className="fs-look-peek" aria-hidden="true">{magazine ? 'View ↗' : 'View look ↗'}</span>
           </button>
+          {/* Category is card metadata, separate from the image button's visible action label. */}
+          <span className="fs-look-region">{itemContext ? look.kind : look.region}</span>
           <button className="fs-look-save" type="button" aria-pressed={saved.includes(look.id)} aria-label={`${saved.includes(look.id) ? 'Unsave' : 'Save'} ${look.celebrity} look`} onClick={() => {
             onToggleSaveLook(look.id);
             setStatus(saved.includes(look.id) ? 'Look removed from this moodboard.' : 'Look saved in this moodboard for this visit.');
           }}>{saved.includes(look.id) ? '♥' : '♡'}</button>
         </div>
-        <div className="fs-look-caption"><h3>{look.celebrity}</h3><p>{look.title}</p>{look.sourceUrl ? <a href={look.sourceUrl} target="_blank" rel="noreferrer">{look.sourceLabel} <span aria-hidden="true">↗</span></a> : <span className="fs-muted">{look.sourceLabel}</span>}</div>
+        <div className="fs-look-caption">
+          <div className="fs-look-byline">
+            {magazine && <span className="fs-look-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>}
+            <h3>{look.celebrity}</h3>
+          </div>
+          <p>{look.title}</p>
+          {look.sourceUrl ? <a href={look.sourceUrl} target="_blank" rel="noreferrer"
+            aria-label={`${magazine ? 'Photo source: ' : ''}${look.sourceLabel} (opens in a new tab)`}
+          >{magazine ? 'Photo source' : look.sourceLabel} <span aria-hidden="true">↗</span></a>
+            : <span className="fs-muted">{look.sourceLabel}</span>}
+        </div>
       </article>)}
     </div>
     {!filtered.length && <p className="fs-muted">This edit is still being collected. Explore another region.</p>}
     {limit < filtered.length && <div ref={sentinel} className="fs-load-more"><button type="button" className="fs-button" onClick={() => { setLimit(value => value + 8); }}>More inspiration <span aria-hidden="true">↓</span></button></div>}
-    <p className="fs-feed-footnote">{filtered.length} {itemContext ? 'provided' : 'sourced'} references · Saved looks stay in this page session.</p>
+    <p className="fs-feed-footnote">{magazine ? 'Styling inspiration, not a verified product match. Saved looks stay for this visit.' : `${filtered.length} ${itemContext ? 'provided' : 'sourced'} references · Saved looks stay in this page session.`}</p>
     <span className="fs-sr-only" role="status">{status}</span>
     {/* Keep the original source, photographer, and license accessible for every look. */}
     <dialog className="fs-look-dialog" ref={dialog} aria-labelledby={headingId} onCancel={() => setSelected(null)} onClose={() => setSelected(null)} onClick={event => { if (event.target === event.currentTarget) setSelected(null); }}>

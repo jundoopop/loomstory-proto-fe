@@ -32,6 +32,8 @@ Chloé's design history and the pictured reissue's specifications link to primar
 
 The contextual outfit feed stays beside the selected shopping edit for the whole browsing session. It does not expire or collapse, and there is no manual hide-inspiration mode. Opening product details or the sample bag leaves the underlying board mounted. Switching studies updates both the products and their styling references; a result with no references can use the full catalog width. The previous 45-second timer and its domain modules have been removed.
 
+The feed is presented as **The Style Journal**, a muted wine surface with ivory photo cards, burgundy headings, natural photo proportions, and compact captions. Its two-column masonry becomes one column when the panel is too narrow for readable cards. The marketplace retains its width, with larger prices and filled **View piece** buttons to remain the primary shopping destination. Both areas use 44px save controls; source credits remain available through the photo links and detail dialog. Edit the journal palette and layout in `components/outfit-magazine.css`.
+
 ## Where to edit
 
 | Content or behavior | Owner |
@@ -96,6 +98,8 @@ For browser review:
 - Review desktop and narrow mobile widths, reduced motion, keyboard navigation, overflow, image loading, and console errors. Keep screenshots containing supplied photos in temporary local storage.
 
 Validated on 2026-11-04 after the sketch feedback: the production build and all nine current tests pass. Browser checks cover hidden-at-rest explanations, hover without layout movement, pointer access to the floating card, keyboard focus/Escape, touch toggling/outside dismissal, and full design notes. All five studies retain their styling references beyond 60 seconds and through product/bag views. Layouts at 320, 390, 768, 1024, and 1440 px have no document overflow; no application errors were reported. Screenshots remain in temporary local storage.
+
+The subsequent journal revision includes a broader [engineering and consumer-interface review](first-sight-review-2026-11-04.md), with tested flows, remaining accessibility findings, and recommended next work. Passing functional checks does not imply whole-site accessibility conformance.
 
 ## Branch workflow
 

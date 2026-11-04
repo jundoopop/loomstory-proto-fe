@@ -12,6 +12,9 @@ export function PurchaseGrid({ products, savedIds, onToggleSave, onSelect }: { p
     <div className="fs-purchase-meta"><span>{product.brand}</span><span>€{product.price}</span></div><h3><button onClick={() => onSelect(product)}>{product.title}</button></h3>
     <p className="fs-product-context"><span>{product.era}</span><span>{product.condition}</span><span>{product.sourceLabel ?? 'LoomStory · sample listing'}</span></p>
     <div className="fs-purchase-sizes">{product.variants.map(variant => <span className={variant.stock ? '' : 'is-unavailable'} key={variant.sku} title={`${variant.size}: ${variant.stock ? `${variant.stock} in sample stock` : 'unavailable'}`}>{variant.size}</span>)}</div>
-    <div className="fs-purchase-bottom"><span>{product.variants.some(variant => variant.stock > 0) ? <><i aria-hidden="true" /> Sample stock available</> : 'Sample out of stock'}</span><button onClick={() => onSelect(product)} aria-label={`Choose size for ${product.title}`}>View piece ↗</button></div>
+    <div className="fs-purchase-bottom">
+      <span>{product.variants.some(variant => variant.stock > 0) ? <><i aria-hidden="true" /> Sample stock available</> : 'Sample out of stock'}</span>
+      <button onClick={() => onSelect(product)} aria-label={`View piece: ${product.title}`}>View piece <span aria-hidden="true">↗</span></button>
+    </div>
   </article>)}</div>;
 }

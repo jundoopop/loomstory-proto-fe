@@ -76,6 +76,15 @@
 .fs-continuous .fs-discovery { margin-top: 25px; }
 .fs-continuous .fs-discovery .fs-feed-heading h2 { font-size: 33px; }
 .fs-continuous .fs-shop-toolbar { margin-top: 0; }
+/* Commerce stays primary beside the softer journal, with readable prices and clear purchase-entry buttons. */
+.fs-purchase-section .fs-purchase-meta { font-size: 11px; }
+.fs-purchase-section .fs-purchase-meta > span:last-child { font-size: 16px; }
+.fs-purchase-section .fs-look-save { width: 44px; height: 44px; }
+.fs-purchase-section .fs-purchase-bottom { flex-wrap: wrap; gap: 10px; }
+.fs-purchase-section .fs-purchase-bottom > span { font-size: 11px; }
+.fs-purchase-section .fs-purchase-bottom > button { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 44px; padding: 10px 14px; border-radius: 5px; background: #672b38; color: #fffaf4; font-size: 13px; }
+.fs-purchase-section .fs-purchase-bottom > button:hover { background: #4d202a; }
+.fs-purchase-section .fs-purchase-bottom > button:focus-visible { outline: 2px solid #672b38; outline-offset: 3px; }
 .fs-shopping-explainer { margin-top: 25px; padding: 15px 0; border-block: 1px solid var(--line); font-size: 11px; color: var(--fs-muted); }
 .fs-shopping-explainer summary { cursor: pointer; width: fit-content; }
 .fs-shopping-explainer p { max-width: 780px; margin-top: 14px; line-height: 1.8; }

@@ -1,0 +1,75 @@
+/*
+ * The shopping sidebar reads as a small fashion journal. Its muted wine surface
+ * separates inspiration from commerce without changing the marketplace's width.
+ * Journal styling stays in this aside; the shared badge rule below only preserves image clicks.
+ */
+/* A metadata badge sits outside the image button so its label matches the visible View action. */
+.first-sight .fs-look-image-wrap > .fs-look-region { pointer-events: none; }
+.first-sight .fs-context-section {
+  --fs-journal-wine: #672b38;
+  --fs-journal-ink: #49323a;
+  --fs-journal-muted: #6d5159;
+  --fs-journal-paper: #fffaf4;
+  container: outfit-journal / inline-size;
+  min-width: 0;
+  padding: clamp(18px, 2vw, 28px);
+  border: 1px solid #cfacb4;
+  border-radius: 18px;
+  background: #ead9de;
+  color: var(--fs-journal-ink);
+}
+
+/* A restrained masthead and readable deck introduce the photographs. */
+.fs-context-section .fs-magazine-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #b58b96;
+  color: var(--fs-journal-wine);
+}
+.fs-magazine-masthead > span:first-child { font: 600 11px/1.5 Arial, sans-serif; letter-spacing: 1.8px; text-transform: uppercase; }
+.fs-magazine-masthead > span:last-child { flex-shrink: 0; font: italic 15px/1.4 Georgia, serif; }
+.fs-context-section .fs-outfits-magazine > .fs-feed-heading .fs-section-kicker { color: var(--fs-journal-muted); font-size: 10px; line-height: 1.7; letter-spacing: .9px; }
+.first-sight .fs-context-section .fs-outfits-magazine > .fs-feed-heading h2 { margin-top: 9px; color: var(--fs-journal-wine); font: 400 30px/1.15 Georgia, serif; letter-spacing: -.7px; }
+.fs-context-section .fs-outfits-magazine > .fs-feed-description { margin: 12px 0 24px; color: var(--fs-journal-muted); font-size: 14px; line-height: 1.7; }
+
+/* Natural image ratios create the masonry rhythm; never crop the bag or outfit to a fixed height. */
+.fs-context-section .fs-outfits-magazine > .fs-masonry { columns: 2; column-gap: 16px; }
+.fs-context-section .fs-outfits-magazine .fs-look { margin-bottom: 17px; border: 1px solid #dcc5c9; border-radius: 12px; background: var(--fs-journal-paper); overflow: hidden; box-shadow: 0 3px 8px #55233308; }
+.fs-context-section .fs-outfits-magazine .fs-look-image-wrap { border-radius: 0; background: #dac3c9; }
+.fs-context-section .fs-outfits-magazine .fs-look-open > img { display: block; width: 100%; height: auto; }
+.fs-context-section .fs-outfits-magazine .fs-look-region { top: auto; bottom: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 10px; line-height: 1.4; letter-spacing: .2px; }
+.fs-context-section .fs-outfits-magazine .fs-look-save { width: 44px; height: 44px; top: 8px; right: 8px; border: 1px solid #d1afb8; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 23px; }
+.fs-context-section .fs-outfits-magazine .fs-look-save[aria-pressed='true'] { background: var(--fs-journal-wine); border-color: var(--fs-journal-wine); color: #fffaf4; }
+.fs-context-section .fs-outfits-magazine .fs-look-peek { top: 10px; bottom: auto; left: 10px; padding: 7px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 11px; }
+
+/* Ivory captions keep names and provenance legible; the number gives each photo an editorial index. */
+.fs-context-section .fs-outfits-magazine .fs-look-caption { padding: 14px 12px 12px; }
+.fs-context-section .fs-outfits-magazine .fs-look-byline { display: flex; align-items: baseline; gap: 7px; }
+.fs-context-section .fs-outfits-magazine .fs-look-number { flex-shrink: 0; color: var(--fs-journal-muted); font: 10px/1.5 Arial, sans-serif; }
+.fs-context-section .fs-outfits-magazine .fs-look-caption h3 { color: var(--fs-journal-ink); font: 600 14px/1.4 Arial, sans-serif; overflow-wrap: anywhere; }
+.fs-context-section .fs-outfits-magazine .fs-look-caption p { margin: 7px 0 8px; color: var(--fs-journal-muted); font-size: 12px; line-height: 1.65; }
+.fs-context-section .fs-outfits-magazine .fs-look-caption > a { min-height: 28px; padding: 5px 0; color: var(--fs-journal-wine); font-size: 12px; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; }
+.fs-context-section .fs-outfits-magazine .fs-look-caption > .fs-muted { display: block; color: var(--fs-journal-muted); font-size: 12px; line-height: 1.6; }
+.fs-context-section .fs-outfits-magazine > .fs-feed-footnote { margin-top: 9px; padding: 16px 0 0; border-top: 1px solid #b58b96; color: var(--fs-journal-muted); font-size: 12px; line-height: 1.7; }
+
+/* Inset rings remain visible inside clipped photo corners. Color never carries saved state alone. */
+.fs-context-section .fs-outfits-magazine .fs-look-open:focus-visible { outline: 3px solid var(--fs-journal-wine); outline-offset: -4px; }
+.fs-context-section .fs-outfits-magazine .fs-look-save:focus-visible { outline: 3px solid var(--fs-journal-wine); outline-offset: 3px; box-shadow: 0 0 0 6px var(--fs-journal-paper); }
+.fs-context-section .fs-outfits-magazine .fs-look-caption > a:focus-visible { outline: 2px solid var(--fs-journal-wine); outline-offset: 3px; border-radius: 2px; }
+
+/* Two columns fit normal phones; a single, generous photo keeps the narrowest cards readable. */
+@container outfit-journal (max-width: 259px) {
+  .first-sight .fs-context-section .fs-outfits-magazine > .fs-masonry { columns: 1; }
+  .fs-context-section .fs-magazine-masthead { flex-wrap: wrap; gap: 4px; }
+}
+@media (max-width: 760px) {
+  .first-sight .fs-context-section { padding: 18px 14px; border-radius: 14px; }
+  .fs-context-section .fs-outfits-magazine > .fs-masonry { column-gap: 12px; }
+}
+@media (hover: none) {
+  .fs-context-section .fs-outfits-magazine .fs-look-peek { opacity: 1; }
+}
