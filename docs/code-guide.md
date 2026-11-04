@@ -12,13 +12,16 @@ This guide covers the active `loomstory-web` React/Vite application. Start with 
 | FirstSight layout ratios and responsive behavior | [first-sight.css](../src/pages/first-sight.css) | `.fs-start-layout` (35/65), `.fs-discovery` (50/50), and `.fs-discovery-focused` (full-width shopping). |
 | Accepted photo formats, size limit, decoding errors | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx) | `acceptedTypes` and `select`. The file picker and drop target share this function. |
 | Matching explanation text and hover/tap behavior | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx) | `openMatching`, dismissal listeners, and the explanation markup. Style `.fs-matching-*` in `first-sight.css`. |
-| Brand, release year, season, sample prices, sizes, stock | [fixtures.ts](../src/features/first-sight/fixtures.ts) | `sampleIdentity` and `purchaseOptions`. Product titles/base prices/images originate in the shared catalog. |
-| Discovery scroll threshold | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | The identity-stage effect compares scroll distance with `100`; `showMatches` supplies the button alternative. |
+| Chloé identity, explanation text, resale range, selected sample | [chloe.ts](../src/features/first-sight/chloe.ts) | `chloeIdentity`, `chloeAnalysis`, and `chloePhoto`. Four explanation cards and the resale card are authored prototype content. |
+| Analysis card layout, bag photograph, resale bar | [ItemAnalysisResult.tsx](../src/features/first-sight/components/ItemAnalysisResult.tsx), [item-analysis.css](../src/features/first-sight/components/item-analysis.css) | Result content rendered inside the existing `fs-upload-panel`; presentation receives data and transition callbacks. |
+| Purchase prices, variants, sample stock | [fixtures.ts](../src/features/first-sight/fixtures.ts), [catalog.ts](../src/data/catalog.ts) | `purchaseOptions` enriches the bag catalog entries while retaining wardrobe-compatible IDs. |
+| Transition from analysis to shopping | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | **Explore buying options** calls `showMatches`. Scrolling the explanation cards keeps the analysis visible. |
 | Active browsing timeout | [engagement.ts](../src/features/first-sight/engagement.ts) | `DISCOVERY_ENGAGEMENT_MS` is `45_000`. If it changes, update user-facing guide text and timer tests too. |
 | Visibility, focus, viewport pauses, permanent engagement | [useDiscoveryTimer.ts](../src/features/first-sight/useDiscoveryTimer.ts) | Browser listeners call the pure engagement rules. `sessionKey` identifies a new photo. |
 | Celebrity photos, names, tags, regions, sources | [looks.ts](../src/features/first-sight/looks.ts) | `outfitLooks`. Keep image dimensions, author, source URL, and license together; see [source records](first-sight-sources.md). |
 | Geographic filters, masonry batching, look dialog | [OutfitMasonry.tsx](../src/features/first-sight/components/OutfitMasonry.tsx) | Local filter/limit/dialog state; saved-look IDs are passed from the page. |
-| Which inspiration appears after a sample scan | [prototype.ts](../src/features/first-sight/services/prototype.ts) | Sample context tags filter and prioritize sourced looks. This is authored matching, not image analysis. |
+| Which inspiration appears after a sample scan | [chloe.ts](../src/features/first-sight/chloe.ts), [prototype.ts](../src/features/first-sight/services/prototype.ts) | `chloeLooks` supplies the five provided styling references. The local gateway returns this authored board with the Chloé result. |
+| Restore the Chloé photographs after cloning | [setup-analysis-media.mjs](../scripts/setup-analysis-media.mjs) | `npm run setup:analysis-media` populates the ignored `public/local-media/chloe/` folder. Source URLs are recorded in the script and [source record](first-sight-sources.md). |
 | Purchase cards in discovery | [PurchaseGrid.tsx](../src/features/first-sight/components/PurchaseGrid.tsx) | Product cards and availability labels; selection delegates to the page. |
 | PDP gallery, specifications, size buttons, CTAs | [ProductDetailPanel.tsx](../src/features/first-sight/components/ProductDetailPanel.tsx) | Local gallery/SKU selection and callback wiring. |
 | PDP 70/30 split and sticky styling sidebar | [product-detail.css](../src/features/first-sight/components/product-detail.css) | `.fs-pdp-layout`, `.fs-pdp-sidebar`, and mobile overrides. |
@@ -47,9 +50,10 @@ index.html
 | [src/types.ts](../src/types.ts) | Shared `Item`, `Story`, and page props for the original collection experience. |
 | [src/data/catalog.ts](../src/data/catalog.ts) | Fictional catalog and editorial content; stable item IDs connect routing, wardrobe, and FirstSight sample products. |
 | [src/components/ItemCard.tsx](../src/components/ItemCard.tsx) | Shared collection card that navigates to the original item-detail route. FirstSight uses selectable `PurchaseGrid` cards instead. |
-| [features/first-sight/types.ts](../src/features/first-sight/types.ts) | Feature-specific photo, identity, variant, source, discovery-result, and cart shapes. |
+| [features/first-sight/types.ts](../src/features/first-sight/types.ts) | Feature-specific photo, identity, `AnalysisCard`, `ItemAnalysis`, variant, source, discovery-result, and cart shapes. |
 | [src/integrations/contracts.ts](../src/integrations/contracts.ts) | Future app-wide repository, photo-storage, and story-analysis interfaces. These are separate from the currently injectable FirstSight gateway. |
-| [public/assets/](../public/assets/) | Static product/reference images, credited celebrity photos, and explicitly labeled garment sketches. |
+| [public/assets/](../public/assets/) | Tracked product/reference images, credited celebrity photos, and explicitly labeled sketches. |
+| `public/local-media/chloe/` | Six local Chloé example photographs; ignored by Git and restored through the setup script after cloning. |
 
 ### Original pages
 
@@ -68,7 +72,7 @@ index.html
 | --- | --- |
 | `discover(nextPhoto)` | Abort the previous request, reset photo-specific state/timer, call the gateway, and reveal the latest result. |
 | `changePhoto()` | Return to selection while retaining the page visit's bag and saved inspiration. |
-| Identity-stage effect | Position the reveal, establish the scroll baseline, and enter discovery after more than 100px of downward scrolling. |
+| Upload/result rendering | Keep the same `fs-upload-panel` mounted while its contents change from selection to loading to analysis. Scrolling does not advance the journey. |
 | `showMatches()` | Enter/return to discovery and position keyboard focus after the section mounts. |
 | `collapseFeed()` | Switch to the full-width catalog and keep it within reach after the taller feed disappears. |
 | `selectProduct(product)` | Open the inline PDP; its keyed content starts fresh gallery and size selection. |
@@ -91,7 +95,9 @@ Two cancellation mechanisms serve different boundaries. `PhotoUploadPanel` uses 
 
 Keep content changes in the data modules and behavior changes in their owners. Editing a price or stock count belongs in fixtures; changing what happens after a purchase-card click belongs in `FirstSightPage`; changing the card's appearance belongs in its component and stylesheet.
 
-The local gateway returns a complete `DiscoveryResult`. A future adapter can map server results into the same feature types, honor cancellation, and be injected at the route. Identity labels, no-match/error states, live product IDs, and actual checkout need explicit implementation when services are connected. See [the API integration guide](first-sight-prototype.md) for those boundaries.
+`chloe.ts` is the single content entry point for the Chloé example. `chloeAnalysis.cards` supplies four titled bullet lists; `chloeAnalysis.resale` supplies the fifth card and numeric EUR range. Editing these values updates the analysis presentation without editing its JSX. Keep the `prototype` basis visible until a real valuation source exists. The source photographs and authored resale percentages do not establish a verified identification or valuation of a selected upload.
+
+The local gateway returns a complete `DiscoveryResult`, including `analysis`. A future adapter can map server results into the same feature types, honor cancellation, and be injected at the route. Identity labels, no-match/error states, live product IDs, and actual checkout need explicit implementation when services are connected. See [the API integration guide](first-sight-prototype.md) for those boundaries.
 
 ## Configuration and checks
 
@@ -132,3 +138,5 @@ git diff --stat
 `git diff` shows changes to tracked files. Files marked `??` by `git status` are new and must be opened directly until they are tracked. Do not treat an empty diff for a new file as proof that it contains no changes.
 
 When updating code, keep the module header and nearby function comments accurate. Comments explain ownership, constraints, and reasons; the code remains the source of truth for values and behavior. Avoid duplicating implementation details in every callback or repeating the same explanation on every data record.
+
+Keep the Chloé photographs in `public/local-media/` and analysis screenshots outside the repository. Do not force-add ignored photographs. Their paths and source metadata remain editable in code; the binaries are intentionally absent from GitHub. The small authored alternative-bag SVG remains tracked under `public/assets/first-sight/chloe/`.

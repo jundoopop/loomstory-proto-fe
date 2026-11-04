@@ -34,6 +34,8 @@ id_rsa*
 id_ed25519*
 
 # Local data, uploads, backups and diagnostic captures
+# FirstSight reference photographs are downloaded locally and excluded from GitHub.
+/public/local-media/
 *.db
 *.db-*
 *.sqlite

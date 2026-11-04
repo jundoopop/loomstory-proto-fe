@@ -1,0 +1,236 @@
+/*
+ * ItemAnalysisResult content only. PhotoUploadPanel keeps its existing outer
+ * section, background, padding, and column width. Cards use natural page scroll.
+ */
+
+/* Compact identity header and the full item photograph. */
+.fs-analysis-result {
+  min-width: 0;
+}
+
+.fs-analysis-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.fs-analysis-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: 8px;
+  letter-spacing: 1.3px;
+  font-weight: 700;
+}
+
+.fs-analysis-status > span {
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #c9aaa5;
+  border-radius: 50%;
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.fs-upload-panel .fs-analysis-result h2 {
+  margin: 20px 0 21px;
+  font-size: clamp(32px, 2.8vw, 43px);
+  line-height: 1.06;
+  letter-spacing: -1.4px;
+}
+
+.fs-analysis-identity {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 21px;
+  border-block: 1px solid #d7cdbf;
+  padding: 12px 0;
+}
+
+.fs-analysis-identity dt {
+  font-size: 8px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+.fs-analysis-identity dd {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.fs-analysis-photo {
+  margin: 0;
+  background: #f8f7f5;
+  border: 1px solid #ded5c7;
+}
+
+.fs-analysis-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  /* Crop only the supplied photo's empty top margin, keeping the handles and key visible. */
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+
+.fs-analysis-photo figcaption {
+  border-top: 1px solid #e7dfd5;
+  padding: 10px 12px;
+  font: italic 14px/1.4 Georgia, 'Times New Roman', serif;
+  color: var(--muted);
+  text-align: center;
+}
+
+.fs-analysis-introduction {
+  font: 19px/1.3 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.2px;
+  margin: 24px 0 8px;
+}
+
+.fs-analysis-disclosure {
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--muted);
+  margin: 0 0 24px;
+}
+
+/* All explanation cards stay expanded; numbering makes long copy easy to scan. */
+.fs-analysis-cards {
+  display: grid;
+  gap: 13px;
+}
+
+.fs-analysis-card {
+  min-width: 0;
+  padding: 20px 18px;
+  background: #f8f5ee;
+  border: 1px solid #ded5c7;
+}
+
+.fs-analysis-card-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  margin-bottom: 15px;
+}
+
+.fs-analysis-card-heading > span {
+  color: var(--accent);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fs-analysis-card-heading h3 {
+  margin: 0;
+  font: 600 10px/1.5 Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fs-analysis-card ul {
+  display: grid;
+  gap: 11px;
+  padding-left: 14px;
+  margin: 0;
+}
+
+.fs-analysis-card li,
+.fs-analysis-card > p {
+  color: #504a43;
+  font-size: 12px;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+.fs-analysis-card li {
+  padding-left: 2px;
+}
+
+.fs-analysis-card li::marker {
+  color: #9b6c4b;
+  font-size: 9px;
+}
+
+.fs-analysis-card > p {
+  margin: 0;
+}
+
+.fs-analysis-resale {
+  background: #f3ece3;
+  border-color: #cdb9a6;
+}
+
+/* Valuation and continuation form the full-width footer of the result content. */
+.fs-analysis-price {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 15px;
+  padding: 23px 20px;
+  background: var(--accent);
+  color: #fff8ef;
+}
+
+.fs-analysis-price > span {
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+.fs-analysis-price strong {
+  font: 34px/1.1 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.9px;
+  font-variant-numeric: lining-nums;
+}
+
+.fs-analysis-price small {
+  font-size: 9px;
+  line-height: 1.6;
+  color: #ecd9d4;
+}
+
+.fs-analysis-actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 23px;
+}
+
+.fs-analysis-actions .fs-button {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.fs-analysis-actions .fs-text-button {
+  min-height: 44px;
+  justify-self: center;
+}
+
+/* Narrow phones retain readable copy and an uncropped item photograph. */
+@media (max-width: 390px) {
+  .fs-analysis-card {
+    padding: 18px 14px;
+  }
+
+  .fs-analysis-price {
+    padding: 21px 15px;
+  }
+
+  .fs-analysis-price strong {
+    font-size: 30px;
+  }
+}

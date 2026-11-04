@@ -20,7 +20,7 @@ export default function ItemPage({ items, savedIds, onToggleSave }: CollectionPr
   return (
     <>
       <section className="details" aria-labelledby="item-title">
-        <img src={item.image} alt={`${item.title} — illustrative photograph`} />
+        <img src={item.image} alt={`${item.title} — ${item.image.endsWith('.svg') ? 'silhouette illustration' : 'illustrative photograph'}`} />
         <div>
           <Link className="eyebrow" to="/vault">← The Vault / {item.era}</Link>
           <h1 id="item-title">{item.title}</h1><div className="price">€{item.price} <small style={{ fontSize: 12 }}>sample price</small></div>

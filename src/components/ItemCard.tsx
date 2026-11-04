@@ -16,7 +16,7 @@ export function ItemCard({ item, saved, onToggleSave }: ItemCardProps) {
     <article className="card">
       <div className="card-photo">
         <Link to={`/items/${item.id}`} aria-label={`View ${item.title}`}>
-          <img src={item.image} alt={`${item.title} — illustrative photograph`} loading="lazy" />
+          <img src={item.image} alt={`${item.title} — ${item.image.endsWith('.svg') ? 'silhouette illustration' : 'illustrative photograph'}`} loading="lazy" />
         </Link>
         <button
           type="button"

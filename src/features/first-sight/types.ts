@@ -13,12 +13,14 @@ export interface OutfitLook {
   // Original thumbnail dimensions preserve each photo's ratio in the masonry layout.
   width: number;
   height: number;
-  sourceUrl: string;
+  // Omit when the original source is still awaiting a supplied file or URL.
+  sourceUrl?: string;
   sourceLabel: string;
   // Keep attribution and license links with the image when adding or replacing a look.
   credit: string;
-  license: string;
-  licenseUrl: string;
+  // User-provided references have credit, but no invented public reuse license.
+  license?: string;
+  licenseUrl?: string;
   tags: string[];
   kind: 'Celebrity style' | 'Editorial' | 'On screen';
   description: string;
@@ -40,6 +42,28 @@ export interface GarmentIdentity {
   description: string;
   mode: 'prototype';
   tags: string[];
+}
+
+/** Authored explanation cards; future analysis adapters can populate the same presentation. */
+export interface AnalysisCard {
+  id: 'design-concept' | 'key-features' | 'craftsmanship' | 'common-materials';
+  title: string;
+  bullets: string[];
+}
+
+/** Item-specific interpretation and sample valuation, separate from uploaded-photo metadata. */
+export interface ItemAnalysis {
+  image: string;
+  imageAlt: string;
+  cards: AnalysisCard[];
+  resale: {
+    description: string;
+    minimum: number;
+    maximum: number;
+    currency: 'EUR';
+    // The prototype must not imply that authored estimates came from live marketplace data.
+    basis: 'prototype';
+  };
 }
 
 /** One purchasable size/SKU. Zero stock disables selection and bounds local bag quantities. */
@@ -72,6 +96,7 @@ export interface PurchaseOption {
 /** Complete result returned through the gateway, keeping page orchestration independent of data access. */
 export interface DiscoveryResult {
   identity: GarmentIdentity;
+  analysis: ItemAnalysis;
   products: PurchaseOption[];
   looks: OutfitLook[];
 }

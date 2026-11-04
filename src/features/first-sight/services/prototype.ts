@@ -1,6 +1,6 @@
 /** Local discovery implementation; replace the injected gateway when live services are ready. */
-import { purchaseOptions, sampleIdentity } from '../fixtures';
-import { outfitLooks } from '../looks';
+import { purchaseOptions } from '../fixtures';
+import { chloeAnalysis, chloeIdentity, chloeLooks } from '../chloe';
 import type { FirstSightGateway } from './contracts';
 
 /** Local adapter: no photo upload, inference, live stock, or network request. */
@@ -17,11 +17,8 @@ export const prototypeGateway: FirstSightGateway = {
       };
       const timer = window.setTimeout(() => {
         signal.removeEventListener('abort', cancel);
-        // This is a curated tag filter with leather looks first, not image-based AI matching.
-        const contextTags = ['Leather', 'Layers', 'Monochrome', 'Tailoring'];
-        const looks = outfitLooks.filter(look => look.tags.some(tag => contextTags.includes(tag)))
-          .sort((left, right) => Number(right.tags.includes('Leather')) - Number(left.tags.includes('Leather')));
-        resolve({ identity: sampleIdentity, products: purchaseOptions, looks });
+        // Every photograph receives this authored walkthrough; no visual identification occurs.
+        resolve({ identity: chloeIdentity, analysis: chloeAnalysis, products: purchaseOptions, looks: chloeLooks });
       }, 900);
       signal.addEventListener('abort', cancel, { once: true });
     });

@@ -26,14 +26,17 @@ Solid connections are implemented. Dashed connections describe the intended late
 | Route shell (`App.tsx`) | Navigation, shared browser state, and the small wardrobe/about views |
 | `pages/` | Discover, catalogue, item details, stories, and upload preview screens |
 | `components/` | Reusable presentation such as clothing cards |
-| `data/` | Twelve fictional clothing records and their editorial context |
+| `data/` | Shared sample clothing and bag records with stable wardrobe IDs and editorial context |
 | `domain/` | Pure saved-item rules that can be tested without rendering React |
-| `features/first-sight/` | Feature components, typed discovery data, local gateway adapter, and pure engagement rules with a browser lifecycle hook |
+| `features/first-sight/` | Feature components, authored Chloé analysis and styling fixtures, typed discovery data, local gateway adapter, and pure engagement rules with a browser lifecycle hook |
+| `scripts/setup-analysis-media.mjs` | Restores the six Chloé photographs into Git-ignored `public/local-media/chloe/` for local use after cloning |
 | `integrations/contracts.ts` | Types for future services; no credentials, SDK initialization, or network traffic |
 | Vite | Development server and static production bundle |
 | `netlify.toml` | Future build command, output folder, and SPA rewrite |
 
 Search and filters act on local records. Saving an item changes browser-local favorites, not inventory. The upload screen reads a user-selected file into a local preview and shows a labeled sample result. Reloading or leaving that screen may discard the draft and photograph. The demo does not submit photos, authenticate users, create database records, or publish listings.
+
+FirstSight keeps its upload-panel shell through photo selection, simulated analysis, and the Chloé result. `PhotoUploadPanel` owns local file reading; `ItemAnalysisResult` renders the returned card data; `FirstSightPage` owns requests and stage transitions. The gateway returns `DiscoveryResult.analysis` alongside identity, purchase options, and styling references, so the future API boundary includes explanatory content and valuation metadata. The explicit **Explore buying options** action starts discovery; reading the analysis does not consume the discovery timer.
 
 ## Why this fits a three-day prototype
 

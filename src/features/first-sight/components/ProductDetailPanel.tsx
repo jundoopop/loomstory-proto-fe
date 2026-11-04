@@ -42,8 +42,10 @@ function ProductDetailContent({
   // Limit sidebar content here; matching/category selection is supplied by the page's adapter result.
   const affordableAlternatives = alternatives
     .filter(alternative => alternative.id !== product.id && alternative.price < product.price)
+    .sort((left, right) => Number(Boolean(right.affordable)) - Number(Boolean(left.affordable)) || left.price - right.price)
     .slice(0, 2);
-  const styleLooks = looks.slice(0, 2);
+  // Pending originals remain visible as board slots; the compact sidebar uses sourced references.
+  const styleLooks = looks.filter(look => look.sourceUrl).slice(0, 2);
   const inspirationCount = Math.max(styleLooks.length, affordableAlternatives.length);
 
   return <section className="fs-pdp" aria-labelledby="fs-pdp-title">
@@ -73,7 +75,7 @@ function ProductDetailContent({
                 <span>{view.label}</span>
               </button>)}
             </div>}
-            <p className="fs-pdp-photo-note">Illustrative photography and garment studies.</p>
+            <p className="fs-pdp-photo-note">Reference photography and illustrative design studies.</p>
           </div>
 
           <div className="fs-pdp-information">
@@ -153,16 +155,17 @@ function ProductDetailContent({
   </section>;
 }
 
-/** Show a real source-linked style reference with its photographer and reusable-image license. */
+/** Show a source-linked reference; a reuse license is displayed only when one is supplied. */
 function StyleNote({ look }: { look: OutfitLook }) {
+  const Source = look.sourceUrl ? 'a' : 'div';
   return <article className="fs-pdp-style-note">
     <div className="fs-pdp-note-label"><span>IN GOOD COMPANY</span><span>{look.region}</span></div>
-    <a href={look.sourceUrl} target="_blank" rel="noreferrer" className="fs-pdp-look-link" aria-label={`${look.celebrity}: ${look.title}. View source in a new tab.`}>
+    <Source href={look.sourceUrl} target={look.sourceUrl ? '_blank' : undefined} rel={look.sourceUrl ? 'noreferrer' : undefined} className="fs-pdp-look-link" aria-label={look.sourceUrl ? `${look.celebrity}: ${look.title}. View source in a new tab.` : undefined}>
       <img src={look.image} width={look.width} height={look.height} alt={`${look.celebrity} — ${look.title}`} loading="lazy" />
-      <h4>{look.celebrity}</h4><p>{look.title}</p><span className="fs-pdp-source">{look.sourceLabel} <span aria-hidden="true">↗</span></span>
-    </a>
+      <h4>{look.celebrity}</h4><p>{look.title}</p><span className="fs-pdp-source">{look.sourceLabel} {look.sourceUrl && <span aria-hidden="true">↗</span>}</span>
+    </Source>
     <p className="fs-pdp-look-description">{look.description}</p>
-    <details className="fs-pdp-image-credit"><summary>Photo credit</summary><p>{look.credit} · <a href={look.licenseUrl} target="_blank" rel="noreferrer">{look.license} ↗</a></p></details>
+    <details className="fs-pdp-image-credit"><summary>Photo credit</summary><p>{look.credit}{look.license && look.licenseUrl && <> · <a href={look.licenseUrl} target="_blank" rel="noreferrer">{look.license} ↗</a></>}</p></details>
   </article>;
 }
 
@@ -171,7 +174,7 @@ function AlternativeNote({ product, onSelect }: { product: PurchaseOption; onSel
   return <article className="fs-pdp-alternative">
     <div className="fs-pdp-note-label"><span>THE SAME FEELING, FOR LESS</span><span aria-hidden="true">↗</span></div>
     <button type="button" className="fs-pdp-alternative-button" onClick={() => onSelect(product)} aria-label={`View ${product.title}, ${priceFormat.format(product.price)}`}>
-      <img src={product.image} alt={`${product.title} — illustrative photograph`} loading="lazy" />
+      <img src={product.image} alt={`${product.title} — ${product.image.endsWith('.svg') ? 'silhouette illustration' : 'reference photograph'}`} loading="lazy" />
       <span className="fs-pdp-alternative-copy"><span className="fs-pdp-alternative-brand">{product.brand}</span><strong>{product.title}</strong><span>{priceFormat.format(product.price)} <small>sample price</small></span></span>
     </button>
     <p>Similar silhouette · Curated alternative</p>

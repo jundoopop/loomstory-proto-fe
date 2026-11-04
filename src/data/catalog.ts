@@ -42,6 +42,18 @@ export const stories: Story[] = [
       'Wear the volume with something simple. A useful piece should make room for your own story, not require you to live inside someone else’s.',
     ],
   },
+  {
+    id: 'the-bag-in-the-story',
+    title: 'The bag in the story.',
+    kicker: 'The style files / 004 · Accessories',
+    image: '/local-media/chloe/paddington-bag.jpg',
+    summary: 'Soft shapes, warm textures, and a detail that catches the eye.',
+    body: [
+      'An accessory can give an outfit its point of view. A curved handle, a soft body, or a flash of metal can change the balance of an otherwise familiar look.',
+      'The FirstSight Paddington example uses a supplied product photograph and authored analysis to demonstrate that journey. Its purchase cards are fictional offers, and the same reference photograph illustrates several sample conditions.',
+      'Start with the detail you are drawn to, then explore the proportion and texture that suit your wardrobe. The affordable silhouette example is an unbranded illustration, not a listing for an authenticated designer item.',
+    ],
+  },
 ];
 
 /** Keep item IDs unique: routes, saved favorites, and FirstSight sample SKUs depend on them. */
@@ -58,4 +70,10 @@ export const items: Item[] = [
   { id: 'clean-lines', title: 'The clean-lines jacket', price: 135, era: '2000s', category: 'Outerwear', size: 'L', image: '/assets/jacket.jpg', description: 'Minimal detail brings the silhouette into focus.', storyId: 'less-but-better' },
   { id: 'sunday-denim', title: 'The Sunday straight jean', price: 58, era: '1990s', category: 'Denim', size: '26', image: '/assets/denim.jpg', description: 'An easy fit for a slower day. Part of our fictional denim collection.', storyId: 'indigo-notes' },
   { id: 'gallery-coat', title: 'The gallery coat', price: 175, era: '1990s', category: 'Outerwear', size: 'M', image: '/assets/coat.jpg', description: 'A strong outline with space for your own interpretation.', storyId: 'city-after-hours' },
+  // Register FirstSight's authored bag offers here so saved cards also resolve in the wardrobe.
+  // Repeated photographs are product references, not evidence of separate stock or condition.
+  { id: 'chloe-paddington-archive', title: 'Paddington · archive example', price: 700, era: '2000s', category: 'Bags', size: 'One size', image: '/local-media/chloe/paddington-bag.jpg', description: 'An imagined archive offer with visible wear. Supplied product photograph reused as a reference; no physical inventory is represented.', storyId: 'the-bag-in-the-story' },
+  { id: 'chloe-paddington-complete', title: 'Paddington · complete-set example', price: 850, era: '2000s', category: 'Bags', size: 'One size', image: '/local-media/chloe/paddington-bag.jpg', description: 'An imagined complete-set offer with its key and accessories. The supplied reference photograph does not establish the condition or contents of a listing.', storyId: 'the-bag-in-the-story' },
+  { id: 'chloe-paddington-reissue', title: 'Paddington · reissue example', price: 1000, era: '2020s', category: 'Bags', size: 'One size', image: '/local-media/chloe/paddington-bag.jpg', description: 'An imagined reissue offer for the shopping walkthrough. The same supplied product photograph is reused as a reference, not a photograph of listed stock.', storyId: 'the-bag-in-the-story' },
+  { id: 'soft-satchel-alternative', title: 'The soft satchel · silhouette example', price: 95, era: '2020s', category: 'Bags', size: 'One size', image: '/assets/first-sight/chloe/soft-satchel.svg', description: 'An unbranded, affordable silhouette idea with soft volume and curved handles. The illustration represents a fictional design alternative, not a real listing or a Chloé product.', storyId: 'the-bag-in-the-story' },
 ];

@@ -1,5 +1,39 @@
 # FirstSight image sources
 
+## Chloé analysis example
+
+The Chloé example uses the product photograph and five styling references supplied in the task brief. Public source copies are used where the original chat attachments have no accessible file path; those copies can have different framing or resolution from the attachments. The UI stores their captions and dimensions with `chloePhoto`, `chloeAnalysis`, and `chloeLooks` in `src/features/first-sight/chloe.ts`. These references replace the general inspiration board after a sample analysis; the original board below remains available before upload.
+
+Run `npm run setup:analysis-media` after cloning to download the six photographs into `public/local-media/chloe/`. This separate directory is ignored by Git: photograph binaries are not included in GitHub. The setup script records the download URLs; the browser serves the resulting files at `/local-media/chloe/`. Keep analysis screenshots outside the repository as well. The authored alternative-bag illustration, `public/assets/first-sight/chloe/soft-satchel.svg`, remains tracked source artwork.
+
+| File | Role | Supplied dimensions | Caption basis |
+| --- | --- | --- | --- |
+| `paddington-bag.jpg` | Sample and analysis photograph | 1440 × 1920 | Brown suede bag with leather handles, padlock, and key |
+| `styling-01.jpg` | Styling reference | 922 × 1560 | Street styling with a floral dress and brown bag |
+| `styling-02.jpg` | Styling reference | 934 × 1600 | Street styling with a dark jacket, jeans, and brown bag |
+| `styling-03.jpg` | Styling reference | 1206 × 1429 | Runway styling with a dark coat and burgundy bag |
+| `styling-04.jpg` | Styling reference | 1064 × 1600 | Runway styling with a light outfit and dark bag |
+| `styling-05.jpg` | Styling reference | 1177 × 1576 | Screen styling reference with a pale bag |
+
+The table above records attachment dimensions; use the actual downloaded dimensions in the UI fixture when a source copy differs. Captions describe the photographs without inferring people's identities from their faces. Names established by a publisher's caption can be recorded as source metadata. No public reuse license is assumed for these photographs, and the Commons licenses below do not apply to them.
+
+Recovered sources:
+
+The exact floral-dress shoulder-bag photograph (`styling-01.jpg`) and TV still (`styling-05.jpg`) still need direct source URLs or local originals. They have not been replaced with similar shots. The setup script reports these two pending files.
+
+| Local file | Public source | Attribution from source |
+| --- | --- | --- |
+| `paddington-bag.jpg` | [Chloé product photograph supplied by the user](https://www.chloe.com/dw/image/v2/BLMX_PRD/on/demandware.static/-/Sites-chloe-master/default/dw2be28163/images/all-images/CH26AS802S77206/pIZa7IUzSWycTjPimTeutw_c928d313.jpeg?sw=1440&sfrm=png&q=90) | Chloé product imagery |
+| `styling-02.jpg` | [Allure: past It bags making a comeback](https://www.allure.com/story/past-it-bags-comeback) | Splash News; publisher identifies Kate Bosworth and the Chloé Paddington |
+| `styling-03.jpg` | [Who What Wear: Chloé Paddington launch retrospective](https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch) | Courtesy of Chloé; publisher identifies Alexa Chung at Chloé Fall/Winter 2025 |
+| `styling-04.jpg` | [Who What Wear: Chloé Paddington launch retrospective](https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch) | Getty Images; Chloé Spring/Summer 2005 runway |
+
+Preserve the downloaded image proportions in `chloeLooks` so the masonry cards retain their different heights. Source links and credits should remain attached to the corresponding image metadata.
+
+The five analysis-card texts and resale figures are also user-provided example content. They are not a documented source for authenticated product provenance, manufacturing claims, or current resale prices. The example's €700–€1,000 range remains labeled as a prototype estimate.
+
+## Initial celebrity inspiration board
+
 This seed collection contains 40 distinct reference photographs of 23 celebrities, selected for visible clothing and styling. It includes 22 Korea/K-pop cards, 11 Global cards, 3 Japan cards, and 4 China cards. “Korea” is the feed’s Korean-entertainment grouping; it includes K-pop artists of other nationalities.
 
 The images are Wikimedia Commons thumbnails downloaded on 3 November 2026. Each source page identifies the subject and provides its attribution and reuse terms. The files retain the supplied thumbnail image data; no new crop, retouching or AI generation has been applied. Original sources may already be crops, video stills or edited photographs. Local file dimensions are recorded in `src/features/first-sight/looks.ts`.

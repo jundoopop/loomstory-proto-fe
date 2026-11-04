@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { items } from './data/catalog';
+import { items, stories } from './data/catalog';
 import { parseSavedItems, SAVED_ITEMS_KEY, toggleSavedItem } from './domain/savedItems';
 import { ItemCard } from './components/ItemCard';
 import DiscoverPage from './pages/DiscoverPage';
@@ -138,7 +138,7 @@ function AboutPage() {
   return <article className="article">
     <div className="eyebrow">Behind the prototype</div><h1>A concept made tangible.</h1>
     <p>LoomStory connects vintage discovery with the stories that make a piece worth keeping. This local frontend explores the full visual journey before we connect live services.</p>
-    <h2>What you can try</h2><p>Browse 12 fictional pieces, filter the collection, read three editorial stories, save your favourites on this device, and preview a submission using a local photograph.</p>
+    <h2>What you can try</h2><p>Browse {items.length} fictional pieces, filter the collection, read {stories.length} editorial stories, save your favourites on this device, and preview a submission using a local photograph.</p>
     <h2>A preview of the next chapter</h2><p>The sample AI result is written in advance. Photographs are never uploaded; no model identifies them. There is no real login, database, sale, or publication in this version.</p>
     <h2>Built to stay simple</h2><p>React and Vite power this frontend. Supabase database, authentication, and image storage are planned. A serverless function will eventually protect AI credentials. Netlify configuration is ready for a future static deployment.</p>
     <p className="notice">Photography comes from the supplied LoomStory concept export and illustrates a mood. It does not verify a garment’s identity, age, history, or ownership.</p>
