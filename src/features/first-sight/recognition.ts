@@ -1,17 +1,20 @@
 /**
  * The five selectable FirstSight studies. Edit narrative, feature targets, and related
- * offers here; the dossier and shopping components only render this typed contract.
+ * archive/style-match edits here. The temporary resolved export keeps the current UI working
+ * until the content provider (P5) and page consumers (P8) migrate to the canonical studies.
  * Every confidence score and era match is seeded. No uploaded image is inspected.
  */
 import { chloeAnalysis, chloeIdentity, chloeLooks, chloeSources } from './chloe.ts';
-import { offersFor, purchaseOptions } from './fixtures.ts';
+import { createCommerceEdit } from './commerce.ts';
+import { offersFor } from './fixtures.ts';
 import { outfitLooks } from './looks.ts';
-import type { AnalysisCard, OutfitLook, ProductAnnotation, RecognizedItem } from './types';
+import type { AnalysisCard, OutfitLook, ProductAnnotation, RecognitionStudy, RecognizedItem } from './types';
 
-/** Resolve an intentional styling edit while preserving original captions and source credits. */
+/** Temporary local resolution, including supplied Chloé photos; P5 moves this into its provider. */
 function looksFor(ids: readonly string[]): OutfitLook[] {
   return ids.map(id => {
-    const look = outfitLooks.find(candidate => candidate.id === id);
+    const look = chloeLooks.find(candidate => candidate.id === id)
+      ?? outfitLooks.find(candidate => candidate.id === id);
     if (!look) throw new Error(`FirstSight styling reference is not registered: ${id}`);
     return look;
   });
@@ -31,13 +34,14 @@ interface GarmentStudyInput {
   annotations: ProductAnnotation[];
   resaleRange: [number, number];
   resaleNote: string;
-  culture: RecognizedItem['culture'];
-  productIds: string[];
-  lookIds: string[];
+  culture: RecognitionStudy['culture'];
+  archiveProductIds: string[];
+  styleMatchProductIds: string[];
+  contextReferenceIds: string[];
 }
 
 /** Assemble a generic style category without inventing a maker or a verified production date. */
-function garmentStudy(study: GarmentStudyInput): RecognizedItem {
+function garmentStudy(study: GarmentStudyInput): RecognitionStudy {
   return {
     id: study.id,
     name: study.name,
@@ -69,8 +73,8 @@ function garmentStudy(study: GarmentStudyInput): RecognizedItem {
     },
     annotations: study.annotations,
     culture: study.culture,
-    products: offersFor(study.productIds),
-    looks: looksFor(study.lookIds),
+    commerce: createCommerceEdit(offersFor(study.archiveProductIds), offersFor(study.styleMatchProductIds)),
+    contextReferenceIds: study.contextReferenceIds,
   };
 }
 
@@ -78,7 +82,7 @@ function garmentStudy(study: GarmentStudyInput): RecognizedItem {
  * Coordinates describe the complete source image. The dossier preserves that image plane
  * even when trimming Chloé's empty upper background, so targets stay anchored to details.
  */
-const paddingtonStudy: RecognizedItem = {
+const paddingtonStudy: RecognitionStudy = {
   id: 'chloe-paddington',
   name: 'Chloé Paddington Bag',
   category: 'Handbag',
@@ -102,8 +106,11 @@ const paddingtonStudy: RecognizedItem = {
     ],
     sources: chloeSources,
   },
-  products: purchaseOptions,
-  looks: chloeLooks,
+  commerce: createCommerceEdit(
+    offersFor(['chloe-paddington-archive', 'chloe-paddington-complete', 'chloe-paddington-reissue']),
+    offersFor(['soft-satchel-alternative']),
+  ),
+  contextReferenceIds: chloeLooks.map(look => look.id),
 };
 
 const leatherBomberStudy = garmentStudy({
@@ -153,8 +160,9 @@ const leatherBomberStudy = garmentStudy({
     ],
     sources: [],
   },
-  productIds: ['bomber-archive', 'bomber-alternative', 'minimalist-leather', 'weekend-layer'],
-  lookIds: ['cha-eun-woo-1', 'zendaya-8', 'han-so-hee-3', 'g-dragon-4'],
+  archiveProductIds: ['bomber-archive', 'minimalist-leather', 'weekend-layer'],
+  styleMatchProductIds: ['bomber-alternative'],
+  contextReferenceIds: ['cha-eun-woo-1', 'zendaya-8', 'han-so-hee-3', 'g-dragon-4'],
 });
 
 const denimJacketStudy = garmentStudy({
@@ -204,8 +212,9 @@ const denimJacketStudy = garmentStudy({
     ],
     sources: [],
   },
-  productIds: ['denim-jacket-archive', 'denim-jacket-alternative', 'archive-denim', 'record-shop-denim'],
-  lookIds: ['jisoo-2', 'iu-singer-6', 'han-so-hee-3', 'dua-lipa-1'],
+  archiveProductIds: ['denim-jacket-archive', 'archive-denim', 'record-shop-denim'],
+  styleMatchProductIds: ['denim-jacket-alternative'],
+  contextReferenceIds: ['jisoo-2', 'iu-singer-6', 'han-so-hee-3', 'dua-lipa-1'],
 });
 
 const tailoredBlazerStudy = garmentStudy({
@@ -255,8 +264,9 @@ const tailoredBlazerStudy = garmentStudy({
     ],
     sources: [],
   },
-  productIds: ['blazer-archive', 'blazer-alternative', 'city-coat', 'gallery-coat'],
-  lookIds: ['g-dragon-7', 'kentaro-sakaguchi-1', 'v-bts-7', 'xiao-zhan-1'],
+  archiveProductIds: ['blazer-archive', 'city-coat', 'gallery-coat'],
+  styleMatchProductIds: ['blazer-alternative'],
+  contextReferenceIds: ['g-dragon-7', 'kentaro-sakaguchi-1', 'v-bts-7', 'xiao-zhan-1'],
 });
 
 const workwearJacketStudy = garmentStudy({
@@ -306,11 +316,29 @@ const workwearJacketStudy = garmentStudy({
     ],
     sources: [],
   },
-  productIds: ['workwear-archive', 'workwear-alternative', 'denim-jacket-archive', 'denim-jacket-alternative'],
-  lookIds: ['timothee-chalamet-6', 'park-seo-joon-6', 'wang-yibo-2', 'cha-eun-woo-3'],
+  archiveProductIds: ['workwear-archive', 'denim-jacket-archive'],
+  styleMatchProductIds: ['workwear-alternative', 'denim-jacket-alternative'],
+  contextReferenceIds: ['timothee-chalamet-6', 'park-seo-joon-6', 'wang-yibo-2', 'cha-eun-woo-3'],
 });
 
 /** Stable ordering makes the supplied Chloé example the default while preserving five choices. */
-export const recognitionItems: RecognizedItem[] = [
+export const recognitionStudies: RecognitionStudy[] = [
   paddingtonStudy, leatherBomberStudy, denimJacketStudy, tailoredBlazerStudy, workwearJacketStudy,
 ];
+
+/**
+ * P5 will resolve references through its content provider; P8 will consume commerce directly.
+ * Until then, derive the current UI's flat edit once, with archive offers before style matches.
+ * Product objects and source records retain their original IDs and metadata.
+ */
+function toRecognizedItem(study: RecognitionStudy): RecognizedItem {
+  const { contextReferenceIds, ...item } = study;
+  return {
+    ...item,
+    products: [...study.commerce.archive, ...study.commerce.styleMatches],
+    looks: looksFor(contextReferenceIds),
+  };
+}
+
+/** @deprecated Compatibility export for the current gateway/tests; replace with P5 composition. */
+export const recognitionItems: RecognizedItem[] = recognitionStudies.map(toRecognizedItem);

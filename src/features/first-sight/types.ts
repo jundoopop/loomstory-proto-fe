@@ -3,6 +3,27 @@
 /** Filter labels; individual looks use a concrete region rather than the aggregate "All". */
 export type Region = 'All' | 'Korea' | 'Japan' | 'China' | 'Global';
 
+/** Commerce intent is authored for each sample listing; price never selects its track. */
+export type CommerceTrack = 'archive' | 'style-match';
+
+/** Listing labels describe the sample offer, not authentication of the uploaded garment. */
+export type ArchiveListingKind = 'vintage-original' | 'designer-reissue' | 'archive-study';
+export type ListingKind = ArchiveListingKind | 'partner-preview';
+
+/** The discriminant prevents partner previews from being authored as archive listings. */
+export type CommerceProfile =
+  | { track: 'archive'; listingKind: ArchiveListingKind; matchReason: string }
+  | { track: 'style-match'; listingKind: 'partner-preview'; matchReason: string };
+
+/** The study's curated commerce streams; validate membership with createCommerceEdit. */
+export interface CommerceEdit {
+  archive: PurchaseOption[];
+  styleMatches: PurchaseOption[];
+}
+
+/** Vocabulary for P6's authored context metadata; existing look records migrate in that phase. */
+export type ContextRelationship = 'same-design' | 'runway-reference' | 'styling-inspiration';
+
 /** A sourced styling reference, including the metadata needed for credit and image layout. */
 export interface OutfitLook {
   id: string;
@@ -94,6 +115,8 @@ export interface PurchaseOption {
   variants: PurchaseVariant[];
   // Labels distinguish illustrative photographs from front/back silhouette sketches.
   gallery: { src: string; label: string }[];
+  commerce: CommerceProfile;
+  /** @deprecated Derived from commerce.track for the existing grid/PDP; remove after P9/P10. */
   affordable?: boolean;
 }
 
@@ -107,7 +130,7 @@ export interface ProductAnnotation {
   y: number;
 }
 
-/** One selectable study, including its own narrative, styling context, and shopping edit. */
+/** Resolved UI result: a selectable study with its narrative, commerce streams, and styling. */
 export interface RecognizedItem {
   id: string;
   name: string;
@@ -124,9 +147,16 @@ export interface RecognizedItem {
     paragraphs: string[];
     sources: { title: string; url: string }[];
   };
+  commerce: CommerceEdit;
+  /** @deprecated Flattened from commerce for the current page; remove when P8 migrates it. */
   products: PurchaseOption[];
   looks: OutfitLook[];
 }
+
+/** Authored input before context resolution and the temporary legacy-product projection. */
+export type RecognitionStudy = Omit<RecognizedItem, 'products' | 'looks'> & {
+  contextReferenceIds: string[];
+};
 
 /** Gateway response: selection stays in the page; the provider returns independent studies. */
 export interface DiscoveryResult {
