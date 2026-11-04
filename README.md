@@ -58,7 +58,7 @@ src/
   pages/            Route screens
   data/             Fictional items and editorial stories
   domain/           Browser-independent rules
-  features/first-sight/  Feature UI, types, sample data, discovery gateway, and engagement timer
+  features/first-sight/  Feature UI, types, sample data, and discovery gateway
   integrations/     Future service contracts; no clients or requests
   images/           Ignored user-supplied originals for local media setup
 public/assets/      Tracked illustrative photography and sketches
@@ -89,11 +89,11 @@ The Chloé analysis photographs live separately in the ignored `public/local-med
 
 ## FirstSight flow prototype
 
-Visit `/first-sight` alongside the preserved Discover and Submit pages. Its three sections stay in one continuous page:
+Visit `/first-sight` alongside the preserved Discover and Submit pages. Its three sections stay in one continuous page, with distinct dashboard-style surfaces and section headers:
 
 1. **Tendances:** a 50/50 editorial hero with four selectable collections and an optional six-look inspiration board.
-2. **Discover the Story:** a 35/65 photo workspace and dossier. Choose a photo, then press **Analyze**. The photo stays visible on the left; five sample choices update the interactive detail cards, annotations, cultural story, and resale bar on the right. The upload panel is sticky only within this section on desktop.
-3. **Find Similar Pieces:** the selected study's shopping edit and styling references. Only this section's optional feed collapses after 45 active seconds without engagement. Product selection opens a 70/30 PDP inline below the grid; the earlier sections remain available.
+2. **Discover the Story:** a 35/65 photo workspace and dossier. Choose a photo, then press **Analyze**. The photo stays visible on the left; five sample choices update a magazine-style product study, feature callouts, cultural story, and resale bar on the right. Feature labels stay visible; hovering, focusing, or tapping reveals a compact explanation without expanding the layout. The upload panel is sticky only within this section on desktop.
+3. **Find Similar Pieces:** the selected study's shopping edit and styling references. Styling references stay visible beside the shopping edit throughout browsing. Product selection opens a 70/30 PDP inline below the grid; the earlier sections remain available.
 
 The five studies cover the Chloé Paddington, leather bomber, denim jacket, oversized blazer, and workwear jacket. The Chloé example distinguishes verified design/product details from its authored **€700–€1,000** resale scenario. Scores, matching, prices, and inventory remain sample data. No AI, photo-upload service, live checkout, or payment is connected.
 

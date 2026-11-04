@@ -3,13 +3,12 @@
  * Sections stay mounted while photo/selection state changes. The page owns
  * request cancellation, object URLs, wardrobe callbacks, and the local cart.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CollectionProps } from '../types';
 import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVariant } from '../features/first-sight/types';
 import type { FirstSightGateway } from '../features/first-sight/services/contracts';
 import { prototypeGateway } from '../features/first-sight/services/prototype';
 import { chloePhoto } from '../features/first-sight/chloe';
-import { useDiscoveryTimer } from '../features/first-sight/useDiscoveryTimer';
 import { TrendHero } from '../features/first-sight/components/TrendHero';
 import { PhotoUploadPanel } from '../features/first-sight/components/PhotoUploadPanel';
 import { RecognitionResults } from '../features/first-sight/components/RecognitionResults';
@@ -40,8 +39,6 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   const [selectedId, setSelectedId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [sessionKey, setSessionKey] = useState(0);
-  const [catalogFocused, setCatalogFocused] = useState(false);
   const [product, setProduct] = useState<PurchaseOption | null>(null);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
@@ -51,19 +48,8 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   const controller = useRef<AbortController | null>(null);
   const recognitionRef = useRef<HTMLElement>(null);
   const matchesRef = useRef<HTMLElement>(null);
-  const feedRef = useRef<HTMLElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
   const selected = result?.items.find(item => item.id === selectedId) ?? result?.items[0];
-
-  /** The timeout changes only the shopping layout, never the recognition/dossier section. */
-  const collapseFeed = useCallback(() => {
-    setCatalogFocused(true);
-    setNotice('More room for your finds. Show inspiration whenever you like.');
-  }, []);
-  const timer = useDiscoveryTimer({
-    enabled: Boolean(selected?.looks.length) && !loading && !catalogFocused && !cartOpen && !product,
-    sessionKey, feedRef, onExpire: collapseFeed,
-  });
 
   // The page owns accepted URLs; the upload workspace owns only unfinished image decodes.
   useEffect(() => () => { if (photo?.kind === 'upload') URL.revokeObjectURL(photo.url); }, [photo]);
@@ -78,7 +64,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   function changePhoto(nextPhoto: PhotoInput | null) {
     controller.current?.abort();
     setPhoto(nextPhoto); setResult(null); setSelectedId(''); setProduct(null);
-    setLoading(false); setError(''); setNotice(''); setCatalogFocused(false);
+    setLoading(false); setError(''); setNotice('');
   }
 
   /** Explicit Analyze action; choosing a file alone never starts the sample recognition. */
@@ -88,7 +74,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
     const request = new AbortController();
     controller.current = request;
     setLoading(true); setError(''); setResult(null); setProduct(null);
-    setSelectedId(''); setCatalogFocused(false); setSessionKey(value => value + 1);
+    setSelectedId('');
     try {
       const response = await gateway.discover(photo, request.signal);
       if (request.signal.aborted || controller.current !== request) return;
@@ -203,24 +189,18 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
       <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Similar Pieces<span>.</span></h2><p>Continue the story. Discover pieces with a similar design heritage.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
 
       {selected ? <>
-        <div className="fs-shop-toolbar"><span>{catalogFocused ? 'A little more room for your finds' : 'ILLUSTRATIVE PRICES & INVENTORY'}</span>
-          {selected.looks.length > 0 && <button onClick={() => {
-            if (catalogFocused) timer.engage();
-            setCatalogFocused(value => !value);
-          }}>{catalogFocused ? 'Show inspiration ↗' : 'Focus on pieces ↗'}</button>}
-        </div>
-        <div className={'fs-discovery' + (catalogFocused || !selected.looks.length ? ' fs-discovery-focused' : '')}>
+        <div className="fs-shop-toolbar"><span>ILLUSTRATIVE PRICES & INVENTORY</span></div>
+        <div className={'fs-discovery' + (!selected.looks.length ? ' fs-discovery-focused' : '')}>
           <div className="fs-purchase-section">
             <PurchaseGrid products={selected.products} savedIds={savedIds} onToggleSave={onToggleSave} onSelect={openProduct} />
           </div>
-          {!catalogFocused && selected.looks.length > 0 && <aside ref={feedRef} className="fs-context-section" aria-label="Contextual outfit feed"
-            onClickCapture={timer.engage} onKeyDownCapture={event => { if (event.key === 'Enter' || event.key === ' ') timer.engage(); }}>
+          {/* Styling stays beside the edit for as long as this study is selected. */}
+          {selected.looks.length > 0 && <aside className="fs-context-section" aria-label="Contextual outfit feed">
             <OutfitMasonry key={selected.id} looks={selected.looks} {...lookSaveProps} contextual
-              contextName={selected.name} onEngage={timer.engage} loadingEnabled={!product && !cartOpen} />
-            <p className="fs-feed-state">{timer.engaged ? 'This inspiration board will stay with your finds.' : 'Explore a look to keep this inspiration board open.'}</p>
+              contextName={selected.name} loadingEnabled={!product && !cartOpen} />
           </aside>}
         </div>
-        <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>These are fictional offers. After 45 active seconds without an interaction with the styling feed, the pieces get the full width. Hidden tabs, offscreen feeds, and open product or bag views pause the timer. Your photograph and dossier always remain above.</p></details>
+        <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>These are fictional offers, paired with styling references for the selected study. The outfits remain alongside your finds while you browse. Your photograph and dossier remain above.</p></details>
 
         {product && <div className="fs-inline-product" ref={productRef} tabIndex={-1}>
           <ProductDetailPanel product={product} alternatives={selected.products} looks={selected.looks}

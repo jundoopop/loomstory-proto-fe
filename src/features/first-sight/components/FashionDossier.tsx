@@ -1,9 +1,9 @@
 /**
- * An interactive product study, composed from the selected recognition fixture.
- * Content lives in the discovery provider; this module owns annotation interaction
- * and the measured SVG connections between the image and its explanatory panels.
+ * A magazine-style product study: labels frame the image and reveal short floating
+ * explanations on demand. Full design notes remain in a separate disclosure.
+ * This module owns interaction and geometry; all editorial content comes from the study.
  */
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { AnalysisCard, ProductAnnotation, RecognizedItem } from '../types';
 import './fashion-dossier.css';
@@ -20,7 +20,7 @@ interface Connector {
   startY: number;
 }
 
-/** Numbering follows the explanatory panels so points and text share one reading order. */
+/** Keep callouts and the optional full notes in the same reading order. */
 function annotationNumber(annotation: ProductAnnotation, cards: AnalysisCard[]) {
   return String(cards.findIndex(card => card.id === annotation.cardId) + 1).padStart(2, '0');
 }
@@ -28,17 +28,16 @@ function annotationNumber(annotation: ProductAnnotation, cards: AnalysisCard[]) 
 /** Render one data-driven study; the parent keys it by item ID to reset selected details. */
 export function FashionDossier({ item, onExplore }: Props) {
   const [selectedAnnotation, setSelectedAnnotation] = useState<string | null>(null);
-  const [previewAnnotation, setPreviewAnnotation] = useState<string | null>(null);
+  const [hoveredAnnotation, setHoveredAnnotation] = useState<string | null>(null);
+  const [focusedAnnotation, setFocusedAnnotation] = useState<string | null>(null);
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [canvasSize, setCanvasSize] = useState({ width: 1, height: 1 });
   const [imageRatio, setImageRatio] = useState(1);
   const canvasRef = useRef<HTMLDivElement>(null);
   const imagePlaneRef = useRef<HTMLDivElement>(null);
-  const panelRefs = useRef(new Map<string, HTMLElement>());
-  const activeId = previewAnnotation ?? selectedAnnotation;
-  const activeAnnotation = item.annotations.find(annotation => annotation.id === activeId);
+  const labelRefs = useRef(new Map<string, HTMLButtonElement>());
+  const activeId = hoveredAnnotation ?? focusedAnnotation ?? selectedAnnotation;
   const titleId = `fs-dossier-title-${item.id}`;
-  const detailId = `fs-dossier-detail-${item.id}`;
   const currency = new Intl.NumberFormat('en-IE', {
     style: 'currency', currency: item.analysis.resale.currency, maximumFractionDigits: 0,
   });
@@ -55,21 +54,20 @@ export function FashionDossier({ item, onExplore }: Props) {
       if (!bounds.width || !image.width) return;
       setCanvasSize({ width: bounds.width, height: bounds.height });
       setConnectors(item.annotations.flatMap(annotation => {
-        const panel = panelRefs.current.get(annotation.cardId)?.getBoundingClientRect();
-        if (!panel) return [];
-        const fromLeft = panel.left < image.left;
-        const startX = (fromLeft ? panel.right : panel.left) - bounds.left;
+        const label = labelRefs.current.get(annotation.id)?.getBoundingClientRect();
+        if (!label) return [];
+        // Labels sit beside the photo on desktop, and above/below it on narrow screens.
+        const imageWindow = imagePlane.parentElement!.getBoundingClientRect();
+        const above = label.bottom <= imageWindow.top;
+        const below = label.top >= imageWindow.bottom;
+        const fromLeft = label.left + label.width / 2 < image.left + image.width / 2;
+        const startX = (above || below ? label.left + label.width / 2 : fromLeft ? label.right : label.left) - bounds.left;
+        const startY = (above ? label.bottom : below ? label.top : label.top + label.height / 2) - bounds.top;
         const endX = image.left - bounds.left + image.width * annotation.x / 100;
         const endY = image.top - bounds.top + image.height * annotation.y / 100;
-        // Use the nearest panel edge height so lower connectors never cross the detail caption.
-        const startY = Math.max(panel.top + 20 - bounds.top, Math.min(endY, panel.bottom - 20 - bounds.top));
-        const imageEdge = (fromLeft ? image.left : image.right) - bounds.left;
-        const elbowX = startX + (imageEdge - startX) * 0.55;
-        const approachX = endX + (fromLeft ? -17 : 17);
         return [{
           id: annotation.id, startX, startY,
-          // Stop before the numbered button; its circle is the endpoint, not a line through its label.
-          path: `M ${startX} ${startY} H ${elbowX} L ${approachX} ${endY}`,
+          path: `M ${startX} ${startY} L ${endX} ${endY}`,
         }];
       }));
     };
@@ -78,11 +76,22 @@ export function FashionDossier({ item, onExplore }: Props) {
     const observer = new ResizeObserver(measure);
     observer.observe(canvas);
     observer.observe(imagePlane);
-    panelRefs.current.forEach(panel => observer.observe(panel));
+    labelRefs.current.forEach(label => observer.observe(label));
     return () => observer.disconnect();
   }, [item, imageRatio]);
 
-  /** A tap or keyboard activation pins a detail; hover/focus temporarily previews another. */
+  /** Outside taps dismiss a pinned card; they never move the photo or the surrounding page. */
+  useEffect(() => {
+    const dismissOutside = (event: PointerEvent) => {
+      if (event.target instanceof Element && !event.target.closest('.fs-dossier-callout, .fs-dossier-point')) {
+        setSelectedAnnotation(null); setHoveredAnnotation(null); setFocusedAnnotation(null);
+      }
+    };
+    document.addEventListener('pointerdown', dismissOutside);
+    return () => document.removeEventListener('pointerdown', dismissOutside);
+  }, []);
+
+  /** Click/tap pins a detail, while pointer hover and keyboard focus offer temporary previews. */
   const toggleAnnotation = (id: string) => {
     setSelectedAnnotation(current => current === id ? null : id);
   };
@@ -96,8 +105,12 @@ export function FashionDossier({ item, onExplore }: Props) {
         <p className="fs-dossier-intro">{item.summary}</p>
       </div>
 
-      <div className="fs-dossier-canvas" ref={canvasRef}>
-        {/* These paths follow actual element geometry. They never occupy a text panel. */}
+      <div className="fs-dossier-canvas" ref={canvasRef} onKeyDown={event => {
+        if (event.key === 'Escape') {
+          setSelectedAnnotation(null); setHoveredAnnotation(null); setFocusedAnnotation(null);
+        }
+      }}>
+        {/* Connector endpoints follow the rendered labels and original image coordinates. */}
         <svg className="fs-dossier-connectors" viewBox={`0 0 ${canvasSize.width} ${canvasSize.height}`} aria-hidden="true">
           {connectors.map(connector => <g key={connector.id} className={activeId === connector.id ? 'is-active' : undefined}>
             <path d={connector.path} />
@@ -120,45 +133,55 @@ export function FashionDossier({ item, onExplore }: Props) {
                 style={{ left: `${annotation.x}%`, top: `${annotation.y}%` }}
                 aria-label={`Explore ${annotation.label}`}
                 aria-pressed={selectedAnnotation === annotation.id}
-                aria-controls={detailId}
-                onPointerEnter={event => { if (event.pointerType !== 'touch') setPreviewAnnotation(annotation.id); }}
-                onPointerLeave={() => setPreviewAnnotation(null)}
-                onFocus={() => setPreviewAnnotation(annotation.id)}
-                onBlur={() => setPreviewAnnotation(null)}
+                aria-expanded={activeId === annotation.id}
+                aria-controls={`fs-dossier-detail-${annotation.id}`}
+                aria-describedby={activeId === annotation.id ? `fs-dossier-description-${annotation.id}` : undefined}
+                onPointerEnter={event => { if (event.pointerType !== 'touch') setHoveredAnnotation(annotation.id); }}
+                onPointerLeave={() => setHoveredAnnotation(null)}
+                onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
+                onBlur={() => setFocusedAnnotation(null)}
                 onClick={() => toggleAnnotation(annotation.id)}
-                onKeyDown={event => { if (event.key === 'Escape') { setSelectedAnnotation(null); setPreviewAnnotation(null); } }}
-              ><span>{annotationNumber(annotation, item.analysis.cards)}</span></button>)}
+              ><span aria-hidden="true" /></button>)}
             </div>
-          </div>
-          <figcaption><span aria-hidden="true">✦</span> {item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</figcaption>
-          <div id={detailId} className={`fs-dossier-feature-detail${activeAnnotation ? ' is-active' : ''}`} aria-live="polite" aria-atomic="true">
-            <span className="fs-dossier-detail-label">{activeAnnotation ? `DETAIL ${annotationNumber(activeAnnotation, item.analysis.cards)}` : 'LOOK A LITTLE CLOSER'}</span>
-            <strong>{activeAnnotation?.label ?? 'Explore the details'}</strong>
-            <p>{activeAnnotation?.detail ?? 'Hover, focus, or tap a numbered point to uncover the thinking behind the piece.'}</p>
           </div>
         </figure>
 
-        {item.analysis.cards.map((card, index) => {
-          const annotation = item.annotations.find(point => point.cardId === card.id);
-          const highlighted = activeAnnotation?.cardId === card.id;
-          return <section
-            key={card.id}
-            ref={element => { if (element) panelRefs.current.set(card.id, element); else panelRefs.current.delete(card.id); }}
-            className={`fs-dossier-panel fs-dossier-panel-${card.id}${highlighted ? ' is-active' : ''}`}
-            aria-labelledby={`fs-dossier-${item.id}-${card.id}`}
-            onPointerEnter={event => { if (annotation && event.pointerType !== 'touch') setPreviewAnnotation(annotation.id); }}
-            onPointerLeave={() => setPreviewAnnotation(null)}
+        {item.annotations.map(annotation => {
+          const expanded = activeId === annotation.id;
+          const labelId = `fs-dossier-label-${annotation.id}`;
+          return <div key={annotation.id}
+            className={`fs-dossier-callout fs-dossier-callout-${annotation.cardId}${expanded ? ' is-active' : ''}`}
+            onPointerEnter={event => { if (event.pointerType !== 'touch') setHoveredAnnotation(annotation.id); }}
+            onPointerLeave={() => setHoveredAnnotation(null)}
           >
-            <div className="fs-dossier-panel-heading"><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><h4 id={`fs-dossier-${item.id}-${card.id}`}>{card.title}</h4></div>
-            <ul>{card.bullets.map(bullet => <li key={bullet}>{bullet}</li>)}</ul>
-            {annotation && <button type="button" className="fs-dossier-detail-link"
-              aria-pressed={selectedAnnotation === annotation.id} aria-controls={detailId}
-              onFocus={() => setPreviewAnnotation(annotation.id)} onBlur={() => setPreviewAnnotation(null)}
+            <button type="button" id={labelId} className="fs-dossier-feature-label"
+              ref={element => { if (element) labelRefs.current.set(annotation.id, element); else labelRefs.current.delete(annotation.id); }}
+              aria-expanded={expanded} aria-controls={`fs-dossier-detail-${annotation.id}`}
+              aria-describedby={expanded ? `fs-dossier-description-${annotation.id}` : undefined}
+              aria-pressed={selectedAnnotation === annotation.id}
+              onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
+              onBlur={() => setFocusedAnnotation(null)}
               onClick={() => toggleAnnotation(annotation.id)}
-            >{annotation.label}<span aria-hidden="true">↗</span></button>}
-          </section>;
+            ><span aria-hidden="true">{annotationNumber(annotation, item.analysis.cards)}</span>{annotation.label}</button>
+            {/* Absolute positioning keeps the magazine composition still when a card opens. */}
+            <div className="fs-dossier-popover" hidden={!expanded}>
+              <section id={`fs-dossier-detail-${annotation.id}`} className="fs-dossier-panel" aria-labelledby={labelId}>
+                <h4>{annotation.label}</h4><p id={`fs-dossier-description-${annotation.id}`}>{annotation.detail}</p>
+              </section>
+            </div>
+          </div>;
         })}
       </div>
+      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>Hover or tap a feature to look closer.</p></div>
+
+      {/* Preserve the full authored analysis without crowding the idle magazine view. */}
+      <details className="fs-dossier-notes">
+        <summary><span>Read the full design notes</span><span aria-hidden="true">+</span></summary>
+        <div className="fs-dossier-notes-grid">{item.analysis.cards.map((card, index) => <section key={card.id} className="fs-dossier-note" aria-labelledby={`fs-note-${item.id}-${card.id}`}>
+          <div className="fs-dossier-panel-heading"><span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><h4 id={`fs-note-${item.id}-${card.id}`}>{card.title}</h4></div>
+          <ul>{card.bullets.map(bullet => <li key={bullet}>{bullet}</li>)}</ul>
+        </section>)}</div>
+      </details>
 
       {/* Resale remains explicitly illustrative until a marketplace-backed provider replaces the fixture. */}
       <section className="fs-dossier-resale" aria-labelledby={`fs-dossier-resale-${item.id}`}>

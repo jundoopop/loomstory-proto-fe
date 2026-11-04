@@ -90,7 +90,7 @@ const paddingtonStudy: RecognizedItem = {
   annotations: [
     { id: 'paddington-shape', cardId: 'design-concept', label: 'Soft silhouette', detail: 'A supple, rounded body gives the bag its relaxed outline.', x: 26, y: 69 },
     { id: 'paddington-padlock', cardId: 'key-features', label: 'Signature padlock', detail: 'The leather-wrapped, gold-tone padlock is the visual focal point. Chloé lists Zamak for this reissue.', x: 49, y: 64 },
-    { id: 'paddington-stitching', cardId: 'craftsmanship', label: 'Shaped leather trim', detail: 'Visible stitching follows the curved handle attachments and leather edging.', x: 65, y: 65 },
+    { id: 'paddington-stitching', cardId: 'craftsmanship', label: 'Shaped leather trim', detail: 'Visible stitching follows the curved handle attachments and leather edging.', x: 35, y: 65 },
     { id: 'paddington-suede', cardId: 'common-materials', label: 'Suede calfskin', detail: 'The pictured reissue combines a suede calfskin body with smoother leather details.', x: 64, y: 73 },
   ],
   culture: {

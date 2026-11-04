@@ -881,7 +881,7 @@
   padding: 12px 0;
 }
 
-/* Phase 2: 50/50 discovery; the focused modifier removes the feed and expands the catalog. */
+/* Shopping and outfits stay side by side; full-width catalog is only for results without looks. */
 .fs-discovery {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1041,12 +1041,6 @@
 .fs-purchase-bottom>button {
   font-size: 9px;
   padding: 5px 0;
-}
-
-.fs-feed-state {
-  font-size: 9px;
-  color: var(--muted);
-  padding-top: 12px;
 }
 
 /* Fictional screen/social context cards sit alongside sourced celebrity references. */

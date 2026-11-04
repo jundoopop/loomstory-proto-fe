@@ -65,6 +65,7 @@ export function TrendHero({ savedLookIds, onToggleSaveLook }: Props) {
   const hero = outfitLooks.find(look => look.id === collection.heroId) ?? outfitLooks[0];
 
   return <section className="fs-trends" id="fs-trends" aria-labelledby="fs-trends-title">
+    <div className="fs-chapter-label"><span>01 / FIND INSPIRATION</span><span>THE EDITORIAL BOARD</span></div>
     <div className="fs-trend-hero">
       <figure className="fs-trend-visual">
         <img key={hero.id} src={hero.image} alt={`${hero.celebrity}: ${hero.title}`} width={hero.width} height={hero.height} style={{ objectPosition: collection.position }} fetchPriority="high" />

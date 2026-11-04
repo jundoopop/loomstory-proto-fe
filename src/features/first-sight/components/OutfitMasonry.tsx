@@ -1,7 +1,7 @@
 /**
  * Region-filtered celebrity moodboard used before and after photo discovery.
  * Controls card rendering, incremental display, and source details; the page
- * retains saved look IDs and decides whether feed activity cancels its timer.
+ * retains saved look IDs while each board owns its filters and open look.
  */
 import { useEffect, useId, useRef, useState } from 'react';
 import type { OutfitLook, Region } from '../types';
@@ -14,13 +14,12 @@ interface Props {
   // The supplied item references use their own copy and do not imply geographic metadata.
   itemContext?: boolean;
   contextName?: string;
-  onEngage?: () => void;
   loadingEnabled?: boolean;
 }
 const regions: Region[] = ['All', 'Korea', 'Japan', 'China', 'Global'];
 
 /** Render the board; `contextual` adds the sample screen/social editorial cards. */
-export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, contextName, itemContext = Boolean(contextName), onEngage, loadingEnabled = true }: Props) {
+export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, contextName, itemContext = Boolean(contextName), loadingEnabled = true }: Props) {
   // Filtering and the visible batch belong to this board. Saved hearts live in FirstSightPage.
   const [region, setRegion] = useState<Region>('All');
   const [limit, setLimit] = useState(12);
@@ -50,7 +49,7 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     <div className="fs-feed-heading"><div><div className="fs-section-kicker">{itemContext ? (contextName ?? 'THE PIECE').toUpperCase() + ' / STYLE REFERENCES' : contextual ? 'THE CULTURAL THREAD' : 'THE WORLD IS YOUR MOODBOARD'}</div><h2>{itemContext ? 'Style, in context.' : contextual ? 'Ways to wear the feeling.' : 'Good style travels.'}</h2></div><span className="fs-look-count">{looks.length} looks<br /><span>worth a closer look</span></span></div>
     <p className="fs-feed-description">{itemContext ? 'A few ways to see the silhouette anew. Selected photographs to inspire your next chapter.' : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.' : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
     {!itemContext && <div className="fs-filters" role="group" aria-label="Filter outfits by region">
-      {regions.map(value => <button type="button" key={value} aria-pressed={region === value} onClick={() => { setRegion(value); setLimit(12); onEngage?.(); }}>{value === 'All' ? 'All looks' : value}</button>)}
+      {regions.map(value => <button type="button" key={value} aria-pressed={region === value} onClick={() => { setRegion(value); setLimit(12); }}>{value === 'All' ? 'All looks' : value}</button>)}
     </div>}
     {/* These are authored prototype context cards; sourced celebrity records follow below. */}
     {contextual && !itemContext && <div className="fs-context-notes">
@@ -61,20 +60,20 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     <div className="fs-masonry">
       {filtered.slice(0, limit).map((look, index) => <article className="fs-look" key={look.id}>
         <div className="fs-look-image-wrap">
-          <button className="fs-look-open" type="button" aria-label={`View ${look.celebrity}: ${look.title}`} onClick={() => { setSelected(look); onEngage?.(); }}>
+          <button className="fs-look-open" type="button" aria-label={`View ${look.celebrity}: ${look.title}`} onClick={() => { setSelected(look); }}>
             <LookImage look={look} eager={index < 4} />
             <span className="fs-look-region">{itemContext ? look.kind : look.region}</span><span className="fs-look-peek">View look ↗</span>
           </button>
           <button className="fs-look-save" type="button" aria-pressed={saved.includes(look.id)} aria-label={`${saved.includes(look.id) ? 'Unsave' : 'Save'} ${look.celebrity} look`} onClick={() => {
             onToggleSaveLook(look.id);
-            setStatus(saved.includes(look.id) ? 'Look removed from this moodboard.' : 'Look saved in this moodboard for this visit.'); onEngage?.();
+            setStatus(saved.includes(look.id) ? 'Look removed from this moodboard.' : 'Look saved in this moodboard for this visit.');
           }}>{saved.includes(look.id) ? '♥' : '♡'}</button>
         </div>
-        <div className="fs-look-caption"><h3>{look.celebrity}</h3><p>{look.title}</p>{look.sourceUrl ? <a href={look.sourceUrl} target="_blank" rel="noreferrer" onClick={onEngage}>{look.sourceLabel} <span aria-hidden="true">↗</span></a> : <span className="fs-muted">{look.sourceLabel}</span>}</div>
+        <div className="fs-look-caption"><h3>{look.celebrity}</h3><p>{look.title}</p>{look.sourceUrl ? <a href={look.sourceUrl} target="_blank" rel="noreferrer">{look.sourceLabel} <span aria-hidden="true">↗</span></a> : <span className="fs-muted">{look.sourceLabel}</span>}</div>
       </article>)}
     </div>
     {!filtered.length && <p className="fs-muted">This edit is still being collected. Explore another region.</p>}
-    {limit < filtered.length && <div ref={sentinel} className="fs-load-more"><button type="button" className="fs-button" onClick={() => { setLimit(value => value + 8); onEngage?.(); }}>More inspiration <span aria-hidden="true">↓</span></button></div>}
+    {limit < filtered.length && <div ref={sentinel} className="fs-load-more"><button type="button" className="fs-button" onClick={() => { setLimit(value => value + 8); }}>More inspiration <span aria-hidden="true">↓</span></button></div>}
     <p className="fs-feed-footnote">{filtered.length} {itemContext ? 'provided' : 'sourced'} references · Saved looks stay in this page session.</p>
     <span className="fs-sr-only" role="status">{status}</span>
     {/* Keep the original source, photographer, and license accessible for every look. */}
