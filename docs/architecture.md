@@ -2,6 +2,8 @@
 
 The implemented application is a static React + TypeScript single-page frontend built with Vite. It demonstrates one product journey without creating backend infrastructure.
 
+For specific edits, use the [code guide and change-location map](code-guide.md). It identifies module owners, named flow functions, data sources, styling controls, and state lifetimes. The [FirstSight guide](first-sight-prototype.md) covers its separate comparison journey and future gateway integration.
+
 ```mermaid
 flowchart LR
     Visitor[Browser] --> UI[React pages and components]
@@ -26,6 +28,7 @@ Solid connections are implemented. Dashed connections describe the intended late
 | `components/` | Reusable presentation such as clothing cards |
 | `data/` | Twelve fictional clothing records and their editorial context |
 | `domain/` | Pure saved-item rules that can be tested without rendering React |
+| `features/first-sight/` | Feature components, typed discovery data, local gateway adapter, and pure engagement rules with a browser lifecycle hook |
 | `integrations/contracts.ts` | Types for future services; no credentials, SDK initialization, or network traffic |
 | Vite | Development server and static production bundle |
 | `netlify.toml` | Future build command, output folder, and SPA rewrite |

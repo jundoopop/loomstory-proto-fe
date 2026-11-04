@@ -1,6 +1,10 @@
+/** Authored catalog and editorial fixtures shared across the original pages and wardrobe.
+ * Edit descriptions/prices here; FirstSight derives its richer commerce fixtures from items.
+ */
 import type { Item, Story } from '../types';
 
 // Authored demo fixtures. Images illustrate a mood, not the listed physical garment.
+/** Editorial copy keyed by stable story IDs; each Item.storyId should resolve to one entry. */
 export const stories: Story[] = [
   {
     id: 'less-but-better',
@@ -40,6 +44,7 @@ export const stories: Story[] = [
   },
 ];
 
+/** Keep item IDs unique: routes, saved favorites, and FirstSight sample SKUs depend on them. */
 export const items: Item[] = [
   { id: 'minimalist-leather', title: 'The minimalist leather jacket', price: 185, era: '1990s', category: 'Outerwear', size: 'M', image: '/assets/jacket.jpg', description: 'A clean silhouette and a quiet sense of attitude. A fictional piece from our minimalist edit.', storyId: 'less-but-better' },
   { id: 'archive-denim', title: 'The straight-leg archive jean', price: 78, era: '1990s', category: 'Denim', size: '28', image: '/assets/denim.jpg', description: 'Faded indigo and an easy straight leg. A starting point for an everyday wardrobe.', storyId: 'indigo-notes' },

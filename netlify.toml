@@ -1,11 +1,14 @@
 # Use loomstory-fe/loomstory-web as the base directory when importing the parent repo.
+# Static production output: the build script runs TypeScript validation before bundling.
 [build]
   command = "npm run build"
   publish = "dist"
 
+# Match the local .nvmrc runtime during hosted builds.
 [build.environment]
   NODE_VERSION = "22.16.0"
 
+# Optional Netlify CLI wrapper around the local Vite server.
 [dev]
   command = "npm run dev"
   targetPort = 5173
@@ -13,6 +16,7 @@
   framework = "vite"
   autoLaunch = false
 
+# BrowserRouter routes must return the SPA shell when opened or refreshed directly.
 [[redirects]]
   from = "/*"
   to = "/index.html"

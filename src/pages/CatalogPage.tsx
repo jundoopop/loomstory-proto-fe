@@ -1,20 +1,27 @@
+/** The Vault route owns URL-based catalog filtering and sorting, not inventory storage.
+ * Add filter controls here; update the catalog/type definitions when adding searchable fields.
+ */
 import { useSearchParams } from 'react-router-dom';
 import { ItemCard } from '../components/ItemCard';
 import type { CollectionProps } from '../types';
 
+/** Derive visible items from the current URL and render shared, controlled product cards. */
 export default function CatalogPage({ items, savedIds, onToggleSave }: CollectionProps) {
   const [params, setParams] = useSearchParams();
   const eras = [...new Set(items.map((item) => item.era))];
   const categories = [...new Set(items.map((item) => item.category))];
   const query = params.get('q') ?? '';
+  // Ignore unsupported URL values so selects and filtering stay consistent with this catalog.
   const era = eras.includes(params.get('era') ?? '') ? params.get('era')! : '';
   const category = categories.includes(params.get('category') ?? '') ? params.get('category')! : '';
   const sort = ['price-asc', 'price-desc'].includes(params.get('sort') ?? '') ? params.get('sort')! : '';
   const search = query.trim().toLocaleLowerCase();
+  // Filter creates a new array; sorting it leaves the featured order of the source catalog intact.
   const matches = items.filter((item) =>
     (!era || item.era === era) && (!category || item.category === category)
     && `${item.title} ${item.description} ${item.era} ${item.category}`.toLocaleLowerCase().includes(search),
   ).sort((a, b) => sort === 'price-asc' ? a.price - b.price : sort === 'price-desc' ? b.price - a.price : 0);
+  /** Change one URL filter while keeping the others; typing does not add browser-history entries. */
   const updateFilter = (key: string, value: string) => {
     const next = new URLSearchParams(params);
     if (value) next.set(key, value); else next.delete(key);

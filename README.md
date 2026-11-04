@@ -2,14 +2,17 @@
 
 A local, frontend-only version of LoomStory’s editorial vintage-fashion experience. It includes discovery, filters, item details, stories, a photo-to-preview walkthrough, and a saved wardrobe.
 
+For editing, start with the [code guide and change-location map](docs/code-guide.md). It links each feature to the module, function, data, or stylesheet that controls it.
+
 **Supabase and AI are not connected. Netlify is configured but has not been provisioned or deployed.** The sample catalogue is fictional, favorites stay in this browser, and uploaded photographs stay in the current page session.
 
 ## Run locally
 
 Use Node.js 22.13 or later. `.nvmrc` pins the development version to 22.16.0.
 
+Run from the `loomstory-web` repository root:
+
 ```sh
-cd ./loomstory-proto-fe
 npm ci
 npm run dev
 ```
@@ -32,6 +35,7 @@ The production preview normally opens at [http://127.0.0.1:4173](http://127.0.0.
 | Experience | Current behavior |
 | --- | --- |
 | Discover and The Vault | Twelve local sample records, search, era/category filters, and sorting |
+| FirstSight | Local photo preview, sourced celebrity moodboard, sample identity/discovery, product details, and bag preview |
 | Item details and stories | Navigable editorial pages using local content |
 | My wardrobe | Save/unsave sample items; favorites persist in this browser when storage is available |
 | Submit a piece | Select a local photograph or sample, enter details, and preview the result |
@@ -49,6 +53,7 @@ src/
   pages/            Route screens
   data/             Fictional items and editorial stories
   domain/           Browser-independent rules
+  features/first-sight/  Feature UI, types, sample data, discovery gateway, and engagement timer
   integrations/     Future service contracts; no clients or requests
 public/assets/      Local illustrative photography
 netlify.toml        Static build and routing configuration
@@ -71,3 +76,9 @@ An eventual manual deployment can upload the completed `dist/` folder instead of
 `.env.example` contains empty future Supabase public settings. It is not needed for this demo. Browser-exposed `VITE_*` variables must never contain AI API secrets or Supabase service-role credentials; a future serverless function would hold those secrets.
 
 Photography is reused from the user-supplied LoomStory export and is illustrative rather than evidence about individual listings. The source described it as Unsplash photography; original attribution and licensing provenance have not been independently verified. The app makes no brand-authentication, ownership, or verified historical-provenance claims.
+
+## FirstSight flow prototype
+
+Visit `/first-sight` to compare the new photo-to-discovery flow with the preserved Discover and Submit pages. It combines a masonry celebrity-style feed, sample identity reveal, 50/50 shopping/context discovery, a 45-second active-browsing focus transition, and a 70/30 product-detail view with a local cart preview. Prototype controls make the sample reveal and timeout transition easy to review; no AI, photo-upload service, live inventory, checkout, or payment is connected.
+
+The UI depends on an injectable service port under `src/features/first-sight/services/`, with the current behavior supplied by a local adapter. Read [the flow and future API integration guide](docs/first-sight-prototype.md) and [the celebrity media source record](docs/first-sight-sources.md).

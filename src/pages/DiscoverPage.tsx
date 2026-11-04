@@ -1,8 +1,12 @@
+/** Original home route: editorial introduction, collection search, and featured pieces.
+ * Change home-page copy/layout here; edit inventory and journal content in data/catalog.ts.
+ */
 import { Link, useNavigate } from 'react-router-dom';
 import { ItemCard } from '../components/ItemCard';
 import { stories } from '../data/catalog';
 import type { CollectionProps } from '../types';
 
+/** Present the first four catalog items while sharing wardrobe state with App. */
 export default function DiscoverPage({ items, savedIds, onToggleSave }: CollectionProps) {
   const navigate = useNavigate();
   const firstStory = stories[0];
@@ -33,6 +37,7 @@ export default function DiscoverPage({ items, savedIds, onToggleSave }: Collecti
         <div><h2>A feeling. A decade. A favourite.</h2><p>Start with a detail. See where the threads lead.</p></div>
         <form className="search-form" onSubmit={(event) => {
           event.preventDefault();
+          // Pass search through the URL so the Vault can restore and share the same filter.
           const query = String(new FormData(event.currentTarget).get('q') ?? '').trim();
           navigate(query ? `/vault?q=${encodeURIComponent(query)}` : '/vault');
         }}>

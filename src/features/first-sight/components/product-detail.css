@@ -1,0 +1,165 @@
+/* ProductDetailPanel styles only. Global tokens come from src/styles.css.
+ * Change desktop 70/30 proportions in .fs-pdp-layout; mobile stacking is below. */
+
+/* Page frame, return navigation, and desktop product/sidebar columns. */
+.fs-pdp { padding: 12px 0 50px; }
+.fs-pdp-topline { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 0 23px; border-bottom: 1px solid var(--line); }
+.fs-pdp-back { display: inline-flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 12px; }
+.fs-pdp-back:hover { color: var(--accent); }
+.fs-pdp-back > span { font-size: 20px; }
+.fs-pdp-step, .fs-pdp-small-label { font-size: 9px; letter-spacing: 1.8px; line-height: 1.6; font-weight: 700; }
+.fs-pdp-step { color: var(--muted); text-align: right; }
+.fs-pdp-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(245px, 3fr); gap: 34px; align-items: start; padding-top: 30px; }
+.fs-pdp-main, .fs-pdp-product > *, 
+/* Sticky cross-sell column: independent scrolling keeps long references accessible. */
+.fs-pdp-sidebar { min-width: 0; }
+.fs-pdp-product { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: 28px; }
+
+/* Gallery photograph/illustrations, captions, and selectable thumbnail views. */
+.fs-pdp-main-image { margin: 0; position: relative; background: #e9e2d8; }
+.fs-pdp-main-image > img { width: 100%; aspect-ratio: 4 / 5; height: auto; object-fit: contain; }
+.fs-pdp-image-label { position: absolute; top: 15px; left: 15px; padding: 8px 9px; background: var(--paper); font-size: 8px; letter-spacing: 1.5px; }
+.fs-pdp-main-image figcaption { display: flex; justify-content: space-between; gap: 12px; padding: 12px; font-size: 10px; line-height: 1.4; }
+.fs-pdp-main-image figcaption > span:last-child { flex-shrink: 0; color: var(--muted); }
+.fs-pdp-thumbnails { display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: 8px; margin-top: 12px; }
+.fs-pdp-thumbnails > button { border: 1px solid transparent; padding: 4px; display: flex; flex-direction: column; gap: 7px; text-align: left; font-size: 9px; color: var(--muted); }
+.fs-pdp-thumbnails > button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.fs-pdp-thumbnails > button:hover { background: #e9e2d8; }
+.fs-pdp-thumbnails img { width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; }
+.fs-pdp-thumbnails span { padding: 0 2px 3px; line-height: 1.4; }
+.fs-pdp-photo-note { color: var(--muted); font-size: 9px; margin: 12px 0 0; }
+
+/* Product identity, pricing, description, and color specification. */
+.fs-pdp-brand { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.7; color: var(--accent); }
+.fs-pdp-brand > span { color: var(--muted); }
+.fs-pdp-information h2 { font-size: clamp(30px, 3.2vw, 47px); line-height: 1.05; letter-spacing: -1.5px; margin: 12px 0 20px; }
+.fs-pdp-price-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 22px; }
+.fs-pdp-price { font-size: 25px; line-height: 1.2; letter-spacing: -.7px; }
+.fs-pdp-stock-status { font-size: 9px; color: var(--muted); border-left: 1px solid var(--line); padding-left: 12px; line-height: 1.5; max-width: 130px; }
+.fs-pdp-description { font-size: 12px; line-height: 1.8; color: var(--muted); }
+.fs-pdp-color { display: flex; gap: 18px; margin: 23px 0; font-size: 11px; }
+.fs-pdp-color > span { color: var(--muted); }
+.fs-pdp-color > strong { font-weight: 400; }
+
+/* SKU selection states. Disabled styles mirror the stock guards in the component. */
+.fs-pdp-size-picker { border: 0; padding: 0; margin: 0; min-width: 0; }
+.fs-pdp-size-picker legend { font-size: 11px; margin-bottom: 11px; padding: 0; }
+.fs-pdp-sizes { display: flex; flex-wrap: wrap; gap: 8px; }
+.fs-pdp-sizes > button { border: 1px solid var(--line); min-width: 44px; min-height: 44px; padding: 10px 12px; font-size: 11px; position: relative; overflow: hidden; }
+.fs-pdp-sizes > button:hover:not(:disabled), .fs-pdp-sizes > button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.fs-pdp-sizes > button:disabled { color: #a69d93; cursor: not-allowed; }
+.fs-pdp-sold-mark { position: absolute; top: 50%; left: -10%; width: 120%; height: 1px; background: var(--line); transform: rotate(-45deg); }
+.fs-pdp-size-help { min-height: 29px; font-size: 9px; color: var(--muted); margin-top: 10px; line-height: 1.5; overflow-wrap: anywhere; }
+
+/* Add-to-bag, Buy Now, and wardrobe controls; callbacks are owned by FirstSightPage. */
+.fs-pdp-purchase-actions { display: grid; gap: 9px; margin-top: 13px; }
+.fs-pdp-cart, .fs-pdp-buy { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; padding: 13px 16px; font-size: 12px; border: 1px solid var(--accent); transition: background .15s ease; }
+.fs-pdp-cart { background: var(--accent); color: #fff; }
+.fs-pdp-buy { color: var(--accent); }
+.fs-pdp-cart:hover:not(:disabled) { background: #62252a; }
+.fs-pdp-buy:hover:not(:disabled) { background: #e9ded8; }
+.fs-pdp-cart:disabled, .fs-pdp-buy:disabled { opacity: .45; cursor: not-allowed; }
+.fs-pdp-save { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; font-size: 11px; }
+.fs-pdp-save > span { font-size: 18px; color: var(--accent); }
+.fs-pdp-save:hover { color: var(--accent); }
+.fs-pdp-prototype-note { font-size: 9px; color: var(--muted); line-height: 1.6; }
+
+/* Product specification table and the editorial note beneath the main product. */
+.fs-pdp-specifications { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); }
+.fs-pdp-specifications h3 { font-size: 23px; }
+.fs-pdp-specifications dl { margin: 15px 0 0; }
+.fs-pdp-specifications dl > div { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; font-size: 10px; line-height: 1.6; padding: 9px 0; border-bottom: 1px solid #ded6cb; }
+.fs-pdp-specifications dt { color: var(--muted); }
+.fs-pdp-specifications dd { margin: 0; }
+.fs-pdp-editor-note { border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 26px minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; padding: 29px 0; margin-top: 40px; }
+.fs-pdp-editor-index { color: var(--accent); font-size: 27px; line-height: 1; }
+.fs-pdp-editor-note h3 { font-size: clamp(24px, 2.4vw, 34px); line-height: 1.12; margin-top: 12px; letter-spacing: -.6px; }
+.fs-pdp-editor-note h3 em { color: var(--accent); font-weight: 400; }
+.fs-pdp-editor-note p { color: var(--muted); font-size: 11px; line-height: 1.8; margin-top: 25px; }
+.fs-pdp-sidebar { position: sticky; top: 24px; border-left: 1px solid var(--line); padding-left: 27px; max-height: calc(100dvh - 48px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent; padding-right: 8px; }
+.fs-pdp-sidebar-heading { padding-bottom: 22px; }
+.fs-pdp-sidebar-heading .fs-pdp-small-label { color: var(--accent); }
+.fs-pdp-sidebar-heading h3 { font-size: 31px; line-height: 1.1; letter-spacing: -.7px; margin: 9px 0 8px; }
+.fs-pdp-sidebar-heading > p { font-size: 10px; color: var(--muted); }
+
+/* Source-linked celebrity styling cards and their attribution disclosure. */
+.fs-pdp-style-note { border-top: 1px solid var(--line); padding-top: 14px; }
+.fs-pdp-note-label { display: flex; justify-content: space-between; gap: 8px; font-size: 8px; letter-spacing: 1px; line-height: 1.6; font-weight: 700; margin-bottom: 12px; }
+.fs-pdp-note-label > span:last-child { color: var(--muted); }
+.fs-pdp-look-link { display: block; }
+.fs-pdp-look-link img { width: 100%; height: auto; max-height: 300px; object-fit: contain; background: #e9e2d8; }
+.fs-pdp-look-link h4 { font: 25px/1.15 Georgia, 'Times New Roman', serif; margin: 13px 0 5px; letter-spacing: -.4px; }
+.fs-pdp-look-link > p { font-size: 10px; color: var(--muted); line-height: 1.7; }
+.fs-pdp-source { display: flex; justify-content: space-between; align-items: center; font-size: 9px; margin-top: 10px; color: var(--accent); }
+.fs-pdp-look-link:hover .fs-pdp-source { text-decoration: underline; text-underline-offset: 3px; }
+.fs-pdp-look-description { font-size: 10px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
+.fs-pdp-image-credit { font-size: 8px; line-height: 1.6; margin-top: 12px; color: var(--muted); }
+.fs-pdp-image-credit summary { cursor: pointer; width: fit-content; }
+.fs-pdp-image-credit p { margin-top: 5px; }
+
+/* Affordable-product cards interleaved between editorial references. */
+.fs-pdp-alternative { background: #eae3d9; padding: 15px; margin: 22px 0; }
+.fs-pdp-alternative .fs-pdp-note-label { font-size: 7px; letter-spacing: .8px; }
+.fs-pdp-alternative-button { display: grid; grid-template-columns: minmax(60px, .65fr) minmax(0, 1fr); gap: 12px; text-align: left; width: 100%; padding: 0; }
+.fs-pdp-alternative-button > img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+.fs-pdp-alternative-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 7px; min-width: 0; }
+.fs-pdp-alternative-brand { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
+.fs-pdp-alternative-copy strong { font: 19px/1.1 Georgia, 'Times New Roman', serif; letter-spacing: -.3px; }
+.fs-pdp-alternative-copy > span:last-child { font-size: 12px; }
+.fs-pdp-alternative-copy small { font-size: 8px; color: var(--muted); white-space: nowrap; }
+.fs-pdp-alternative-button:hover strong { color: var(--accent); }
+.fs-pdp-alternative > p { font-size: 8px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 11px; margin-top: 13px; }
+.fs-pdp-sidebar-disclosure, .fs-pdp-sidebar-empty { font-size: 9px; line-height: 1.7; color: var(--muted); padding: 15px 0; border-top: 1px solid var(--line); }
+
+/* Wide displays: add breathing room while retaining the 70/30 structure. */
+@media (min-width: 1500px) {
+  .fs-pdp-layout { gap: 46px; }
+  .fs-pdp-product { gap: 38px; }
+  .fs-pdp-sidebar { padding-left: 36px; }
+  .fs-pdp-information h2 { font-size: 52px; }
+}
+
+/* Tablets/narrow desktops: stack product photo and details inside the main column. */
+@media (max-width: 1150px) {
+  .fs-pdp-layout { gap: 25px; grid-template-columns: minmax(0, 7fr) minmax(220px, 3fr); }
+  .fs-pdp-product { grid-template-columns: minmax(0, 1fr); gap: 25px; }
+  .fs-pdp-main-image > img { aspect-ratio: 1; }
+  .fs-pdp-thumbnails { grid-template-columns: repeat(auto-fit, minmax(60px, 90px)); }
+  .fs-pdp-information h2 { font-size: 42px; }
+  .fs-pdp-description { max-width: 48ch; }
+  .fs-pdp-purchase-actions { grid-template-columns: 1fr 1fr; }
+  .fs-pdp-save { grid-column: 1 / -1; }
+  .fs-pdp-sidebar { padding-left: 20px; }
+  .fs-pdp-editor-note { grid-template-columns: 24px minmax(0, 1fr); gap: 13px; }
+  .fs-pdp-editor-note p { grid-column: 2; margin-top: 0; }
+}
+
+/* Mobile: move the sidebar beneath the product and let the page scroll naturally. */
+@media (max-width: 760px) {
+  .fs-pdp { padding-top: 0; }
+  .fs-pdp-topline { padding-bottom: 15px; }
+  .fs-pdp-step { font-size: 7px; letter-spacing: 1px; max-width: 110px; }
+  .fs-pdp-back { font-size: 10px; }
+  .fs-pdp-layout { display: block; padding-top: 20px; }
+  .fs-pdp-product { gap: 26px; }
+  .fs-pdp-main-image > img { aspect-ratio: 4 / 5; max-height: 70dvh; object-fit: contain; }
+  .fs-pdp-thumbnails { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+  .fs-pdp-information h2 { font-size: clamp(35px, 9vw, 48px); max-width: 20ch; }
+  .fs-pdp-description { font-size: 13px; max-width: none; }
+  .fs-pdp-specifications dl > div { font-size: 11px; grid-template-columns: 90px minmax(0, 1fr); }
+  .fs-pdp-editor-note { margin-top: 30px; padding: 24px 0; }
+  .fs-pdp-editor-note h3 { font-size: 30px; }
+  .fs-pdp-sidebar { position: static; max-height: none; overflow: visible; border-left: 0; padding: 30px 0 0; margin-top: 15px; }
+  .fs-pdp-inspiration-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+  .fs-pdp-alternative { margin: 0 0 22px; padding: 12px; }
+  .fs-pdp-alternative-button { display: flex; flex-direction: column; }
+  .fs-pdp-alternative-button > img { aspect-ratio: 4 / 5; }
+  .fs-pdp-style-note { margin-bottom: 25px; }
+  .fs-pdp-look-link h4 { font-size: 23px; }
+  .fs-pdp-note-label { flex-wrap: wrap; font-size: 7px; letter-spacing: .7px; }
+}
+
+/* Respect the operating system preference for reduced interface motion. */
+@media (prefers-reduced-motion: reduce) {
+  .fs-pdp-cart, .fs-pdp-buy { transition: none; }
+}

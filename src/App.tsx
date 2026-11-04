@@ -1,3 +1,7 @@
+/**
+ * Application shell: owns routes, desktop/mobile navigation, wardrobe persistence,
+ * and shared notifications. Page-specific FirstSight state lives in FirstSightPage.
+ */
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { items } from './data/catalog';
@@ -8,14 +12,18 @@ import CatalogPage from './pages/CatalogPage';
 import ItemPage from './pages/ItemPage';
 import StoriesPage from './pages/StoriesPage';
 import SubmitPage from './pages/SubmitPage';
+import FirstSightPage from './pages/FirstSightPage';
 
+// Wardrobe entries must refer to this catalog; update the catalog when adding live IDs.
 const validIds = items.map(item => item.id);
 
+/** Read stored favorites through the domain validator; unavailable storage starts empty. */
 function readSavedItems() {
   try { return parseSavedItems(localStorage.getItem(SAVED_ITEMS_KEY), validIds); }
   catch { return []; }
 }
 
+/** Render the shared shell and pass one consistent wardrobe state into collection pages. */
 export default function App() {
   const [savedIds, setSavedIds] = useState(readSavedItems);
   const [notice, setNotice] = useState('');
@@ -23,8 +31,10 @@ export default function App() {
   const mainRef = useRef<HTMLElement>(null);
   const previousPath = useRef(location.pathname);
 
+  // Keep route titles, keyboard focus, and scroll position in sync after navigation.
   useEffect(() => {
-    const title = location.pathname.startsWith('/vault') ? 'The Vault'
+    const title = location.pathname.startsWith('/first-sight') ? 'FirstSight'
+      : location.pathname.startsWith('/vault') ? 'The Vault'
       : location.pathname.startsWith('/submit') ? 'Submit a piece'
       : location.pathname.startsWith('/wardrobe') ? 'My wardrobe'
       : location.pathname.startsWith('/stories') ? 'Stories'
@@ -37,13 +47,16 @@ export default function App() {
     }
   }, [location.pathname]);
 
+  // A new wardrobe notice replaces the previous timeout instead of clearing early.
   useEffect(() => {
     if (!notice) return;
     const timer = window.setTimeout(() => setNotice(''), 4500);
     return () => window.clearTimeout(timer);
   }, [notice]);
 
+  // The storage event synchronizes favorites changed in another tab on this origin.
   useEffect(() => {
+    /** Reload favorites when another tab changes or clears this origin's stored data. */
     const sync = (event: StorageEvent) => {
       if (event.key === SAVED_ITEMS_KEY || event.key === null) setSavedIds(readSavedItems());
     };
@@ -51,6 +64,7 @@ export default function App() {
     return () => window.removeEventListener('storage', sync);
   }, []);
 
+  /** Update shared favorites immediately, then persist them when browser storage permits. */
   const onToggleSave = (id: string) => {
     const next = toggleSavedItem(savedIds, id, validIds);
     setSavedIds(next);
@@ -61,15 +75,17 @@ export default function App() {
       setNotice('Browser storage is unavailable. Saved pieces will last only for this visit.');
     }
   };
+  // Collection pages receive these dependencies rather than owning separate wardrobe copies.
   const collectionProps = { items, savedIds, onToggleSave };
 
   return <>
     <a className="skip" href="#main">Skip to content</a>
     <div className="edition">THE PAST HAS GOOD TASTE.<span>A NEW CHAPTER IN VINTAGE</span><span>FRONTEND DEMO · VOL. 01</span></div>
+    {/* Desktop navigation. Keep the mobile navigation below aligned when adding a route. */}
     <header>
       <Link className="logo" to="/" aria-label="LoomStory home">LoomStory<span>®</span></Link>
       <nav aria-label="Main navigation">
-        <NavLink to="/" end>Discover</NavLink><NavLink to="/vault">The Vault</NavLink><NavLink to="/stories">Stories</NavLink>
+        <NavLink to="/" end>Discover</NavLink><NavLink to="/first-sight">FirstSight</NavLink><NavLink to="/vault">The Vault</NavLink><NavLink to="/stories">Stories</NavLink>
       </nav>
       <div className="utilities">
         <Link to="/vault" aria-label="Search the collection">⌕ <span>Search</span></Link>
@@ -78,13 +94,16 @@ export default function App() {
       </div>
     </header>
     <main id="main" ref={mainRef} tabIndex={-1}>
+      {/* Route registry: FirstSight stays alongside the original comparison pages. */}
       <Routes>
         <Route path="/" element={<DiscoverPage {...collectionProps} />} />
+        <Route path="/first-sight" element={<FirstSightPage {...collectionProps} />} />
         <Route path="/vault" element={<CatalogPage {...collectionProps} />} />
         <Route path="/items/:id" element={<ItemPage {...collectionProps} />} />
         <Route path="/stories" element={<StoriesPage />} />
         <Route path="/stories/:id" element={<StoriesPage />} />
         <Route path="/submit" element={<SubmitPage />} />
+        {/* The small wardrobe view stays inline because its data is already owned here. */}
         <Route path="/wardrobe" element={<>
           <div className="page-heading"><div className="eyebrow">Your personal archive</div><h1>My wardrobe.</h1><p>Pieces to come back to. Saved in this browser, on this device.</p></div>
           <section className="section wardrobe-section"><div className="section-head"><h2>Saved pieces · {savedIds.length}</h2><Link to="/vault">Explore the collection ↗</Link></div>
@@ -102,8 +121,10 @@ export default function App() {
       <div><Link to="/wardrobe">My wardrobe</Link><Link to="/submit">Submit a piece</Link><Link to="/about">About this prototype</Link></div>
       <small>Frontend demo · Fictional inventory · Illustrative photography · No live AI, accounts, or transactions</small>
     </footer>
+    {/* Fixed mobile shortcuts; responsive rules live in styles.css and first-sight.css. */}
     <nav className="mobile-nav" aria-label="Mobile navigation">
       <NavLink to="/" end><span aria-hidden="true">⌂</span><span>Discover</span></NavLink>
+      <NavLink to="/first-sight"><span aria-hidden="true">✧</span><span>FirstSight</span></NavLink>
       <NavLink to="/vault"><span aria-hidden="true">◇</span><span>Explore</span></NavLink>
       <NavLink to="/submit"><span aria-hidden="true">＋</span><span>Submit</span></NavLink>
       <NavLink to="/wardrobe"><span aria-hidden="true">♡</span><span>Wardrobe</span></NavLink>
@@ -112,6 +133,7 @@ export default function App() {
   </>;
 }
 
+/** Explain the prototype's current capabilities and future integration boundaries. */
 function AboutPage() {
   return <article className="article">
     <div className="eyebrow">Behind the prototype</div><h1>A concept made tangible.</h1>
