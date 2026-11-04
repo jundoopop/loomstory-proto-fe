@@ -14,26 +14,38 @@ export const chloePhoto: PhotoInput = {
   name: 'Chloé Paddington Bag example',
 };
 
-/** Fixed example identity; selecting another photograph still demonstrates this same item. */
+/** Design history and the pictured reissue are kept separate; neither authenticates an upload. */
 export const chloeIdentity: GarmentIdentity = {
   brand: 'Chloé',
   name: 'Paddington Bag',
   year: '2005',
-  season: 'Original Paddington collection',
+  season: 'Original design · reissue photograph',
   description: 'A soft silhouette, expressive hardware, and a distinctive padlock. Explore the story and details of the Chloé Paddington Bag through this authored example.',
   mode: 'prototype',
   tags: ['Paddington', 'Soft silhouette', 'Signature padlock'],
 };
 
-/** User-supplied editorial copy and illustrative resale figures; no live appraisal is performed. */
+/** Primary references for the historical model and this specific supplied product photograph. */
+export const chloeSources = [
+  { title: 'Chloé · pictured suede Paddington specifications', url: 'https://www.chloe.com/en-us/p/bags/shoulder-bag/CH26AS802S77206.html' },
+  { title: 'Chloé Attitudes · official exhibition release', url: 'https://ualresearchonline.arts.ac.uk/id/eprint/5514/6/judith_clark_Chloe_exhibition_erelease_EN.pdf' },
+  { title: 'The Jewish Museum · Chloé Archive exhibition texts', url: 'https://s3.amazonaws.com/tjmassets/Chloe_Exhibition_Texts_Final_for_PR.pdf' },
+];
+
+/**
+ * User-supplied editorial concept, checked against the primary references above.
+ * A current suede reissue must not inherit unverified claims about every vintage version.
+ * Valuation percentages remain an explicitly authored scenario, never market measurements.
+ */
 export const chloeAnalysis: ItemAnalysis = {
   image: chloePhoto.url,
   imageAlt: 'Brown suede Chloé Paddington Bag with leather handles, gold-tone padlock, and hanging key',
+  imagePresentation: 'trim-top-space',
   cards: [
     {
       id: 'design-concept', title: 'Design concept',
       bullets: [
-        'Created in 2005 by legendary designer Phoebe Philo, it became a millennium-defining It Bag.',
+        'Introduced by Phoebe Philo for Spring/Summer 2005, the Paddington became a defining It Bag of the era.',
         'Blends a relaxed French bohemian spirit with equestrian vintage elements, challenging the conventional image of refined luxury handbags.',
         'Combines industrial-style metal hardware with a soft leather body, expressing effortless French luxury and making it a perennial vintage favorite.',
       ],
@@ -42,28 +54,29 @@ export const chloeAnalysis: ItemAnalysis = {
       id: 'key-features', title: 'Key features',
       bullets: [
         'Soft, slouchy, pillow-like silhouette.',
-        'Signature oversized brass padlock wrapped in leather, complete with its original key - the soul of the bag.',
-        'Wraparound C-shaped straps, buckles, rivets, and equestrian-inspired details.',
+        'An oversized, leather-wrapped padlock and hanging key form its signature focal point.',
+        'C-shaped buckles, curved handles, and visible rivet details balance its soft body.',
       ],
     },
     {
       id: 'craftsmanship', title: 'Craftsmanship',
       bullets: [
-        'Vegetable-tanned washed leather undergoes multiple softening treatments; hand-stitched by Italian artisans at the original workshop.',
-        "Brass hardware uses a vintage-style finish. The lock, rivets, and buckles are individually molded and polished. The 52 rivets around the body commemorate the brand's founding year.",
-        'Symmetrical stitching and reinforced, wear-resistant corners.',
+        'Chloé lists Italy for the pictured reissue’s tanning, finishing, and manufacture.',
+        'Visible stitching follows the shaped leather trim; rounded handle attachments frame the front.',
+        'The photographed reissue has a single zip and a lighter construction than the original design.',
       ],
     },
     {
       id: 'common-materials', title: 'Common materials',
       bullets: [
-        'MAINSTAYS: Grained buffalo leather and washed vegetable-tanned calfskin, with naturally fine texture and good durability. Relatively easy to care for and generally the most stable options on the secondhand market.',
-        'VARIATIONS: Suede, shearling, distressed oiled-waxed leather, and vintage-finish suede. These create a stronger vintage mood but require more care and tend to have lower resale liquidity than smooth calfskin.',
+        'ARCHIVE: The museum’s 2005–2006 examples are described as washed calf leather with brass fittings.',
+        'PICTURED REISSUE: Suede calfskin, calfskin lining, and a Zamak padlock. Specifications vary by version.',
+        'Chloé advises protecting this suede version from moisture, abrasion, light, and heat.',
       ],
     },
   ],
   resale: {
-    description: 'Original vintage Paddington bags in 95% condition with a complete set: estimated resale value retention of 32%-40%. The popular 20th-anniversary reissue: estimated retention of 28%-35%. Suede and special colors typically depreciate more.',
+    description: 'Sample scenario: a complete vintage bag in approximately 95% condition retains 32–40% of its original price; a 20th-anniversary reissue retains 28–35%. These are authored assumptions for this prototype, not measured resale rates. A real valuation would depend on the exact edition, condition, accessories, and comparable sales.',
     minimum: 700, maximum: 1000, currency: 'EUR', basis: 'prototype',
   },
 };
@@ -106,12 +119,5 @@ export const chloeLooks: OutfitLook[] = [
     credit: 'Getty Images, via Who What Wear', tags: ['Runway', 'Tailoring', 'Shoulder bag'], kind: 'Editorial',
     description: 'A dark shoulder bag contrasted with a white runway look. Supplied as contextual inspiration; the exact bag model is not verified.',
   },
-  {
-    id: 'paddington-styling-05', celebrity: 'On-screen reference', region: 'Global',
-    title: 'A pale bag and a bright city outfit',
-    image: `${assetDirectory}/styling-05.jpg`, width: 1177, height: 1576,
-    sourceLabel: 'Provided reference',
-    credit: 'User-provided styling reference', tags: ['On screen', 'Shoulder bag', 'Color'], kind: 'On screen',
-    description: 'A pale shoulder bag styled with a warm jacket and a colorful outfit. Supplied as an on-screen reference; the exact bag model is not verified.',
-  },
+  // Add the on-screen reference only after its missing source photograph is supplied.
 ];

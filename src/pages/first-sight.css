@@ -1,7 +1,7 @@
 /*
- * FirstSight visual controls: shell/progress → upload/help card → outfit masonry
- * → identity → discovery/purchase cards → bag → responsive overrides.
- * Stage logic lives in FirstSightPage.tsx; the 70/30 PDP is styled in product-detail.css.
+ * Shared FirstSight styles: page shell, upload/help card, outfit masonry,
+ * purchase cards, and bag. The continuous three-section layout is in
+ * first-sight-flow.css; component-local styles live beside their TSX modules.
  * Keep feature selectors under .first-sight or the fs- prefix to limit style collisions.
  */
 
@@ -1223,10 +1223,10 @@
   margin-bottom: 20px;
 }
 
-/* FirstSight notifications are separate from App's shared wardrobe toast. */
+/* Leave room below for App's wardrobe notification when saves and bag actions happen together. */
 .fs-toast {
   position: fixed;
-  bottom: 28px;
+  bottom: 92px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 11;
@@ -1439,7 +1439,7 @@
   }
 
   .fs-toast {
-    bottom: 92px;
+    bottom: 180px;
   }
 }
 

@@ -1,34 +1,43 @@
 /**
- * FirstSight flow coordinator. Owns stage transitions, request cancellation, photo
- * lifetime, moodboard saves, and the sample bag; child components render each area.
- * Layout rules: first-sight.css. Data boundary: FirstSightGateway. See docs/code-guide.md.
+ * FirstSight's continuous editorial → recognition → shopping journey.
+ * Sections stay mounted while photo/selection state changes. The page owns
+ * request cancellation, object URLs, wardrobe callbacks, and the local cart.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CollectionProps } from '../types';
 import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVariant } from '../features/first-sight/types';
 import type { FirstSightGateway } from '../features/first-sight/services/contracts';
 import { prototypeGateway } from '../features/first-sight/services/prototype';
-import { outfitLooks } from '../features/first-sight/looks';
 import { chloePhoto } from '../features/first-sight/chloe';
 import { useDiscoveryTimer } from '../features/first-sight/useDiscoveryTimer';
+import { TrendHero } from '../features/first-sight/components/TrendHero';
 import { PhotoUploadPanel } from '../features/first-sight/components/PhotoUploadPanel';
+import { RecognitionResults } from '../features/first-sight/components/RecognitionResults';
+import { FashionDossier } from '../features/first-sight/components/FashionDossier';
 import { OutfitMasonry } from '../features/first-sight/components/OutfitMasonry';
 import { PurchaseGrid } from '../features/first-sight/components/PurchaseGrid';
 import { ProductDetailPanel } from '../features/first-sight/components/ProductDetailPanel';
 import { CartPreview } from '../features/first-sight/components/CartPreview';
 import './first-sight.css';
+import './first-sight-flow.css';
 
-/** The focused catalog is a discovery layout variant, not a separate journey stage. */
-type Stage = 'inspiration' | 'identity' | 'discovery' | 'product';
-/** Inject a future gateway here; shared wardrobe operations continue to come from App. */
+/** A future server adapter can replace the local gateway without changing the presentation. */
 type Props = CollectionProps & { gateway?: FirstSightGateway };
 
-/** Coordinate inspiration → identity → discovery → product without changing routes. */
+/** Honor reduced motion for explicit section links and product-detail navigation. */
+function scrollToSection(element: HTMLElement | null) {
+  element?.scrollIntoView({
+    block: 'start',
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+  });
+  element?.focus({ preventScroll: true });
+}
+
+/** Keep the user's photograph, selected study, shopping edit, and saved state coordinated. */
 export default function FirstSightPage({ savedIds, onToggleSave, gateway = prototypeGateway }: Props) {
-  // Journey and photo state reset for each scan; the bag and saved looks last for this page visit.
-  const [stage, setStage] = useState<Stage>('inspiration');
   const [photo, setPhoto] = useState<PhotoInput | null>(null);
   const [result, setResult] = useState<DiscoveryResult | null>(null);
+  const [selectedId, setSelectedId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [sessionKey, setSessionKey] = useState(0);
@@ -38,136 +47,190 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [notice, setNotice] = useState('');
-  // Separate request ownership from DOM refs used to preserve focus during layout changes.
+
   const controller = useRef<AbortController | null>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
+  const recognitionRef = useRef<HTMLElement>(null);
   const matchesRef = useRef<HTMLElement>(null);
   const feedRef = useRef<HTMLElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
-  /** Expand shopping after timeout and keep the shorter catalog within reach of the viewport. */
+  const selected = result?.items.find(item => item.id === selectedId) ?? result?.items[0];
+
+  /** The timeout changes only the shopping layout, never the recognition/dossier section. */
   const collapseFeed = useCallback(() => {
     setCatalogFocused(true);
-    setNotice('Your matches now have more room. You can bring inspiration back at any time.');
-    requestAnimationFrame(() => {
-      const bounds = matchesRef.current?.getBoundingClientRect();
-      if (bounds && (bounds.bottom < 120 || bounds.top > window.innerHeight)) matchesRef.current?.scrollIntoView({ block: 'start' });
-    });
+    setNotice('More room for your finds. Show inspiration whenever you like.');
   }, []);
-  // Only the visible discovery feed participates; PDP and bag browsing pause the opportunity.
-  const timer = useDiscoveryTimer({ enabled: stage === 'discovery' && !catalogFocused && !cartOpen, sessionKey, feedRef, onExpire: collapseFeed });
+  const timer = useDiscoveryTimer({
+    enabled: Boolean(selected?.looks.length) && !loading && !catalogFocused && !cartOpen && !product,
+    sessionKey, feedRef, onExpire: collapseFeed,
+  });
 
-  // Leaving the page cancels work so a late response cannot update an unmounted flow.
-  useEffect(() => () => controller.current?.abort(), []);
-  // Stage changes transfer focus to the newly mounted content without moving it a second time.
-  useEffect(() => {
-    if (stage === 'discovery') matchesRef.current?.focus({ preventScroll: true });
-  }, [stage]);
-  // Accepted upload URLs are owned here; the upload component cleans only unfinished reads.
+  // The page owns accepted URLs; the upload workspace owns only unfinished image decodes.
   useEffect(() => () => { if (photo?.kind === 'upload') URL.revokeObjectURL(photo.url); }, [photo]);
-  // FirstSight notices have their own lifetime, separate from App's wardrobe notifications.
+  useEffect(() => () => controller.current?.abort(), []);
   useEffect(() => {
     if (!notice) return;
     const timeout = window.setTimeout(() => setNotice(''), 5000);
     return () => window.clearTimeout(timeout);
   }, [notice]);
-  // Reveal the result in its original column. Reading or scrolling never dismisses the analysis.
-  useEffect(() => {
-    if (stage !== 'identity') return;
-    const frame = requestAnimationFrame(() => {
-      panelRef.current?.scrollIntoView({ block: 'start' });
-      panelRef.current?.querySelector<HTMLElement>('#fs-upload-title')?.focus({ preventScroll: true });
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [stage]);
 
-  /** Start a fresh photo session; only its non-aborted gateway result may reveal an identity. */
-  async function discover(nextPhoto: PhotoInput) {
+  /** Replace/remove invalidates recognition immediately while preserving the visit's cart. */
+  function changePhoto(nextPhoto: PhotoInput | null) {
+    controller.current?.abort();
+    setPhoto(nextPhoto); setResult(null); setSelectedId(''); setProduct(null);
+    setLoading(false); setError(''); setNotice(''); setCatalogFocused(false);
+  }
+
+  /** Explicit Analyze action; choosing a file alone never starts the sample recognition. */
+  async function analyze() {
+    if (!photo || loading) return;
     controller.current?.abort();
     const request = new AbortController();
     controller.current = request;
-    setPhoto(nextPhoto); setLoading(true); setError(''); setNotice(''); setStage('inspiration');
-    setResult(null); setProduct(null); setCatalogFocused(false); setSessionKey(value => value + 1);
+    setLoading(true); setError(''); setResult(null); setProduct(null);
+    setSelectedId(''); setCatalogFocused(false); setSessionKey(value => value + 1);
     try {
-      const response = await gateway.discover(nextPhoto, request.signal);
-      if (request.signal.aborted) return;
-      setResult(response); setStage('identity');
+      const response = await gateway.discover(photo, request.signal);
+      if (request.signal.aborted || controller.current !== request) return;
+      setResult(response); setSelectedId(response.items[0]?.id ?? '');
+      if (!response.items.length) setError('No studies were returned. Try the sample photograph or analyze again.');
     } catch {
-      if (!request.signal.aborted) setError('The sample journey could not be prepared. Try the photo again.');
-    } finally { if (!request.signal.aborted) setLoading(false); }
+      if (!request.signal.aborted) setError('The sample analysis could not be prepared. Your photograph is still here; please try again.');
+    } finally {
+      if (!request.signal.aborted && controller.current === request) setLoading(false);
+    }
   }
 
-  /** Return to photo selection while keeping this visit's bag and saved inspiration. */
-  function changePhoto() {
-    controller.current?.abort(); setLoading(false); setStage('inspiration'); setError(''); setNotice('');
-    setResult(null); setPhoto(null); setProduct(null); setCatalogFocused(false);
-    requestAnimationFrame(() => { headingRef.current?.scrollIntoView({ block: 'start' }); headingRef.current?.focus({ preventScroll: true }); });
+  /** Cancellation keeps the selected image available for another attempt. */
+  function cancelAnalysis() {
+    controller.current?.abort();
+    setLoading(false); setError('');
   }
 
-  /** Enter or return to discovery, then position and focus the mounted results section. */
-  function showMatches() {
-    setStage('discovery');
-    requestAnimationFrame(() => { matchesRef.current?.scrollIntoView({ block: 'start' }); matchesRef.current?.focus({ preventScroll: true }); });
+  /** Switching a study updates both sections together without scrolling or replacing the photo. */
+  function selectRecognition(id: string) {
+    setSelectedId(id);
+    setProduct(null);
   }
 
-  /** Open the inline PDP; its keyed content resets gallery and size choices for the new item. */
-  function selectProduct(nextProduct: PurchaseOption) {
-    setProduct(nextProduct); setStage('product');
-    requestAnimationFrame(() => { productRef.current?.scrollIntoView({ block: 'start' }); productRef.current?.focus({ preventScroll: true }); });
+  /** Product details open within Section 3; every earlier section remains in the document. */
+  function openProduct(nextProduct: PurchaseOption) {
+    setProduct(nextProduct);
+    requestAnimationFrame(() => scrollToSection(productRef.current));
   }
 
-  /** Add one SKU within sample stock limits; Buy Now also opens the local bag preview. */
+  /** Close only the inline PDP and return to the retained shopping grid. */
+  function closeProduct() {
+    setProduct(null);
+    requestAnimationFrame(() => scrollToSection(matchesRef.current));
+  }
+
+  /** Clamp cart quantities to the chosen sample SKU's stock, including rapid repeated clicks. */
   function addToCart(nextProduct: PurchaseOption, variant: PurchaseVariant, buyNow = false) {
     if (!variant.stock) return;
     const existing = cart.find(line => line.sku === variant.sku);
     if (existing && existing.quantity >= variant.stock) {
-      setNotice('Your bag already contains all available sample stock for this size.');
+      setNotice('Your bag already contains the available sample stock for this option.');
       if (buyNow) setCartOpen(true);
       return;
     }
-    // Clamp again inside the updater so rapid actions cannot exceed the variant's stock.
     setCart(current => {
       const line = current.find(item => item.sku === variant.sku);
-      return line ? current.map(item => item.sku === variant.sku ? { ...item, quantity: Math.min(item.quantity + 1, variant.stock) } : item)
+      return line
+        ? current.map(item => item.sku === variant.sku ? { ...item, quantity: Math.min(item.quantity + 1, variant.stock) } : item)
         : [...current, { product: nextProduct, sku: variant.sku, size: variant.size, quantity: 1 }];
     });
-    setNotice(`${nextProduct.title}, size ${variant.size}, added to your sample bag.`);
+    setNotice(nextProduct.title + ' added to your sample bag.');
     if (buyNow) setCartOpen(true);
   }
 
-  // Derived UI props keep header progress and moodboard hearts consistent across stage remounts.
-  const step = stage === 'inspiration' ? 1 : stage === 'product' ? 3 : 2;
   const count = cart.reduce((total, line) => total + line.quantity, 0);
-  const lookSaveProps = { savedLookIds, onToggleSaveLook: (id: string) => setSavedLookIds(current => current.includes(id) ? current.filter(value => value !== id) : [...current, id]) };
+  const lookSaveProps = {
+    savedLookIds,
+    onToggleSaveLook: (id: string) => setSavedLookIds(current => current.includes(id)
+      ? current.filter(value => value !== id) : [...current, id]),
+  };
 
-  return <div className="first-sight">
-    <div className="fs-page-top"><div><span className="fs-section-kicker">A NEW WAY TO FIND YOUR NEXT CHAPTER</span><h1 ref={headingRef} tabIndex={-1}>First sight<span>.</span></h1></div><div className="fs-page-intro"><p>You know it when you see it.<br />Find the piece. Follow its possibilities.</p><span className="fs-prototype-pill"><i aria-hidden="true" /> INTERACTIVE PROTOTYPE</span></div></div>
-    <div className="fs-journey-bar"><ol aria-label="FirstSight journey"><li aria-current={step === 1 ? 'step' : undefined}><span>01</span> A first look</li><li aria-hidden="true">→</li><li aria-current={step === 2 ? 'step' : undefined}><span>02</span> The connection</li><li aria-hidden="true">→</li><li aria-current={step === 3 ? 'step' : undefined}><span>03</span> Make it yours</li></ol><button className="fs-bag-button" onClick={() => setCartOpen(true)}>Your bag <span>{count}</span></button></div>
-    {/* Review shortcuts use the same handlers as the normal upload and timeout paths. */}
-    <details className="fs-prototype-guide"><summary>Try the prototype <span aria-hidden="true">＋</span></summary><div><p>Choose a photo or the Chloé sample → read the item analysis → explore buying options → choose a piece → preview checkout. All identification, pricing, and shopping results are demonstrations.</p><div className="fs-guide-actions"><button type="button" disabled={loading} onClick={() => void discover(chloePhoto)}>Start sample journey ↗</button>{stage === 'discovery' && !catalogFocused && <button type="button" onClick={collapseFeed}>Preview the 45-second outcome ↗</button>}</div><p className="fs-muted">In discovery, inspiration makes room for shopping after 45 active seconds without an interaction. Hidden tabs and offscreen feeds pause the clock. Your analysis stays open until you choose to continue.</p></div></details>
+  return <div className="first-sight fs-continuous">
+    <div className="fs-page-top">
+      <div><span className="fs-section-kicker">THE FASHION ENCYCLOPEDIA / VOL. 01</span><h1>First sight<span>.</span></h1></div>
+      <div className="fs-page-intro"><p>A photograph. A piece of history.<br />A story waiting to be worn.</p><span className="fs-prototype-pill"><i aria-hidden="true" /> INTERACTIVE PROTOTYPE</span></div>
+    </div>
+    <div className="fs-journey-bar">
+      <nav aria-label="FirstSight sections">
+        <a href="#fs-trends">01 <span>Find inspiration</span></a>
+        <a href="#fs-recognition">02 <span>Discover the story</span></a>
+        <a href="#fs-similar-pieces">03 <span>Find your piece</span></a>
+      </nav>
+      <button className="fs-bag-button" onClick={() => setCartOpen(true)}>Your bag <span>{count}</span></button>
+    </div>
 
-    {error && <p className="fs-error" role="alert">{error}</p>}
-    {/* Keep this shell mounted through upload → loading → result; only the panel contents change. */}
-    {(stage === 'inspiration' || stage === 'identity') && <div className="fs-start-layout" ref={panelRef}>
-      <PhotoUploadPanel photo={photo} busy={loading} result={stage === 'identity' ? result : null} onReady={nextPhoto => void discover(nextPhoto)} onExplore={showMatches} onChangePhoto={changePhoto} />
-      <OutfitMasonry key={stage === 'identity' ? `analysis-${sessionKey}` : 'inspiration'} looks={stage === 'identity' && result ? result.looks : outfitLooks} {...lookSaveProps} itemContext={stage === 'identity'} />
-    </div>}
+    <TrendHero {...lookSaveProps} />
 
-    {/* Shopping is an explicit next step; the compact summary also returns to the full analysis. */}
-    {result && (stage === 'discovery' || stage === 'product') && <>
-      <div className="fs-photo-summary"><img src={result.analysis.image} alt={result.analysis.imageAlt} /><div><span>SAMPLE IDENTIFICATION</span><strong>{result.identity.name} <span>· {result.identity.year}</span></strong></div><button onClick={() => setStage('identity')}>View analysis ↗</button><button onClick={changePhoto}>Change photo ↗</button></div>
+    {/* The grid itself defines the sticky boundary: the upload column ends with Section 2. */}
+    <section id="fs-recognition" className="fs-recognition-section" ref={recognitionRef} tabIndex={-1} aria-labelledby="fs-recognition-title">
+      <div className="fs-chapter-label"><span>02 / A CLOSER LOOK</span><span>FROM INSPIRATION TO UNDERSTANDING</span></div>
+      <div className="fs-recognition-layout">
+        <PhotoUploadPanel photo={photo} busy={loading} hasResults={Boolean(selected)}
+          onPhotoChange={changePhoto} onAnalyze={() => void analyze()} onCancel={cancelAnalysis} />
+        <div className="fs-recognition-content">
+          <div className="fs-recognition-heading">
+            <span className="fs-section-kicker">THE STORY IS IN THE DETAILS</span>
+            <h2 id="fs-recognition-title">Discover the Story<span>.</span></h2>
+            <p>Every piece has a history. Uncover the design, culture, and craftsmanship behind your inspiration.</p>
+          </div>
+          <p className="fs-sr-only" role="status">{loading ? 'Preparing five demonstration studies.' : selected ? 'Five sample studies ready. Choose a piece to explore its story.' : ''}</p>
+          {error && <p className="fs-error" role="alert">{error}</p>}
+          {loading ? <div className="fs-recognition-loading" aria-hidden="true">
+            <span className="fs-section-kicker">LOOKING CLOSER</span><h3>A story taking shape.</h3>
+            <p>Gathering five sample studies, their design details, and a few possibilities for your wardrobe.</p>
+            <div className="fs-result-skeletons">{[0, 1, 2, 3, 4].map(index => <span key={index} />)}</div>
+            <div className="fs-dossier-skeleton" />
+          </div> : selected && result ? <>
+            <RecognitionResults items={result.items} selectedId={selected.id} onSelect={selectRecognition} />
+            <FashionDossier key={selected.id} item={selected} onExplore={() => scrollToSection(matchesRef.current)} />
+          </> : <div className="fs-recognition-empty">
+            <div className="fs-empty-copy"><span className="fs-section-kicker">AN OPEN INVITATION</span><h3>Start with a detail.<br /><em>Stay for the story.</em></h3><p>Choose a photograph, then select Analyze to explore five prepared fashion studies.</p><button className="fs-text-button" onClick={() => changePhoto(chloePhoto)}>Use the Chloé example ↗</button></div>
+            <figure><img src={chloePhoto.url} alt="Chloé Paddington Bag, a preview of the example study" /><figcaption>THE PADDINGTON / A STORY TO DISCOVER</figcaption></figure>
+          </div>}
+        </div>
+      </div>
+    </section>
 
-      {/* Discovery uses 50/50 columns; the focused modifier expands shopping and unmounts the feed. */}
-      {stage === 'discovery' && <section ref={matchesRef} tabIndex={-1} className={`fs-discovery${catalogFocused ? ' fs-discovery-focused' : ''}`} aria-label="Purchase matches and outfit inspiration">
-        <div className="fs-purchase-section"><div className="fs-feed-heading"><div><span className="fs-section-kicker">02 / FIND YOUR VERSION</span><h2>{catalogFocused ? 'A little more room to find it.' : 'The pieces. The possibilities.'}</h2></div><span className="fs-look-count">{result.products.length}<br /><span>sample pieces</span></span></div><p className="fs-feed-description">An imagined edit of archive finds and accessible alternatives. Sample prices, sizes, and stock.</p><div className="fs-shop-toolbar"><span>{catalogFocused ? 'Focused on your matches' : 'THE LOOMSTORY EDIT'}</span>{catalogFocused ? <button onClick={() => { timer.engage(); setCatalogFocused(false); setNotice('Outfit inspiration restored. It will stay open for this photo.'); }}>Show inspiration ↗</button> : <span>Curated for the feeling</span>}</div><PurchaseGrid products={result.products} savedIds={savedIds} onToggleSave={onToggleSave} onSelect={selectProduct} /></div>
-        {!catalogFocused && <aside ref={feedRef} className="fs-context-section" aria-label="Contextual outfit feed" onClickCapture={timer.engage} onKeyDownCapture={event => { if (event.key === 'Enter' || event.key === ' ') timer.engage(); }}><OutfitMasonry looks={result.looks} {...lookSaveProps} contextual itemContext onEngage={timer.engage} /><p className="fs-feed-state">{timer.engaged ? 'This inspiration board will stay with your matches.' : 'Explore a look to keep this inspiration board open.'}</p></aside>}
-      </section>}
+    {/* This section is always present. Its edit follows the selected study, not a separate route. */}
+    <section id="fs-similar-pieces" className="fs-similar-section" ref={matchesRef} tabIndex={-1} aria-labelledby="fs-similar-title">
+      <div className="fs-chapter-label"><span>03 / THE NEXT CHAPTER</span><span>CURATED POSSIBILITIES</span></div>
+      <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Similar Pieces<span>.</span></h2><p>Continue the story. Discover pieces with a similar design heritage.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
 
-      {/* PDP content owns local gallery/size selection; this page retains navigation and bag state. */}
-      {stage === 'product' && product && <div ref={productRef} tabIndex={-1}><ProductDetailPanel product={product} alternatives={result.products.filter(option => option.category === product.category)} looks={result.looks} saved={savedIds.includes(product.id)} onToggleSave={onToggleSave} onBack={showMatches} onSelectProduct={selectProduct} onAddToCart={(item, variant) => addToCart(item, variant)} onBuyNow={(item, variant) => addToCart(item, variant, true)} /></div>}
-    </>}
+      {selected ? <>
+        <div className="fs-shop-toolbar"><span>{catalogFocused ? 'A little more room for your finds' : 'ILLUSTRATIVE PRICES & INVENTORY'}</span>
+          {selected.looks.length > 0 && <button onClick={() => {
+            if (catalogFocused) timer.engage();
+            setCatalogFocused(value => !value);
+          }}>{catalogFocused ? 'Show inspiration ↗' : 'Focus on pieces ↗'}</button>}
+        </div>
+        <div className={'fs-discovery' + (catalogFocused || !selected.looks.length ? ' fs-discovery-focused' : '')}>
+          <div className="fs-purchase-section">
+            <PurchaseGrid products={selected.products} savedIds={savedIds} onToggleSave={onToggleSave} onSelect={openProduct} />
+          </div>
+          {!catalogFocused && selected.looks.length > 0 && <aside ref={feedRef} className="fs-context-section" aria-label="Contextual outfit feed"
+            onClickCapture={timer.engage} onKeyDownCapture={event => { if (event.key === 'Enter' || event.key === ' ') timer.engage(); }}>
+            <OutfitMasonry key={selected.id} looks={selected.looks} {...lookSaveProps} contextual
+              contextName={selected.name} onEngage={timer.engage} loadingEnabled={!product && !cartOpen} />
+            <p className="fs-feed-state">{timer.engaged ? 'This inspiration board will stay with your finds.' : 'Explore a look to keep this inspiration board open.'}</p>
+          </aside>}
+        </div>
+        <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>These are fictional offers. After 45 active seconds without an interaction with the styling feed, the pieces get the full width. Hidden tabs, offscreen feeds, and open product or bag views pause the timer. Your photograph and dossier always remain above.</p></details>
 
-    {/* Keep the bag outside stage branches so it can open from the header or Buy Now. */}
+        {product && <div className="fs-inline-product" ref={productRef} tabIndex={-1}>
+          <ProductDetailPanel product={product} alternatives={selected.products} looks={selected.looks}
+            saved={savedIds.includes(product.id)} onToggleSave={onToggleSave} onBack={closeProduct}
+            onSelectProduct={openProduct} onAddToCart={(item, variant) => addToCart(item, variant)}
+            onBuyNow={(item, variant) => addToCart(item, variant, true)} />
+        </div>}
+      </> : <div className="fs-products-empty"><span aria-hidden="true">↗</span><div><h3>Your next chapter starts with a story.</h3><p>Analyze a photograph above. Choose a study and its related edit will appear here.</p></div><button className="fs-text-button" onClick={() => scrollToSection(recognitionRef.current)}>Find a story ↑</button></div>}
+    </section>
+
     <CartPreview open={cartOpen} lines={cart} onClose={() => setCartOpen(false)} onChange={setCart} />
     <div className="fs-toast" role="status" aria-live="polite" data-visible={Boolean(notice)}>{notice}</div>
   </div>;

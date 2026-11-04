@@ -6,6 +6,6 @@ import type { DiscoveryResult, PhotoInput } from '../types';
  * Aborting must prevent an older photograph from replacing a newer result.
  */
 export interface FirstSightGateway {
-  /** Resolve identity, analysis cards/valuation, purchase options, and styling context; honor cancellation. */
+  /** Return selectable studies with their own dossier, shopping edit, and context; honor cancellation. */
   discover(photo: PhotoInput, signal: AbortSignal): Promise<DiscoveryResult>;
 }

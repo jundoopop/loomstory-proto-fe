@@ -13,13 +13,14 @@ interface Props {
   contextual?: boolean;
   // The supplied item references use their own copy and do not imply geographic metadata.
   itemContext?: boolean;
+  contextName?: string;
   onEngage?: () => void;
   loadingEnabled?: boolean;
 }
 const regions: Region[] = ['All', 'Korea', 'Japan', 'China', 'Global'];
 
 /** Render the board; `contextual` adds the sample screen/social editorial cards. */
-export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, itemContext = false, onEngage, loadingEnabled = true }: Props) {
+export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, contextName, itemContext = Boolean(contextName), onEngage, loadingEnabled = true }: Props) {
   // Filtering and the visible batch belong to this board. Saved hearts live in FirstSightPage.
   const [region, setRegion] = useState<Region>('All');
   const [limit, setLimit] = useState(12);
@@ -46,8 +47,8 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
   }, [selected]);
 
   return <div className={`fs-outfits${contextual ? ' fs-outfits-contextual' : ''}${itemContext ? ' fs-outfits-item' : ''}`}>
-    <div className="fs-feed-heading"><div><div className="fs-section-kicker">{itemContext ? 'THE PADDINGTON / STYLE REFERENCES' : contextual ? '02 / THE CULTURAL THREAD' : 'THE WORLD IS YOUR MOODBOARD'}</div><h2>{itemContext ? 'A bag. So many stories.' : contextual ? 'Ways to wear the feeling.' : 'Good style travels.'}</h2></div><span className="fs-look-count">{looks.length} looks<br /><span>worth a closer look</span></span></div>
-    <p className="fs-feed-description">{itemContext ? 'From the street to the runway and screen. Your selected photographs, brought together around the Paddington.' : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.' : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
+    <div className="fs-feed-heading"><div><div className="fs-section-kicker">{itemContext ? (contextName ?? 'THE PIECE').toUpperCase() + ' / STYLE REFERENCES' : contextual ? 'THE CULTURAL THREAD' : 'THE WORLD IS YOUR MOODBOARD'}</div><h2>{itemContext ? 'Style, in context.' : contextual ? 'Ways to wear the feeling.' : 'Good style travels.'}</h2></div><span className="fs-look-count">{looks.length} looks<br /><span>worth a closer look</span></span></div>
+    <p className="fs-feed-description">{itemContext ? 'A few ways to see the silhouette anew. Selected photographs to inspire your next chapter.' : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.' : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
     {!itemContext && <div className="fs-filters" role="group" aria-label="Filter outfits by region">
       {regions.map(value => <button type="button" key={value} aria-pressed={region === value} onClick={() => { setRegion(value); setLimit(12); onEngage?.(); }}>{value === 'All' ? 'All looks' : value}</button>)}
     </div>}

@@ -55,6 +55,8 @@ export interface AnalysisCard {
 export interface ItemAnalysis {
   image: string;
   imageAlt: string;
+  // Trim only known empty studio background; annotation coordinates still use the original image.
+  imagePresentation?: 'full' | 'trim-top-space';
   cards: AnalysisCard[];
   resale: {
     description: string;
@@ -87,18 +89,48 @@ export interface PurchaseOption {
   description: string;
   material: string;
   condition: string;
+  era?: string;
+  sourceLabel?: string;
   variants: PurchaseVariant[];
   // Labels distinguish illustrative photographs from front/back silhouette sketches.
   gallery: { src: string; label: string }[];
   affordable?: boolean;
 }
 
-/** Complete result returned through the gateway, keeping page orchestration independent of data access. */
-export interface DiscoveryResult {
+/** Coordinates are percentages of the product-image frame, not of the whole dossier. */
+export interface ProductAnnotation {
+  id: string;
+  cardId: AnalysisCard['id'];
+  label: string;
+  detail: string;
+  x: number;
+  y: number;
+}
+
+/** One selectable study, including its own narrative, styling context, and shopping edit. */
+export interface RecognizedItem {
+  id: string;
+  name: string;
+  category: string;
+  era: string;
+  summary: string;
+  // A seeded demonstration score, never a measured probability for the uploaded photograph.
+  confidence: number;
   identity: GarmentIdentity;
   analysis: ItemAnalysis;
+  annotations: ProductAnnotation[];
+  culture: {
+    title: string;
+    paragraphs: string[];
+    sources: { title: string; url: string }[];
+  };
   products: PurchaseOption[];
   looks: OutfitLook[];
+}
+
+/** Gateway response: selection stays in the page; the provider returns independent studies. */
+export interface DiscoveryResult {
+  items: RecognizedItem[];
 }
 
 /** A selected SKU in the page-owned bag; quantity is capped by its variant's sample stock. */

@@ -1,21 +1,21 @@
-/** Stable upload-panel shell: only its contents change during the analysis journey. */
+/** Persistent photo workspace: selection, decoding, and analysis are separate actions. */
 import { useEffect, useRef, useState } from 'react';
-import type { DiscoveryResult, PhotoInput } from '../types';
+import type { PhotoInput } from '../types';
 import { chloePhoto } from '../chloe';
-import { ItemAnalysisResult } from './ItemAnalysisResult';
+import './upload-workspace.css';
 
 interface Props {
   photo: PhotoInput | null;
   busy: boolean;
-  result: DiscoveryResult | null;
-  onReady: (photo: PhotoInput) => void;
-  onExplore: () => void;
-  onChangePhoto: () => void;
+  hasResults: boolean;
+  onPhotoChange: (photo: PhotoInput | null) => void;
+  onAnalyze: () => void;
+  onCancel: () => void;
 }
 const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-/** Validate local photographs and retain the same section through upload, loading, and result. */
-export function PhotoUploadPanel({ photo, busy, result, onReady, onExplore, onChangePhoto }: Props) {
+/** Keep the selected photograph visible while the adjacent results change. */
+export function PhotoUploadPanel({ photo, busy, hasResults, onPhotoChange, onAnalyze, onCancel }: Props) {
   const [error, setError] = useState('');
   const [reading, setReading] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -24,28 +24,30 @@ export function PhotoUploadPanel({ photo, busy, result, onReady, onExplore, onCh
   const matchingRef = useRef<HTMLDivElement>(null);
   const request = useRef(0);
   const pendingUrl = useRef<string | null>(null);
-  // Unaccepted object URLs belong here; the parent takes ownership after onReady.
+
+  // Only pending URLs belong here. The parent releases accepted upload URLs.
   useEffect(() => () => {
     request.current += 1;
     if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
   }, []);
 
-  // A sample started elsewhere cancels an unfinished decode and dismisses the hover card.
+  // An externally started analysis must not accept an older, unfinished image decode.
   useEffect(() => {
-    if (!busy && !result) return;
+    if (!busy) return;
     request.current += 1;
     if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
     pendingUrl.current = null;
     setReading(false); setDragging(false); setMatchingOpen(false); setError('');
-  }, [busy, result]);
+  }, [busy]);
 
-  /** Place the floating explanation on the side with more room; it never expands the panel. */
+  /** Float the explanation toward the available space without resizing the upload panel. */
   function openMatching() {
     const bounds = matchingRef.current?.getBoundingClientRect();
     if (bounds) setMatchingSide(bounds.top > window.innerHeight - bounds.bottom ? 'above' : 'below');
     setMatchingOpen(true);
   }
 
+  // Pointer, keyboard, and touch users can all dismiss the same explanation card.
   useEffect(() => {
     if (!matchingOpen) return;
     const dismissOutside = (event: PointerEvent) => {
@@ -67,18 +69,25 @@ export function PhotoUploadPanel({ photo, busy, result, onReady, onExplore, onCh
     };
   }, [matchingOpen]);
 
-  /** Decode before handing a browser-local preview to the gateway; ignore superseded files. */
-  async function select(file?: File) {
-    if (!file || busy) return;
-    const token = ++request.current;
+  /** Invalidate a pending decode before switching to a sample or removing the photo. */
+  function cancelDecode() {
+    request.current += 1;
     if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
     pendingUrl.current = null;
-    setReading(false);
-    setError('');
+    setReading(false); setError('');
+  }
+
+  /** Validate and decode locally; accepting a photo never starts analysis itself. */
+  async function select(file?: File) {
+    if (!file) return;
+    cancelDecode();
+    const token = request.current;
     if (!acceptedTypes.includes(file.type) || file.size === 0 || file.size > 5 * 1024 * 1024) {
       setError('Choose a nonempty JPG, PNG, or WebP photo up to 5 MB.');
       return;
     }
+    // Replacing a valid photo also stops an in-flight scan before its delayed result lands.
+    if (busy) onCancel();
     const url = URL.createObjectURL(file);
     pendingUrl.current = url;
     setReading(true);
@@ -91,7 +100,7 @@ export function PhotoUploadPanel({ photo, busy, result, onReady, onExplore, onCh
       });
       if (token !== request.current) { URL.revokeObjectURL(url); return; }
       pendingUrl.current = null;
-      onReady({ kind: 'upload', url, name: file.name });
+      onPhotoChange({ kind: 'upload', url, name: file.name });
     } catch {
       URL.revokeObjectURL(url);
       if (token === request.current) {
@@ -101,68 +110,59 @@ export function PhotoUploadPanel({ photo, busy, result, onReady, onExplore, onCh
     } finally { if (token === request.current) setReading(false); }
   }
 
-  /** Enter the same loading flow with the authored Chloé reference instead of a local upload. */
-  function sample() {
-    request.current += 1;
-    if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
-    pendingUrl.current = null;
-    setReading(false);
-    setError('');
-    onReady(chloePhoto);
+  /** The authored sample follows the same explicit Analyze action as an uploaded photo. */
+  function chooseSample() {
+    cancelDecode();
+    onPhotoChange(chloePhoto);
   }
 
-  return <section className="fs-upload-panel" data-state={result ? 'result' : busy ? 'analyzing' : 'upload'} aria-labelledby="fs-upload-title" aria-busy={busy}>
-    {result ? <ItemAnalysisResult identity={result.identity} analysis={result.analysis} onExplore={onExplore} onChangePhoto={onChangePhoto} /> : busy ? <div className="fs-analysis-loading">
-      <div className="fs-section-kicker"><span>01 / LOOKING CLOSER</span><span aria-hidden="true">✧</span></div>
-      <h2 id="fs-upload-title">A story<br /><em>taking shape.</em></h2>
-      <div className="fs-analysis-preview">{photo && <img src={photo.url} alt="Your selected photograph" />}<span className="fs-scan-line" aria-hidden="true" /></div>
-      <p role="status">Preparing your sample analysis…</p>
-      <p className="fs-muted">A closer look at the design, details, and possibilities. This walkthrough uses a prepared Chloé example.</p>
-      <button type="button" className="fs-text-button" onClick={onChangePhoto}>Cancel analysis</button>
-    </div> : <>
-    <div className="fs-section-kicker"><span>01 / YOUR STARTING POINT</span><span aria-hidden="true">↗</span></div>
-    <h2 id="fs-upload-title">Seen something<br /><em>you love?</em></h2>
-    <p>A piece in your wardrobe. A look you can’t forget. Start with a photo and follow the thread.</p>
-    <div className={`fs-dropzone${dragging ? ' is-dragging' : ''}`} onDragOver={event => { event.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={event => {
-      event.preventDefault(); setDragging(false); void select(event.dataTransfer.files[0]);
-    }}>
-      <svg width="46" height="46" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="7" y="12" width="34" height="28" rx="3" stroke="currentColor" strokeWidth="1.4" /><path d="M16 12l3-5h10l3 5M24 22v12m-6-6h12" stroke="currentColor" strokeWidth="1.4" /><path d="M34 18h2" stroke="currentColor" strokeWidth="2" /></svg>
-      <strong>{reading ? 'Opening your photograph…' : 'Drop a photo here'}</strong>
-      <span>or choose one from your device</span>
-      <label className="fs-button fs-primary fs-file-label">
-        Choose a photo <span aria-hidden="true">↗</span>
-        <input className="fs-file-input" aria-label="Choose a garment photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || reading} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; void select(file); }} aria-describedby="fs-photo-help" />
-      </label>
-      <small id="fs-photo-help">JPG, PNG, WebP · up to 5 MB</small>
+  const status = reading ? 'Opening your photograph…' : busy ? 'Finding the threads…' : hasResults ? 'Your story is ready to explore.' : photo ? 'Photo ready. Let’s look a little closer.' : 'JPG, PNG, WebP · up to 5 MB';
+
+  return <section className="fs-upload-panel fs-photo-workspace" data-state={busy ? 'analyzing' : hasResults ? 'result' : photo ? 'ready' : 'upload'} aria-labelledby="fs-upload-title" aria-busy={busy}>
+    <div className="fs-section-kicker"><span>01 / YOUR PHOTO, YOUR STORY</span><span aria-hidden="true">✧</span></div>
+    <h2 id="fs-upload-title">Find the Story<br /><em>Behind Your Style</em></h2>
+    <p className="fs-workspace-intro">One photo. A closer look at the design, the details, and the possibilities.</p>
+    <div className={`fs-dropzone fs-workspace-photo${photo ? ' has-photo' : ''}${dragging ? ' is-dragging' : ''}`}
+      onDragOver={event => { event.preventDefault(); setDragging(true); }}
+      onDragLeave={event => { if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setDragging(false); }}
+      onDrop={event => { event.preventDefault(); setDragging(false); void select(event.dataTransfer.files[0]); }}>
+      {photo ? <><img className="fs-workspace-preview" src={photo.url} alt={photo.kind === 'sample' ? 'Chloé Paddington bag selected for the sample journey' : 'Your selected fashion photograph'} /><span className="fs-workspace-photo-label">{photo.kind === 'sample' ? 'THE CHLOÉ STUDY' : 'YOUR PHOTOGRAPH'}</span></> : <>
+        <svg width="37" height="37" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="7" y="12" width="34" height="28" rx="3" stroke="currentColor" strokeWidth="1.4" /><path d="M16 12l3-5h10l3 5M24 22v12m-6-6h12" stroke="currentColor" strokeWidth="1.4" /></svg>
+        <strong>Drop a photo here</strong><span>or choose one from your device</span>
+      </>}
+      {!photo && <label className="fs-button fs-file-label fs-workspace-file">Choose a photo <span aria-hidden="true">↗</span><input className="fs-file-input" aria-label="Choose a garment photo" type="file" accept="image/jpeg,image/png,image/webp" disabled={busy || reading} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; void select(file); }} aria-describedby="fs-photo-help" /></label>}
       {(busy || reading) && <span className="fs-scan-line" aria-hidden="true" />}
     </div>
-    {error && <p className="fs-error" role="alert">{error}</p>}
+    {photo && <div className="fs-workspace-file-tools">
+      <span className="fs-workspace-filename" title={photo.name}>{photo.kind === 'sample' ? 'Chloé Paddington · sample' : photo.name}</span>
+      <label className={`fs-file-label fs-workspace-replace${reading ? ' is-disabled' : ''}`}>Replace<input className="fs-file-input" aria-label="Replace selected photograph" type="file" accept="image/jpeg,image/png,image/webp" disabled={reading} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; void select(file); }} aria-describedby="fs-photo-help" /></label>
+      <button type="button" onClick={() => { cancelDecode(); onPhotoChange(null); }}>Remove</button>
+    </div>}
+    <p className="fs-workspace-status" id="fs-photo-help" role="status">{status}</p>
+    {error && <p className="fs-error fs-workspace-error" role="alert">{error}</p>}
+    <div className="fs-workspace-analysis-controls">
+      <button className="fs-button fs-primary fs-analyze-button" type="button" disabled={!photo || busy || reading} onClick={onAnalyze}>{busy ? 'Preparing your story…' : hasResults ? 'Analyze again' : 'Analyze photo'}<span aria-hidden="true">{busy ? '◌' : '↗'}</span></button>
+      {busy && <button type="button" className="fs-workspace-cancel" onClick={onCancel}>Cancel</button>}
+    </div>
+
     <div className="fs-matching-explainer" ref={matchingRef} data-side={matchingSide}
       onPointerEnter={event => { if (event.pointerType === 'mouse') openMatching(); }}
       onPointerLeave={event => { if (event.pointerType === 'mouse') setMatchingOpen(false); }}
       onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setMatchingOpen(false); }}>
-      <button className="fs-matching-trigger" type="button" aria-expanded={matchingOpen} aria-controls="fs-matching-details"
-        onClick={() => matchingOpen ? setMatchingOpen(false) : openMatching()}>
-        <span>How a photo becomes a match.</span><span aria-hidden="true">?</span>
-      </button>
+      <button className="fs-matching-trigger" type="button" aria-expanded={matchingOpen} aria-controls="fs-matching-details" onClick={() => matchingOpen ? setMatchingOpen(false) : openMatching()}><span>How a photo becomes a match</span><span aria-hidden="true">?</span></button>
       {matchingOpen && <div className="fs-matching-popover" id="fs-matching-details" role="region" aria-label="How photo matching would work">
         <div className="fs-matching-content" tabIndex={0}>
-          <p>Our planned matching process:</p>
+          <p>A closer look, in three steps:</p>
           <ol>
-            <li><strong>Read the visual clues</strong><p>Look at the shape, color, pattern, and readable garment labels.</p></li>
-            <li><strong>Compare references</strong><p>Compare those clues with catalog images and documented brand and collection details.</p></li>
-            <li><strong>Suggest possible matches</strong><p>Bring together likely products, similar silhouettes, and celebrity styling inspiration.</p></li>
+            <li><strong>Read the details</strong><p>Shape, texture, color, and visible labels offer the first clues.</p></li>
+            <li><strong>Follow the references</strong><p>Compare those clues with catalog imagery and documented designs.</p></li>
+            <li><strong>Connect the story</strong><p>Discover possible matches, styling references, and related pieces.</p></li>
           </ol>
-          <p className="fs-matching-note">This prototype uses prepared samples and does not analyze your photo. Visual similarity alone does not verify a brand or release year.</p>
+          <p className="fs-matching-note">This interactive prototype uses prepared examples. Your photograph stays in this tab; no image analysis is performed.</p>
         </div>
       </div>}
     </div>
-    <span className="fs-sr-only" role="status">{busy ? 'Preparing a demonstration result. No image analysis is performed.' : reading ? 'Opening photo.' : ''}</span>
-    <button className="fs-sample" type="button" disabled={busy} onClick={sample}>
-      <img src={chloePhoto.url} alt="" /><span><small>JUST LOOKING AROUND?</small><strong>Try the Chloé bag</strong><span>Take the whole journey in a few clicks.</span></span><b aria-hidden="true">↗</b>
-    </button>
-    <p className="fs-local-note"><span aria-hidden="true">◈</span> Your photo stays in this tab. Results are an interactive demonstration.</p>
-    <div className="fs-upload-footer"><span>A PHOTO.</span><span>A CONNECTION.</span><span>A NEW CHAPTER.</span></div>
-    </>}
+    <button className="fs-sample fs-workspace-sample" type="button" disabled={busy} onClick={chooseSample}><img src={chloePhoto.url} alt="" /><span><small>NEED A STARTING POINT?</small><strong>Try the Chloé bag</strong></span><b aria-hidden="true">↗</b></button>
+    <p className="fs-local-note"><span aria-hidden="true">◈</span> Local photo · Prepared sample results</p>
   </section>;
 }

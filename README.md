@@ -22,7 +22,7 @@ Open the Local URL printed by Vite, normally [http://127.0.0.1:5173](http://127.
 
 The media setup command restores available Chloé example photographs into `public/local-media/chloe/`. It first copies the supplied originals from `src/images/`, preserving their files there, and uses reviewed download URLs when no local original is available. Both directories are ignored by Git, so these photographs are not included in GitHub and need to be supplied or restored after a fresh clone. The app serves its copies at `/local-media/chloe/`; see [the source record](docs/first-sight-sources.md) for the filename mapping and provenance.
 
-The bag and four of the five styling photographs are available. Only the TV-scene original (`styling-05.jpg`) remains pending. The setup command reports missing media and exits with an incomplete status until it is supplied; the app can still run with that image placeholder. The floral-dress and dog-walking photographs now use the exact local originals supplied in `src/images/`.
+The active Chloé example uses the bag and four available styling photographs. The optional TV-scene original (`styling-05.jpg`) is excluded from the active flow while unavailable. The floral-dress and dog-walking photographs use the exact local originals supplied in `src/images/`.
 
 To check and preview a production build:
 
@@ -40,7 +40,7 @@ The production preview normally opens at [http://127.0.0.1:4173](http://127.0.0.
 | Experience | Current behavior |
 | --- | --- |
 | Discover and The Vault | Shared sample clothing and bag records, search, era/category filters, and sorting |
-| FirstSight | Local photo preview, Chloé analysis cards and resale estimate, supplied styling references, shopping discovery, product details, and bag preview |
+| FirstSight | Continuous inspiration, photo analysis, and shopping sections; five selectable studies, interactive dossiers, sourced styling references, inline product details, and bag preview |
 | Item details and stories | Navigable editorial pages using local content |
 | My wardrobe | Save/unsave sample items; favorites persist in this browser when storage is available |
 | Submit a piece | Select a local photograph or sample, enter details, and preview the result |
@@ -85,10 +85,16 @@ An eventual manual deployment can upload the completed `dist/` folder instead of
 
 Photography is reused from the user-supplied LoomStory export and is illustrative rather than evidence about individual listings. The source described it as Unsplash photography; original attribution and licensing provenance have not been independently verified. The app makes no brand-authentication, ownership, or verified historical-provenance claims.
 
-The Chloé analysis photographs live separately in the ignored `public/local-media/` directory, with supplied originals retained in the ignored `src/images/` directory. Keep those photographs and screenshots containing them out of Git commits. The authored alternative-bag SVG under `public/assets/first-sight/chloe/` is source artwork and remains tracked. Vite copies local public assets into a build when they are present, so repository exclusion is separate from the contents of a future deployed build.
+The Chloé analysis photographs live separately in the ignored `public/local-media/` directory, with supplied originals retained in the ignored `src/images/` directory. Keep those photographs and screenshots containing them out of Git commits. The authored bag and garment SVGs under `public/assets/first-sight/chloe/` and `public/assets/first-sight/studies/` are source artwork and remain tracked. Vite copies local public assets into a build when they are present, so repository exclusion is separate from the contents of a future deployed build.
 
 ## FirstSight flow prototype
 
-Visit `/first-sight` to compare the new photo-to-discovery flow with the preserved Discover and Submit pages. The upload panel changes its contents into a Chloé Paddington example with four explanation cards, a resale card, and a labeled **€700–€1,000** prototype estimate. Five styling-reference slots appear alongside it; only the TV-scene photograph remains pending. **Explore buying options** opens 50/50 shopping/context discovery, followed by a 45-second active-browsing focus transition and a 70/30 product-detail view with a local cart preview. No AI, photo-upload service, live inventory, checkout, or payment is connected.
+Visit `/first-sight` alongside the preserved Discover and Submit pages. Its three sections stay in one continuous page:
+
+1. **Tendances:** a 50/50 editorial hero with four selectable collections and an optional six-look inspiration board.
+2. **Discover the Story:** a 35/65 photo workspace and dossier. Choose a photo, then press **Analyze**. The photo stays visible on the left; five sample choices update the interactive detail cards, annotations, cultural story, and resale bar on the right. The upload panel is sticky only within this section on desktop.
+3. **Find Similar Pieces:** the selected study's shopping edit and styling references. Only this section's optional feed collapses after 45 active seconds without engagement. Product selection opens a 70/30 PDP inline below the grid; the earlier sections remain available.
+
+The five studies cover the Chloé Paddington, leather bomber, denim jacket, oversized blazer, and workwear jacket. The Chloé example distinguishes verified design/product details from its authored **€700–€1,000** resale scenario. Scores, matching, prices, and inventory remain sample data. No AI, photo-upload service, live checkout, or payment is connected.
 
 The UI depends on an injectable service port under `src/features/first-sight/services/`, with the current behavior supplied by a local adapter. Read [the flow and future API integration guide](docs/first-sight-prototype.md) and [the celebrity media source record](docs/first-sight-sources.md).

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" fill="none">
+  <title>Vintage workwear jacket — original silhouette illustration</title>
+  <desc>A faded olive chore-jacket study with a straight body, three patch pockets and a button front.</desc>
+  <defs>
+    <linearGradient id="canvas" x1="173" y1="111" x2="433" y2="492" gradientUnits="userSpaceOnUse"><stop stop-color="#9b9b74"/><stop offset=".5" stop-color="#7d805d"/><stop offset="1" stop-color="#5e6549"/></linearGradient>
+    <linearGradient id="sleeve" x1="111" y1="170" x2="162" y2="472" gradientUnits="userSpaceOnUse"><stop stop-color="#91936b"/><stop offset="1" stop-color="#676e4d"/></linearGradient>
+    <pattern id="canvas-weave" width="5" height="5" patternUnits="userSpaceOnUse"><path d="M0 1h5M1 0v5" stroke="#ddd7af" stroke-opacity=".11"/></pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+  <ellipse cx="300" cy="516" rx="163" ry="12" fill="#474b35" opacity=".12" filter="url(#shadow)"/>
+  <g stroke="#51593d" stroke-width="2.5">
+    <path d="m193 127-49 18q-25 12-31 46L73 465l65 13 45-205 32-76Z" fill="url(#sleeve)"/>
+    <path d="m407 127 49 18q25 12 31 46l40 274-65 13-45-205-32-76Z" fill="url(#sleeve)"/>
+    <path d="m246 104-62 28q-9 66-8 143l-10 218q134 15 268 0l-10-218q1-77-8-143l-62-28Z" fill="url(#canvas)"/>
+  </g>
+  <path d="m246 104-62 28q-9 66-8 143l-10 218q134 15 268 0l-10-218q1-77-8-143l-62-28Z" fill="url(#canvas-weave)"/>
+  <path d="m246 105 54 43 54-43q-52-27-108 0Z" fill="#424b33"/>
+  <path d="m246 99-24 33 48 62 30-46-34-53Zm108 0 24 33-48 62-30-46 34-53Z" fill="#a1a17b" stroke="#51593d" stroke-width="2"/>
+  <path d="m246 110-15 22 39 50m84-72 15 22-39 50" stroke="#d1cba7" stroke-width="1.3" opacity=".75"/>
+  <!-- Large surface-mounted pockets are the central functional cue of this chore-jacket study. -->
+  <path d="M338 213h65v79q-30 12-65 0ZM189 350h83v113q-40 14-83 0Zm139 0h83v113q-40 14-83 0Z" fill="#7b805b" stroke="#505a3d" stroke-width="2"/>
+  <path d="M343 218h55v70q-25 9-55 0ZM194 355h73v104q-35 11-73 0Zm139 0h73v104q-35 11-73 0Z" stroke="#c6c098" stroke-width="1.2"/>
+  <path d="M340 226h61M191 363h79m60 0h79" stroke="#51593d" stroke-width="2"/>
+  <path d="M288 148h24v349h-24Z" fill="#8d926b" stroke="#51593d" stroke-width="2"/>
+  <path d="M294 154v337m12-337v337M177 482h248M93 438l45 10m324 0 45-10" stroke="#c9c4a0" stroke-width="1.2" opacity=".7"/>
+  <g fill="#4d5036" stroke="#c0b88d" stroke-width="1.2"><circle cx="300" cy="196" r="5.5"/><circle cx="300" cy="260" r="5.5"/><circle cx="300" cy="324" r="5.5"/><circle cx="300" cy="388" r="5.5"/><circle cx="300" cy="452" r="5.5"/><circle cx="122" cy="456" r="4"/><circle cx="478" cy="456" r="4"/></g>
+  <path d="M197 162q-9 77-3 144m209-144q9 77 3 144M149 198l-27 195m329-195 27 195M196 396l27 4m160-10 21 4" stroke="#e3d9ad" stroke-opacity=".25" stroke-width="2"/>
+  <text x="300" y="559" fill="#8d7968" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" text-anchor="middle">SILHOUETTE STUDY · 04</text>
+</svg>

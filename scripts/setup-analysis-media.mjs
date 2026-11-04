@@ -29,7 +29,8 @@ const references = [
     file: 'styling-04.jpg',
     url: 'https://cdn.mos.cms.futurecdn.net/sUqKuFuwjaMY8eTEUsMgmS.jpg',
   },
-  { file: 'styling-05.jpg', url: null },
+  // The TV reference is not in the active board until its original is supplied.
+  { file: 'styling-05.jpg', url: null, optional: true },
 ];
 
 /** Validate local and downloaded bytes alike, then atomically replace only the served copy. */
@@ -45,7 +46,7 @@ async function savePhoto(file, bytes) {
 }
 
 /** Prefer the supplied crop, then keep an existing copy, then try a reviewed download URL. */
-async function restore({ file, local, url }) {
+async function restore({ file, local, url, optional = false }) {
   if (local) {
     let bytes;
     try { bytes = await readFile(new URL(local, originals)); }
@@ -59,6 +60,7 @@ async function restore({ file, local, url }) {
   try { await access(new URL(file, directory)); console.log(`Already present: ${file}`); return; }
   catch (error) { if (error.code !== 'ENOENT') throw error; }
   if (!url) {
+    if (optional) { console.log(`Optional reference not supplied: ${file} (excluded from the board)`); return; }
     console.warn(`Original needed: ${file} — place the supplied photograph in ${fileURLToPath(directory)}`);
     process.exitCode = 1;
     return;

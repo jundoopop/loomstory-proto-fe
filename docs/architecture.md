@@ -28,15 +28,21 @@ Solid connections are implemented. Dashed connections describe the intended late
 | `components/` | Reusable presentation such as clothing cards |
 | `data/` | Shared sample clothing and bag records with stable wardrobe IDs and editorial context |
 | `domain/` | Pure saved-item rules that can be tested without rendering React |
-| `features/first-sight/` | Feature components, authored Chloé analysis and styling fixtures, typed discovery data, local gateway adapter, and pure engagement rules with a browser lifecycle hook |
-| `scripts/setup-analysis-media.mjs` | Restores the six Chloé photographs into Git-ignored `public/local-media/chloe/` for local use after cloning |
+| `features/first-sight/` | Continuous-page components, five selectable recognition studies, commerce and source metadata, an injectable gateway, and pure engagement rules with a browser lifecycle hook |
+| `scripts/setup-analysis-media.mjs` | Restores available Chloé photographs into Git-ignored `public/local-media/chloe/`; supplied originals stay in ignored `src/images/` |
 | `integrations/contracts.ts` | Types for future services; no credentials, SDK initialization, or network traffic |
 | Vite | Development server and static production bundle |
 | `netlify.toml` | Future build command, output folder, and SPA rewrite |
 
 Search and filters act on local records. Saving an item changes browser-local favorites, not inventory. The upload screen reads a user-selected file into a local preview and shows a labeled sample result. Reloading or leaving that screen may discard the draft and photograph. The demo does not submit photos, authenticate users, create database records, or publish listings.
 
-FirstSight keeps its upload-panel shell through photo selection, simulated analysis, and the Chloé result. `PhotoUploadPanel` owns local file reading; `ItemAnalysisResult` renders the returned card data; `FirstSightPage` owns requests and stage transitions. The gateway returns `DiscoveryResult.analysis` alongside identity, purchase options, and styling references, so the future API boundary includes explanatory content and valuation metadata. The explicit **Explore buying options** action starts discovery; reading the analysis does not consume the discovery timer.
+FirstSight is one continuous route with three retained sections: `TrendHero` presents a 50/50 inspiration edit; Section 2 pairs the persistent `PhotoUploadPanel` with results at 35/65; Section 3 contains the selected study's related products and optional styling feed. Desktop upload stickiness ends with Section 2. Narrow screens stack the content, and the dossier adapts to its own available width.
+
+Choosing a photograph and pressing **Analyze** are separate actions. `PhotoUploadPanel` validates and decodes a browser-local file; `FirstSightPage` owns its accepted URL, request cancellation, selected study, inline PDP, and cart. `DiscoveryResult.items` contains five complete `RecognizedItem` studies. Each carries its own identity, explanation cards, image annotations, resale scenario, cultural context, purchase options, and styling references. `RecognitionResults` selects a study; `FashionDossier` presents it without changing the uploaded photo.
+
+The 45-active-second timer governs only Section 3's optional feed. It pauses offscreen, in hidden or unfocused windows, during keyboard focus in the feed, and while a PDP or cart is open. Expiry expands the product grid without hiding the photo or dossier. Product selection opens the existing 70/30 detail layout inline below that grid, preserving all earlier sections.
+
+`recognition.ts` composes the studies from `chloe.ts`, `fixtures.ts`, and the sourced `looks.ts` library. Shared catalog IDs make study products saveable across routes. Chloé facts link to primary references, while scores and resale figures remain explicit prototype assumptions. Four original garment SVGs illustrate generic categories; the supplied Chloé photographs stay Git-ignored. The missing TV still is optional and excluded from the active feed.
 
 ## Why this fits a three-day prototype
 
