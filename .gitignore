@@ -63,3 +63,6 @@ logs/
 # Operating system metadata
 .DS_Store
 Thumbs.db
+
+# images
+src/images/

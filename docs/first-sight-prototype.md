@@ -2,9 +2,9 @@
 
 Open `/first-sight` from the main or mobile navigation. This is a separate comparison experience: `DiscoverPage.tsx` at `/` and `SubmitPage.tsx` at `/submit` remain available.
 
-After a fresh clone, run `npm run setup:analysis-media` to restore the Chloé photographs. The setup script downloads them into the separate, Git-ignored `public/local-media/chloe/` folder. Their browser paths start with `/local-media/chloe/`. These six image binaries and analysis screenshots are kept out of GitHub; the authored alternative-bag SVG remains tracked. See [the media source record](first-sight-sources.md).
+After a fresh clone, supply any available originals in the Git-ignored `src/images/` folder and run `npm run setup:analysis-media`. The setup script prioritizes these local originals, copies them into the separate, Git-ignored `public/local-media/chloe/` folder, and uses reviewed download URLs as fallbacks. It preserves the source originals. Browser paths start with `/local-media/chloe/`. These photograph binaries and analysis screenshots are kept out of GitHub; the authored alternative-bag SVG remains tracked. See [the media source record](first-sight-sources.md) for the original filenames.
 
-Current media coverage: the bag and styling references 02–04 are available. References 01 (floral-dress street photograph) and 05 (TV still) retain their planned slots but await exact image URLs or local originals. The setup command reports these missing files instead of substituting different photographs.
+Current media coverage: the bag and four styling references (01–04) are available. References 01 and 02 use the exact supplied floral-dress and dog-walking originals from `src/images/`. Only reference 05, the TV still, awaits an image URL or local original. The setup command reports this pending file instead of substituting a different photograph.
 
 ## Walk through the flow
 
@@ -28,7 +28,7 @@ The initial celebrity board retains its sourced photographs and metadata. After 
 | --- | --- |
 | Sample photo, brand/year, four explanation cards, resale prose/range | `src/features/first-sight/chloe.ts`: `chloePhoto`, `chloeIdentity`, `chloeAnalysis` |
 | Five post-analysis styling references and natural image dimensions | `src/features/first-sight/chloe.ts`: `chloeLooks` |
-| Local photograph setup and download URLs | `scripts/setup-analysis-media.mjs`, run through `npm run setup:analysis-media` |
+| Local original filenames, copy priority, and download fallbacks | `scripts/setup-analysis-media.mjs`, run through `npm run setup:analysis-media` |
 | Analysis content layout and EUR formatting | `src/features/first-sight/components/ItemAnalysisResult.tsx` and `item-analysis.css` |
 | Upload/loading/result shell | `src/features/first-sight/components/PhotoUploadPanel.tsx` |
 | Explicit transition to buying options, reset, and request cancellation | `src/pages/FirstSightPage.tsx` |
@@ -82,7 +82,7 @@ Timer rules are isolated in `engagement.ts`, with browser lifecycle handling in 
 - Production build and all 11 existing domain tests pass.
 - Twelve browser-check groups pass: same panel DOM/width through all states; all five cards and valuation; no scroll/time-triggered analysis exit; explicit shopping transition; 45 active-second expiry, restoration and engagement; available/unavailable SKUs; stock-bound cart and checkout preview; persistent wardrobe saves; cancellation and invalid/valid uploads; credit rendering; and no uncaught JavaScript errors.
 - Result, discovery, and PDP layouts have no horizontal overflow at 320, 390, 768, and 1440 pixels.
-- The bag and references 02–04 load. Exact images 01 and 05 remain the open media dependency. Screenshot captures containing these reference photos stay in temporary local storage.
+- After the local originals were supplied, the served copies of references 01 and 02 were confirmed byte-for-byte identical to the unchanged source files. All four available styling photographs load, the first reference's source image opens, and only the TV-reference fallback remains. The refreshed check passed at 390px with no horizontal overflow or JavaScript errors; the production build also passed. Media setup reports an incomplete status only for the pending TV still. Screenshot captures containing these photographs stay in temporary local storage.
 
 ## Earlier homepage verification — 2026-11-03
 

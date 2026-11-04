@@ -21,7 +21,7 @@ This guide covers the active `loomstory-web` React/Vite application. Start with 
 | Celebrity photos, names, tags, regions, sources | [looks.ts](../src/features/first-sight/looks.ts) | `outfitLooks`. Keep image dimensions, author, source URL, and license together; see [source records](first-sight-sources.md). |
 | Geographic filters, masonry batching, look dialog | [OutfitMasonry.tsx](../src/features/first-sight/components/OutfitMasonry.tsx) | Local filter/limit/dialog state; saved-look IDs are passed from the page. |
 | Which inspiration appears after a sample scan | [chloe.ts](../src/features/first-sight/chloe.ts), [prototype.ts](../src/features/first-sight/services/prototype.ts) | `chloeLooks` supplies the five provided styling references. The local gateway returns this authored board with the Chloé result. |
-| Restore the Chloé photographs after cloning | [setup-analysis-media.mjs](../scripts/setup-analysis-media.mjs) | `npm run setup:analysis-media` populates the ignored `public/local-media/chloe/` folder. Source URLs are recorded in the script and [source record](first-sight-sources.md). |
+| Restore the Chloé photographs after cloning | [setup-analysis-media.mjs](../scripts/setup-analysis-media.mjs) | `npm run setup:analysis-media` prioritizes originals in ignored `src/images/`, copies them into ignored `public/local-media/chloe/`, and uses reviewed download URLs as fallbacks. Original filenames and provenance are in the [source record](first-sight-sources.md). |
 | Purchase cards in discovery | [PurchaseGrid.tsx](../src/features/first-sight/components/PurchaseGrid.tsx) | Product cards and availability labels; selection delegates to the page. |
 | PDP gallery, specifications, size buttons, CTAs | [ProductDetailPanel.tsx](../src/features/first-sight/components/ProductDetailPanel.tsx) | Local gallery/SKU selection and callback wiring. |
 | PDP 70/30 split and sticky styling sidebar | [product-detail.css](../src/features/first-sight/components/product-detail.css) | `.fs-pdp-layout`, `.fs-pdp-sidebar`, and mobile overrides. |
@@ -54,6 +54,7 @@ index.html
 | [src/integrations/contracts.ts](../src/integrations/contracts.ts) | Future app-wide repository, photo-storage, and story-analysis interfaces. These are separate from the currently injectable FirstSight gateway. |
 | [public/assets/](../public/assets/) | Tracked product/reference images, credited celebrity photos, and explicitly labeled sketches. |
 | `public/local-media/chloe/` | Six local Chloé example photographs; ignored by Git and restored through the setup script after cloning. |
+| `src/images/` | Ignored user-supplied originals; the media setup script copies them without removing or modifying these source files. |
 
 ### Original pages
 
@@ -139,4 +140,4 @@ git diff --stat
 
 When updating code, keep the module header and nearby function comments accurate. Comments explain ownership, constraints, and reasons; the code remains the source of truth for values and behavior. Avoid duplicating implementation details in every callback or repeating the same explanation on every data record.
 
-Keep the Chloé photographs in `public/local-media/` and analysis screenshots outside the repository. Do not force-add ignored photographs. Their paths and source metadata remain editable in code; the binaries are intentionally absent from GitHub. The small authored alternative-bag SVG remains tracked under `public/assets/first-sight/chloe/`.
+Keep the Chloé photographs in `public/local-media/`, their supplied originals in `src/images/`, and analysis screenshots outside the repository. Do not force-add ignored photographs. Their paths and source metadata remain editable in code; the binaries are intentionally absent from GitHub. Four styling photographs are available; only the TV reference still needs its original. The small authored alternative-bag SVG remains tracked under `public/assets/first-sight/chloe/`.

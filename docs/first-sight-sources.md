@@ -2,9 +2,18 @@
 
 ## Chloé analysis example
 
-The Chloé example uses the product photograph and five styling references supplied in the task brief. Public source copies are used where the original chat attachments have no accessible file path; those copies can have different framing or resolution from the attachments. The UI stores their captions and dimensions with `chloePhoto`, `chloeAnalysis`, and `chloeLooks` in `src/features/first-sight/chloe.ts`. These references replace the general inspiration board after a sample analysis; the original board below remains available before upload.
+The Chloé example is based on the product photograph and five styling references supplied in the task brief. The exact floral-dress and dog-walking originals are now available locally in `src/images/`. Public source copies are used for the two runway references; these copies can have different framing or resolution from the attachments. The bag and four styling photographs are available; only the TV still is pending. The UI stores their captions and dimensions with `chloePhoto`, `chloeAnalysis`, and `chloeLooks` in `src/features/first-sight/chloe.ts`. These references replace the general inspiration board after a sample analysis; the original board below remains available before upload.
 
-Run `npm run setup:analysis-media` after cloning to download the six photographs into `public/local-media/chloe/`. This separate directory is ignored by Git: photograph binaries are not included in GitHub. The setup script records the download URLs; the browser serves the resulting files at `/local-media/chloe/`. Keep analysis screenshots outside the repository as well. The authored alternative-bag illustration, `public/assets/first-sight/chloe/soft-satchel.svg`, remains tracked source artwork.
+Run `npm run setup:analysis-media` after cloning to restore available photographs into `public/local-media/chloe/`. The script first checks for the supplied originals in `src/images/`, copies them while preserving the source files, and uses reviewed download URLs as fallbacks. Both directories are ignored by Git: photograph binaries are not included in GitHub. The browser serves the resulting copies at `/local-media/chloe/`. Keep analysis screenshots outside the repository as well. The authored alternative-bag illustration, `public/assets/first-sight/chloe/soft-satchel.svg`, remains tracked source artwork.
+
+Local-original mapping:
+
+| Source file in ignored `src/images/` | Served copy | Content |
+| --- | --- | --- |
+| `WhatsApp Image 2026-11-03 at 17.00.43.jpeg` | `public/local-media/chloe/styling-01.jpg` | Exact floral-dress street photograph, 922 × 1560 |
+| `WhatsApp Image 2026-11-03 at 17.00.44.jpeg` | `public/local-media/chloe/styling-02.jpg` | Exact dog-walking photograph, 934 × 1600; this is not the TV still |
+
+Retain these filenames when supplying originals after a fresh clone so the setup script can find them. The original files are copied, not moved or committed.
 
 | File | Role | Supplied dimensions | Caption basis |
 | --- | --- | --- | --- |
@@ -19,12 +28,13 @@ The table above records attachment dimensions; use the actual downloaded dimensi
 
 Recovered sources:
 
-The exact floral-dress shoulder-bag photograph (`styling-01.jpg`) and TV still (`styling-05.jpg`) still need direct source URLs or local originals. They have not been replaced with similar shots. The setup script reports these two pending files.
+Only the TV still (`styling-05.jpg`) still needs a direct source URL or local original. It has not been replaced with a similar shot. The setup script reports this pending file.
 
-| Local file | Public source | Attribution from source |
+| Local file | Source | Attribution and copy used |
 | --- | --- | --- |
 | `paddington-bag.jpg` | [Chloé product photograph supplied by the user](https://www.chloe.com/dw/image/v2/BLMX_PRD/on/demandware.static/-/Sites-chloe-master/default/dw2be28163/images/all-images/CH26AS802S77206/pIZa7IUzSWycTjPimTeutw_c928d313.jpeg?sw=1440&sfrm=png&q=90) | Chloé product imagery |
-| `styling-02.jpg` | [Allure: past It bags making a comeback](https://www.allure.com/story/past-it-bags-comeback) | Splash News; publisher identifies Kate Bosworth and the Chloé Paddington |
+| `styling-01.jpg` | User-provided `src/images/WhatsApp Image 2026-11-03 at 17.00.43.jpeg` | Exact supplied crop; neutral street-style caption; no photographer or public reuse license supplied |
+| `styling-02.jpg` | User-provided `src/images/WhatsApp Image 2026-11-03 at 17.00.44.jpeg`; [Allure article](https://www.allure.com/story/past-it-bags-comeback) provides caption metadata and a fallback copy | Exact supplied crop is preferred. Allure credits Splash News and identifies Kate Bosworth and the Chloé Paddington; its downloadable copy has different framing |
 | `styling-03.jpg` | [Who What Wear: Chloé Paddington launch retrospective](https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch) | Courtesy of Chloé; publisher identifies Alexa Chung at Chloé Fall/Winter 2025 |
 | `styling-04.jpg` | [Who What Wear: Chloé Paddington launch retrospective](https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch) | Getty Images; Chloé Spring/Summer 2005 runway |
 

@@ -20,7 +20,9 @@ npm run dev
 
 Open the Local URL printed by Vite, normally [http://127.0.0.1:5173](http://127.0.0.1:5173). Keep the terminal open. Press **Control + C** to stop it. No environment variables, login, database, Docker, or separate application server are required.
 
-The media setup command restores available Chloé example photographs into `public/local-media/chloe/`. This separate folder is ignored by Git, so those image files are not included in GitHub and need to be set up again after a fresh clone. The app serves them locally at `/local-media/chloe/`; see [the source record](docs/first-sight-sources.md) for their provenance. The bag and three styling photographs are available. The exact floral-dress and TV-scene originals (`styling-01.jpg` and `styling-05.jpg`) still need direct URLs or local files; the setup command reports them and exits with an incomplete status until they are supplied. The app can still run with those two image placeholders.
+The media setup command restores available Chloé example photographs into `public/local-media/chloe/`. It first copies the supplied originals from `src/images/`, preserving their files there, and uses reviewed download URLs when no local original is available. Both directories are ignored by Git, so these photographs are not included in GitHub and need to be supplied or restored after a fresh clone. The app serves its copies at `/local-media/chloe/`; see [the source record](docs/first-sight-sources.md) for the filename mapping and provenance.
+
+The bag and four of the five styling photographs are available. Only the TV-scene original (`styling-05.jpg`) remains pending. The setup command reports missing media and exits with an incomplete status until it is supplied; the app can still run with that image placeholder. The floral-dress and dog-walking photographs now use the exact local originals supplied in `src/images/`.
 
 To check and preview a production build:
 
@@ -58,6 +60,7 @@ src/
   domain/           Browser-independent rules
   features/first-sight/  Feature UI, types, sample data, discovery gateway, and engagement timer
   integrations/     Future service contracts; no clients or requests
+  images/           Ignored user-supplied originals for local media setup
 public/assets/      Tracked illustrative photography and sketches
 public/local-media/ Ignored Chloé example photographs, restored by setup:analysis-media
 scripts/            Local media setup
@@ -82,10 +85,10 @@ An eventual manual deployment can upload the completed `dist/` folder instead of
 
 Photography is reused from the user-supplied LoomStory export and is illustrative rather than evidence about individual listings. The source described it as Unsplash photography; original attribution and licensing provenance have not been independently verified. The app makes no brand-authentication, ownership, or verified historical-provenance claims.
 
-The Chloé analysis photographs live separately in the ignored `public/local-media/` directory. Keep those photographs and screenshots containing them out of Git commits. The authored alternative-bag SVG under `public/assets/first-sight/chloe/` is source artwork and remains tracked. Vite copies local public assets into a build when they are present, so repository exclusion is separate from the contents of a future deployed build.
+The Chloé analysis photographs live separately in the ignored `public/local-media/` directory, with supplied originals retained in the ignored `src/images/` directory. Keep those photographs and screenshots containing them out of Git commits. The authored alternative-bag SVG under `public/assets/first-sight/chloe/` is source artwork and remains tracked. Vite copies local public assets into a build when they are present, so repository exclusion is separate from the contents of a future deployed build.
 
 ## FirstSight flow prototype
 
-Visit `/first-sight` to compare the new photo-to-discovery flow with the preserved Discover and Submit pages. The upload panel changes its contents into a Chloé Paddington example with four explanation cards, a resale card, and a labeled **€700–€1,000** prototype estimate. Five styling-reference slots appear alongside it; two currently await their original photographs. **Explore buying options** opens 50/50 shopping/context discovery, followed by a 45-second active-browsing focus transition and a 70/30 product-detail view with a local cart preview. No AI, photo-upload service, live inventory, checkout, or payment is connected.
+Visit `/first-sight` to compare the new photo-to-discovery flow with the preserved Discover and Submit pages. The upload panel changes its contents into a Chloé Paddington example with four explanation cards, a resale card, and a labeled **€700–€1,000** prototype estimate. Five styling-reference slots appear alongside it; only the TV-scene photograph remains pending. **Explore buying options** opens 50/50 shopping/context discovery, followed by a 45-second active-browsing focus transition and a 70/30 product-detail view with a local cart preview. No AI, photo-upload service, live inventory, checkout, or payment is connected.
 
 The UI depends on an injectable service port under `src/features/first-sight/services/`, with the current behavior supplied by a local adapter. Read [the flow and future API integration guide](docs/first-sight-prototype.md) and [the celebrity media source record](docs/first-sight-sources.md).
