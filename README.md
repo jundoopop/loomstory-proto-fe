@@ -100,7 +100,8 @@ hero and inspiration board. FirstSight has two retained sections:
 1. **Discover the Story:** choose a photograph or celebrity example, then press **Analyse photo**.
    The city example presents PUMA's Micro Grip bag, slim long-sleeve tee and mini skirt; the track
    example presents T7 trousers, mesh top and Speedcat PRM trainers. Each named model opens its
-   own product reference and design notes. The campaign associations are curated, not exact worn-SKU
+   own product reference, four connected interactive feature tags and design notes. Tags preview on
+   hover/focus and turn burgundy when pinned. The campaign associations are curated, not exact worn-SKU
    identifications. Chloé, uploads and Discover references retain the five-study demonstration.
 2. **Find Your Piece:** celebrity examples retain all three pieces in the shopping edit when the
    dossier selection changes. Product images/names open the inline PDP; saves and bag actions resolve

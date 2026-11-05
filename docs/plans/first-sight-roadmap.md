@@ -1,10 +1,16 @@
 # FirstSight P1–P17 roadmap and Discover P18 renewal
 
+Latest approved follow-up: [dossier features and editorial tags](dossier-feature-tags-plan.md),
+adding four measured features per ROSÉ model and the shared feature-button redesign. This preserves
+the wider project/animation boundaries. The user has now authorised its EC-style commit, push
+and integration through `new-home-page` into `main`.
+
 Latest implementation slice: [whole-outfit analysis examples](whole-outfit-example-plan.md),
 confirmed by the user on 5 November 2026. Two ROSÉ × PUMA samples add six documented real models
 to FirstSight's example chooser, with whole-look commerce and the original five-study library
 retained. This is separate from the proposed wider project renewal and deferred animations.
-Git delivery requires a separate explicit instruction.
+Supporting card/outfit changes are committed as `8fe0d9a`; the reviewed dossier commit follows.
+Historical Git restrictions below refer to their implementation checkpoints.
 
 Recorded: 2026-11-04. Branch inspected: `new-analysis`. Starting commit: `c45cf42`.
 

@@ -7,6 +7,13 @@
   --fs-dossier-copper: #b47750;
   --fs-dossier-ink: #24201e;
   --fs-dossier-muted: #766e67;
+  /* Feature tags have their own palette so the surrounding editorial colours stay unchanged. */
+  --fs-feature-paper: #fffcf9;
+  --fs-feature-preview: #f2e6dc;
+  --fs-feature-border: #9d7b65;
+  --fs-feature-ink: #694a34;
+  --fs-feature-accent: var(--accent, #802f35);
+  --fs-feature-on-accent: #fffaf3;
   container: fashion-dossier / inline-size;
   color: var(--fs-dossier-ink);
   scroll-margin-top: 100px;
@@ -69,7 +76,7 @@
   font: 15px/1.6 Georgia, 'Times New Roman', serif;
 }
 
-/* The photo gets most of the canvas; four short oval labels form its magazine callouts. */
+/* The photo gets most of the canvas; four editorial tags frame its feature callouts. */
 .fs-dossier-canvas {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 3fr) minmax(0, 1fr);
@@ -112,30 +119,61 @@
 }
 
 .fs-dossier-feature-label {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 12px;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
-  min-height: 48px;
-  padding: 11px 9px;
-  border: 1px solid #bfa58c;
-  border-radius: 50%;
-  background: var(--fs-dossier-paper);
-  color: #694a34;
-  font: italic 15px/1.25 Georgia, 'Times New Roman', serif;
+  min-height: 56px;
+  padding: 12px 10px;
+  border: 1px solid var(--fs-feature-border);
+  border-radius: 10px;
+  background: var(--fs-feature-paper);
+  color: var(--fs-feature-ink);
+  box-shadow: 0 1px 3px #54391d0a;
+  text-align: left;
+  font: 400 15px/1.35 Georgia, 'Times New Roman', serif;
   cursor: pointer;
-  transition: background 160ms ease, border-color 160ms ease;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
-.fs-dossier-feature-label>span {
-  color: #71533e;
-  font: 8px/1 Arial, sans-serif;
+.fs-dossier-feature-number {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  min-height: 24px;
+  border-radius: 50%;
+  background: #eee3d9;
+  color: var(--fs-feature-ink);
+  font: 10px/1.2 Arial, sans-serif;
+}
+
+.fs-dossier-feature-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.fs-dossier-feature-toggle {
+  color: inherit;
+  text-align: center;
+  font: 16px/1 Arial, sans-serif;
 }
 
 .fs-dossier-callout.is-active .fs-dossier-feature-label {
-  background: #eadccf;
-  border-color: var(--fs-dossier-brown);
+  background: var(--fs-feature-preview);
+  box-shadow: 0 2px 8px #54391d14;
+}
+
+/* A temporary preview never changes which feature is pinned. */
+.fs-dossier-callout .fs-dossier-feature-label[aria-pressed='true'] {
+  background: var(--fs-feature-accent);
+  border-color: var(--fs-feature-accent);
+  color: var(--fs-feature-on-accent);
+}
+
+.fs-dossier-feature-label[aria-pressed='true'] .fs-dossier-feature-number {
+  background: var(--fs-feature-on-accent);
+  color: var(--fs-feature-accent);
 }
 
 /* A padded bridge keeps hover continuous between the label and its floating explanation. */
@@ -297,6 +335,11 @@
 .fs-dossier-notes summary:focus-visible {
   outline: 2px solid #6e472c;
   outline-offset: 4px;
+}
+
+.fs-dossier-feature-label:focus-visible {
+  outline: 3px solid var(--fs-feature-accent);
+  outline-offset: 3px;
 }
 
 .fs-dossier-caption {
@@ -590,6 +633,25 @@
 }
 
 /* On narrower columns, labels frame the photo from above and below instead of squeezing it. */
+/* Side callouts get narrow before the canvas stacks. Keep their text on its own row
+   rather than squeezing words between the badge and disclosure symbol. */
+@container fashion-dossier (min-width: 560px) and (max-width: 799px) {
+  .fs-dossier-feature-number {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .fs-dossier-feature-toggle {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .fs-dossier-feature-text {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
 @container fashion-dossier (max-width: 559px) {
   .fs-dossier-sheet {
     padding: 19px 14px 0;
@@ -651,7 +713,7 @@
   }
 
   .fs-dossier-feature-label {
-    min-height: 51px;
+    min-height: 56px;
     font-size: 15px;
   }
 
@@ -703,7 +765,7 @@
 
 @container fashion-dossier (max-width: 329px) {
 
-  /* Image hit areas overlap at this size. The four large oval buttons retain every action. */
+  /* Image hit areas overlap at this size. The four editorial tags retain every action. */
   .fs-dossier-point {
     display: none;
   }
@@ -725,11 +787,12 @@
   }
 
   .fs-dossier-feature-label {
-    padding-inline: 7px;
-    font-size: 13px;
+    grid-template-columns: minmax(0, 1fr) 12px;
+    padding-inline: 9px;
+    font-size: 14px;
   }
 
-  .fs-dossier-feature-label>span {
+  .fs-dossier-feature-number {
     display: none;
   }
 

@@ -92,7 +92,9 @@ export function FashionDossier({ item, onExplore }: Props) {
   }, []);
 
   /** Click/tap pins a detail, while pointer hover and keyboard focus offer temporary previews. */
-  const toggleAnnotation = (id: string) => {
+  const toggleAnnotation = (id: string, button: HTMLButtonElement) => {
+    // WebKit may leave pointer-activated buttons unfocused; keep Escape inside this canvas.
+    button.focus({ preventScroll: true });
     setSelectedAnnotation(current => current === id ? null : id);
   };
 
@@ -141,7 +143,7 @@ export function FashionDossier({ item, onExplore }: Props) {
                 onPointerLeave={() => setHoveredAnnotation(null)}
                 onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
                 onBlur={() => setFocusedAnnotation(null)}
-                onClick={() => toggleAnnotation(annotation.id)}
+                onClick={event => toggleAnnotation(annotation.id, event.currentTarget)}
               ><span aria-hidden="true" /></button>)}
               {/* Narrow images use the equivalent large label buttons; preserve these visual anchors. */}
               {item.annotations.map(annotation => <span key={annotation.id}
@@ -166,8 +168,13 @@ export function FashionDossier({ item, onExplore }: Props) {
               aria-pressed={selectedAnnotation === annotation.id}
               onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
               onBlur={() => setFocusedAnnotation(null)}
-              onClick={() => toggleAnnotation(annotation.id)}
-            ><span aria-hidden="true">{annotationNumber(annotation, item.analysis.cards)}</span>{annotation.label}</button>
+              onClick={event => toggleAnnotation(annotation.id, event.currentTarget)}
+            >
+              {/* Decorations stay outside the accessible name; open and pinned remain distinct. */}
+              <span className="fs-dossier-feature-number" aria-hidden="true">{annotationNumber(annotation, item.analysis.cards)}</span>
+              <span className="fs-dossier-feature-text">{annotation.label}</span>
+              <span className="fs-dossier-feature-toggle" aria-hidden="true">{expanded ? '−' : '+'}</span>
+            </button>
             {/* Absolute positioning keeps the magazine composition still when a card opens. */}
             <div className="fs-dossier-popover" hidden={!expanded}>
               <section id={`fs-dossier-detail-${annotation.id}`} className="fs-dossier-panel" aria-labelledby={labelId}>

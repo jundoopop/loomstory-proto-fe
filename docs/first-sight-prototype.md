@@ -145,7 +145,11 @@ starts analysis. Press **Analyse photo** to reveal that example's three real col
 Result buttons select the linked product photograph and four design notes. These models are named
 in PUMA's published collection release; their relationship to the campaign photographs is curated,
 not a brand-confirmed worn-SKU list or automated image recognition. Scores and valuations are
-omitted. New packshots do not receive invented feature coordinates.
+omitted. Each new packshot now has four measured feature anchors. The shared ivory editorial tags
+show a numbered badge, upright serif label and `+`/`−`; a pinned feature turns burgundy. Hover and
+keyboard focus preview explanations, click/tap pins them, and Escape or an outside action dismisses
+them. At narrow widths the text wraps and grows; it never disappears with the decorative badge.
+The [dossier follow-up ledger](plans/dossier-feature-tags-plan.md) records all 24 labels and anchors.
 
 All three sample offers remain visible when the selected piece changes. Opening the top while the
 bag is selected also changes PDP ownership, so its details, context, sizes, wardrobe save and bag

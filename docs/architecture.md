@@ -49,6 +49,13 @@ The styling feed remains mounted beside the selected archive edit regardless of 
 
 ## FirstSight data and service flow
 
+The approved [dossier feature follow-up](plans/dossier-feature-tags-plan.md) adds 24 measured
+annotations to the six PUMA product photographs. All dossiers share editorial tags with dedicated
+number/text/disclosure spans. Open explanations and pinned selections remain separate accessible
+states; tag colours and shadows change without moving connector geometry. Scoped feature tokens
+preserve the surrounding user-edited dossier palette, and compact two-row tags keep middle-width
+side columns readable. No public contract or service boundary changes in this follow-up.
+
 ```mermaid
 flowchart TD
     Studies[recognitionStudies: dossier, commerce, contextReferenceIds] --> Gateway[createPrototypeGateway]

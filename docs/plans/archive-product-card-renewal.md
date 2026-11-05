@@ -1,6 +1,8 @@
 # Archive product-card renewal
 
-Approved: 5 November 2026. Status: **complete and verified; uncommitted for review** on `new-analysis`.
+Approved: 5 November 2026. Status: **complete and verified; committed in `8fe0d9a`** on `new-analysis`.
+The user later authorised push and integration through `new-home-page` into `main`. The earlier
+Git restrictions below preserve the implementation checkpoint and are superseded by that instruction.
 Baseline: `00578d6988b2d7bc61253af9b4690ad333b2b1e6`.
 This approval covers implementation and verification, not staging, committing, pushing or merging.
 

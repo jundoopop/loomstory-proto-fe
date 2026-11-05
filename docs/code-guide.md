@@ -1,10 +1,11 @@
 # LoomStory code guide
 
 This guide covers the active React/Vite application, including the archive-first FirstSight journey,
-browser tooling and delivered P18 Discover renewal. The landscape follow-up is locally committed as
-`00578d6`; it has not been pushed or merged. The current [archive-card renewal](plans/archive-product-card-renewal.md)
+browser tooling and delivered P18 Discover renewal. The landscape follow-up is committed as
+`00578d6`. The user has authorised delivery through `new-home-page` into `main`, including supporting
+card/outfit commit `8fe0d9a` and the reviewed dossier follow-up. The [archive-card renewal](plans/archive-product-card-renewal.md)
 simplifies marketplace cards and moves listing context into the PDP. The functional renewal passed 127 browser executions; its subsequent visual refinement passed
-32 fresh browser executions and eight preview checks. All renewal work remains uncommitted for review. See the [Discover verification record](discover-verification.md) for
+32 fresh browser executions and eight preview checks. See the [Discover verification record](discover-verification.md) for
 historical checks and the renewal ledger for current evidence. Start with the change-location map;
 module/function comments and CSS section comments identify ownership and transitions.
 
@@ -24,11 +25,11 @@ module/function comments and CSS section comments identify ownership and transit
 | Matching-explanation floating card | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx) | `openMatching`, dismissal listeners, `.fs-matching-*` styles in `first-sight.css` |
 | Five studies, annotations, stories, related edits | [recognition.ts](../src/features/first-sight/recognition.ts) | `recognitionStudies`, `garmentStudy`, `archiveProductIds`, `styleMatchProductIds`, `contextReferenceIds` |
 | Celebrity example photographs, membership, primary piece and credits | [outfitExamples.ts](../src/features/first-sight/data/outfitExamples.ts) | `outfitExamples`, `findOutfitExample`, `outfitExampleLooks`; only explicit sample IDs select a whole look |
-| Real model names, dossiers and illustrative listing metadata | [outfitStudies.ts](../src/features/first-sight/data/outfitStudies.ts), [outfitCatalog.ts](../src/features/first-sight/data/outfitCatalog.ts) | Six sourced model studies; catalogue identity, explicit sizes and no invented confidence/resale |
+| Real model names, dossiers and illustrative listing metadata | [outfitStudies.ts](../src/features/first-sight/data/outfitStudies.ts), [outfitCatalog.ts](../src/features/first-sight/data/outfitCatalog.ts) | Six sourced model studies, 24 full-image feature anchors, catalogue identity, explicit sizes and no invented confidence/resale |
 | Example chooser and whole-look presentation | [ExampleChooser.tsx](../src/features/first-sight/components/ExampleChooser.tsx), [outfit-examples.css](../src/features/first-sight/components/outfit-examples.css) | Native example buttons, full visible accessible names, photograph framing and featured-piece cue |
 | Chloé photo, identity, explanation copy, resale, sources | [chloe.ts](../src/features/first-sight/chloe.ts) | `chloePhoto`, `chloeIdentity`, `chloeAnalysis`, `chloeSources`, `chloeLooks` |
 | Recognition-choice cards and sample confidence scores | [RecognitionResults.tsx](../src/features/first-sight/components/RecognitionResults.tsx), [recognition-results.css](../src/features/first-sight/components/recognition-results.css) | Selection callbacks and active-choice presentation |
-| Dossier feature labels, floating explanations, connectors, commented-out resale bar | [FashionDossier.tsx](../src/features/first-sight/components/FashionDossier.tsx), [fashion-dossier.css](../src/features/first-sight/components/fashion-dossier.css) | `measure`, `toggleAnnotation`, container queries, `imagePresentation` |
+| Dossier feature tags, floating explanations, connectors, commented-out resale bar | [FashionDossier.tsx](../src/features/first-sight/components/FashionDossier.tsx), [fashion-dossier.css](../src/features/first-sight/components/fashion-dossier.css) | `measure`, `toggleAnnotation`, `.fs-dossier-feature-number/text/toggle`, `--fs-feature-*`, compact 560–799 px tags, `imagePresentation` |
 | Garment-study drawing | [public/assets/first-sight/studies/](../public/assets/first-sight/studies/) | Four original SVGs; annotation coordinates are percentages of the full image |
 | Prices, product descriptions, saveable IDs | [catalog.ts](../src/data/catalog.ts) | Shared `items`; every FirstSight product ID must exist here |
 | Sample stock, variants, condition, material labels | [fixtures.ts](../src/features/first-sight/fixtures.ts) | `offerDetails`, `sampleOffers`, `offersFor` |

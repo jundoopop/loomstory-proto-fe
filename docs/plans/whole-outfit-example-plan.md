@@ -1,6 +1,15 @@
 # Whole-outfit examples — proposed implementation slice
 
-Recorded: 5 November 2026. Status: implemented and verified; uncommitted for review.
+Recorded: 5 November 2026. Status: implemented and verified; committed in `8fe0d9a`.
+
+The user subsequently authorised pushing and merging the verified work through `new-home-page`
+into `main`. Earlier Git restrictions below describe their implementation checkpoints and are
+superseded by that delivery instruction. The dossier follow-up remains a separate reviewed commit.
+
+Later approved follow-up: [dossier features and editorial tags](dossier-feature-tags-plan.md) adds
+24 measured product-image annotations and the shared button redesign. This document preserves the
+earlier example-delivery checkpoint; its previously empty annotation arrays are superseded by
+that follow-up.
 
 The user confirmed placing real branded results in FirstSight's analyse examples. The delivered
 slice uses two ROSÉ × PUMA campaign examples with six published model identities and clearly
