@@ -1,6 +1,6 @@
 # LoomStory code guide
 
-This guide covers the active React/Vite application, including the archive-first FirstSight journey, repository-owned browser tooling and the P18 Discover renewal. P18 implementation and verification are complete and remain uncommitted; see the [phase plan](plans/discover-p18-plan.md) and [Discover verification record](discover-verification.md). Start with the change-location map, then open the relevant module. Module headers describe ownership; function comments explain transitions and constraints; CSS section comments identify the visual area.
+This guide covers the active React/Vite application, including the archive-first FirstSight journey, browser tooling and delivered P18 Discover renewal. The [landscape follow-up](plans/discover-landscape-plan.md) is complete and verified; its local EC-style commit is now authorised, including the disabled dossier resale section. Push and merge remain separate. See the [P18 plan](plans/discover-p18-plan.md) and [Discover verification record](discover-verification.md) for historical results and current checks. Start with the change-location map, then open the relevant module. Module headers describe ownership; function comments explain transitions and constraints; CSS section comments identify the visual area.
 
 ## Find the change you want to make
 
@@ -11,7 +11,7 @@ This guide covers the active React/Vite application, including the archive-first
 | Continuous FirstSight flow and commerce separation | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | `changePhoto`, `analyze`, `selectRecognition`, `openProduct`, `openStyleMatches`, guarded save/bag actions |
 | Dashboard section surfaces and Section 1 35/65 split | [first-sight-flow.css](../src/pages/first-sight-flow.css) | `.fs-recognition-layout`, sticky boundary, section headings, responsive rules |
 | Section 2 shopping/feed layout and shared FirstSight controls | [first-sight.css](../src/pages/first-sight.css) | `.fs-discovery`, no-looks full-width fallback, feature buttons and cart dialog |
-| Discover cover and always-visible six-look board | [TrendHero.tsx](../src/features/discover/components/TrendHero.tsx), [trend-hero.css](../src/features/discover/components/trend-hero.css) | `selectCollection`, `exploreLook`, `?collection=<id>`, board breakpoints |
+| Discover cover and always-visible six-look board | [TrendHero.tsx](../src/features/discover/components/TrendHero.tsx), [trend-hero.css](../src/features/discover/components/trend-hero.css) | `selectCollection`, `exploreLook`, `boardRef`, `?collection=<id>`, landscape workspace query and board breakpoints |
 | Four authored collections and ordered six-look ranking | [collections.ts](../src/features/discover/collections.ts) | `inspirationCollections`, `InspirationCollection`, `collectionLooks` |
 | Discover reference hand-off | [references.ts](../src/features/discover/references.ts), [App.tsx](../src/App.tsx) | `resolveInspirationPhoto`, authored ID lookup, `workspaceKey`, route focus |
 | File formats, 5 MB limit, local decoding, persistent photo | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx), [upload-workspace.css](../src/features/first-sight/components/upload-workspace.css) | `acceptedTypes`, `select`, `cancelDecode`, explicit Analyze/Replace/Remove controls |
@@ -19,7 +19,7 @@ This guide covers the active React/Vite application, including the archive-first
 | Five studies, annotations, stories, related edits | [recognition.ts](../src/features/first-sight/recognition.ts) | `recognitionStudies`, `garmentStudy`, `archiveProductIds`, `styleMatchProductIds`, `contextReferenceIds` |
 | Chloé photo, identity, explanation copy, resale, sources | [chloe.ts](../src/features/first-sight/chloe.ts) | `chloePhoto`, `chloeIdentity`, `chloeAnalysis`, `chloeSources`, `chloeLooks` |
 | Recognition-choice cards and sample confidence scores | [RecognitionResults.tsx](../src/features/first-sight/components/RecognitionResults.tsx), [recognition-results.css](../src/features/first-sight/components/recognition-results.css) | Selection callbacks and active-choice presentation |
-| Dossier feature labels, floating explanations, connectors, resale bar | [FashionDossier.tsx](../src/features/first-sight/components/FashionDossier.tsx), [fashion-dossier.css](../src/features/first-sight/components/fashion-dossier.css) | `measure`, `toggleAnnotation`, container queries, `imagePresentation` |
+| Dossier feature labels, floating explanations, connectors, commented-out resale bar | [FashionDossier.tsx](../src/features/first-sight/components/FashionDossier.tsx), [fashion-dossier.css](../src/features/first-sight/components/fashion-dossier.css) | `measure`, `toggleAnnotation`, container queries, `imagePresentation` |
 | Garment-study drawing | [public/assets/first-sight/studies/](../public/assets/first-sight/studies/) | Four original SVGs; annotation coordinates are percentages of the full image |
 | Prices, product descriptions, saveable IDs | [catalog.ts](../src/data/catalog.ts) | Shared `items`; every FirstSight product ID must exist here |
 | Sample stock, variants, condition, material labels | [fixtures.ts](../src/features/first-sight/fixtures.ts) | `offerDetails`, `sampleOffers`, `offersFor` |
@@ -140,6 +140,7 @@ and local contrast colours/backings live in the feature CSS rather than the glob
 | [playwright.config.ts](../playwright.config.ts), [playwright.preview.config.ts](../playwright.preview.config.ts) | Managed browser projects, owned development/preview servers and failure artefacts |
 | [tests/browser/firstSight.flow.spec.ts](../tests/browser/firstSight.flow.spec.ts) | Real App route, five edits, archive/Inspire separation, upload, persistence and source labels |
 | [tests/browser/firstSight.resilience.spec.ts](../tests/browser/firstSight.resilience.spec.ts) | Controlled empty/error/pending/stale data and native modal regressions |
+| [tests/browser/discover.landscape.spec.ts](../tests/browser/discover.landscape.spec.ts) | Viewport panels, native scroll ownership, caption containment, resizing, keyboard and enlarged-text access |
 | [tests/browser/firstSight.accessibility.spec.ts](../tests/browser/firstSight.accessibility.spec.ts) | Study/drawer/bag accessibility, keyboard, touch and text reflow |
 | [tests/browser/discover.flow.spec.ts](../tests/browser/discover.flow.spec.ts) | Four independently expected edits, reference hand-off/history, saves and retained homepage actions |
 | [tests/browser/discover.accessibility.spec.ts](../tests/browser/discover.accessibility.spec.ts) | Direct homepage/open-dialog scans, reference metadata, keyboard/focus, touch and enlarged text |

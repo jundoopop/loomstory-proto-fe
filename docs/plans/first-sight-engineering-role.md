@@ -7,6 +7,11 @@ This agreement adapts the user-supplied “Senior Forward Deployed Engineer — 
 Related documents: [FirstSight roadmap and P18 renewal](first-sight-roadmap.md), [P1–P4 plan and assessment](first-sight-p1-p4-plan.md), [P5–P7 plan and assessment](first-sight-p5-p7-plan.md), and [delivered P8–P12 plan](first-sight-p8-p12-plan.md).
 
 Current approved work: [P18 Discover renewal](discover-p18-plan.md), authorised on 5 November 2026.
+
+Current implementation follow-up: [landscape inspiration workspace](discover-landscape-plan.md),
+separately approved after P18 delivery. Implementation and verification are complete. The user has
+now authorised its local EC-style commit, including the commented-out `fs-dossier-resale` patch.
+Push and merge require a separate instruction. Preserve unrelated concurrent user edits.
 P13–P16 were completed and verified in order; P17 delivered them as
 `d32ef3c3f700f936b409c06a5dfa7cde4f6b9252`, pushed to `origin/new-analysis` without a
 `new-home-page` or `main` merge. The [historical verification record](../first-sight-verification.md)
@@ -30,7 +35,7 @@ The current assignment renews Discover and its authored-reference hand-off into 
 - Share inspiration saves across both routes for the App visit only, separate from durable wardrobe and FirstSight-only Inspire saves.
 - Keep the photo workspace sticky only inside the recognition section; stack naturally on mobile.
 - Preserve five deterministic recognition studies and selection-driven dossier/product updates.
-- Preserve the interactive central product image, connected feature labels, floating explanations, longer design notes, and resale scenario.
+- Preserve the interactive central product image, connected feature labels, floating explanations, longer design notes, and resale scenario data. The latest user instruction keeps the dossier resale section commented out.
 - Keep the burgundy Style Journal visible while browsing. There is no 45-second collapse.
 - Keep explicit archive and style-match commerce tracks. The default FirstSight edit is archive-only; modern alternatives appear in the opt-in Inspire drawer integrated in P8–P12.
 - Keep recognition, prices, inventory, and valuations clearly represented as prototype data.

@@ -13,6 +13,8 @@
 .fs-trends { margin: 0 0 68px; }
 .fs-trend-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: #ebe5d9; border: 1px solid #d8cfc1; }
 .fs-trend-hero > * { min-width: 0; }
+/* Named regions provide a visible keyboard entry point when their content scrolls. */
+.fs-trend-hero:focus-visible, .fs-trend-board:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 /* In-flow captions can grow the cover at enlarged text sizes instead of being clipped. */
 .fs-trend-visual { display: grid; grid-template-rows: auto 1fr; position: relative; margin: 0; min-height: 650px; overflow: hidden; background: #b7a28d; isolation: isolate; }
 .fs-trend-visual > img { display: block; width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
@@ -117,4 +119,52 @@
 }
 @media (hover: none) {
   .discover-page .fs-look-peek { opacity: 1; }
+}
+
+/* Landscape workspace: ordinary page flow outside, independently scrollable panels inside. */
+@media (min-width: 1024px) and (min-height: 600px) and (orientation: landscape) {
+  .discover-page .fs-trends {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    height: calc(100dvh - 48px);
+    scroll-margin-top: 24px;
+  }
+
+  .discover-page .fs-trend-hero, .discover-page .fs-trend-board {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    /* Native chaining lets the page continue at a panel's boundary. */
+    overscroll-behavior-y: auto;
+  }
+
+  .discover-page .fs-trend-hero {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Preserve intrinsic content height; the panel scrolls instead of shrinking/clipping its cover. */
+  .discover-page .fs-trend-hero > * { flex: none; }
+  /* A short cover must not crop the portrait behind its headline; both remain in flow. */
+  .discover-page .fs-trend-visual { display: flex; flex-direction: column; min-height: 0; background: #ded4c8; }
+  .discover-page .fs-trend-visual > img { position: static; height: clamp(220px, 30dvh, 300px); flex: none; object-fit: contain; }
+  .discover-page .fs-trend-visual::after { display: none; }
+  .discover-page .fs-trend-image-top { position: absolute; inset: 16px 20px auto; margin: 0; }
+  .discover-page .fs-trend-visual figcaption { align-self: stretch; margin: 12px 20px 18px; }
+  .discover-page .fs-trend-visual figcaption > strong { font-size: clamp(27px, 2.3vw, 38px); letter-spacing: -.8px; }
+  .discover-page .fs-trend-chapter { margin-bottom: 8px; }
+  .discover-page .fs-trend-credit { margin-top: 8px; }
+  .discover-page .fs-trend-copy { padding: 20px; }
+  .discover-page .fs-trend-copy h2 { margin-top: 14px; font-size: clamp(30px, 2.8vw, 42px); letter-spacing: -1.5px; }
+  .discover-page .fs-trend-subtitle { font-size: 18px; }
+  .discover-page .fs-trend-introduction { margin: 12px 0 16px; }
+  .discover-page .fs-trend-collections > button { min-height: 48px; padding-block: 8px; }
+  .discover-page .fs-trend-collections > button > span:nth-child(2) { font-size: 18px; }
+  .discover-page .fs-trend-description { min-height: 0; margin: 12px 0 16px; }
+  .discover-page .fs-trend-actions { gap: 12px; }
+  .discover-page .fs-trend-actions > * { max-width: 100%; }
+  .discover-page .fs-trend-board { margin-top: 0; padding: 20px; }
+  .discover-page .fs-trend-board .fs-masonry { columns: 2; }
 }

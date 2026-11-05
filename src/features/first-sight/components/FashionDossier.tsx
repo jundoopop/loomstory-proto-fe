@@ -39,9 +39,6 @@ export function FashionDossier({ item, onExplore }: Props) {
   // Scrolling a keyboard-focused label under the pointer must not replace its explanation.
   const activeId = focusedAnnotation ?? hoveredAnnotation ?? selectedAnnotation;
   const titleId = `fs-dossier-title-${item.id}`;
-  const currency = new Intl.NumberFormat('en-IE', {
-    style: 'currency', currency: item.analysis.resale.currency, maximumFractionDigits: 0,
-  });
 
   /** Recalculate endpoints after wrapping, resizing, or image loading, without fixed pixel paths. */
   useLayoutEffect(() => {
@@ -190,15 +187,16 @@ export function FashionDossier({ item, onExplore }: Props) {
         </section>)}</div>
       </details>
 
-      {/* Resale remains explicitly illustrative until a marketplace-backed provider replaces the fixture. */}
-      <section className="fs-dossier-resale" aria-labelledby={`fs-dossier-resale-${item.id}`}>
+      {/* Keep resale disabled for the current business model; retain the sample markup for review.
+          Restore its currency formatter before re-enabling this section. */}
+      {/* <section className="fs-dossier-resale" aria-labelledby={`fs-dossier-resale-${item.id}`}>
         <div className="fs-dossier-panel-heading"><span aria-hidden="true">05</span><h4 id={`fs-dossier-resale-${item.id}`}>Resale value</h4></div>
         <p>{item.analysis.resale.description}</p>
         <div className="fs-dossier-valuation">
           <div><span>Suggested resale range</span><small>Illustrative estimate · condition dependent</small></div>
           <strong>{currency.format(item.analysis.resale.minimum)}<span>–</span>{currency.format(item.analysis.resale.maximum)}</strong>
         </div>
-      </section>
+      </section> */}
 
       <details className="fs-dossier-culture">
         <summary><span><small>CULTURAL SIGNIFICANCE</small><strong>The story behind the piece</strong></span><span className="fs-dossier-culture-toggle" aria-hidden="true">+</span></summary>

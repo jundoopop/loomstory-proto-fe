@@ -11,12 +11,16 @@ Distinct surfaces, numbered section headers and spacing separate the two areas l
 
 ## Start with inspiration on Discover
 
-Discover is a hybrid homepage: a 50/50 editorial cover, an immediately visible six-photo collection,
+Discover is a hybrid homepage: an editorial cover, an immediately visible six-photo collection,
 Vault search, four featured products and links to Stories and submission. Choose 90s Streetwear,
 Vintage Denim, Retro Cinema or Iconic Designer Accessories. Selection updates the cover and finite
 board together; `?collection=<id>` preserves the selected edit through browser history. The board
-uses three columns above 1000 px, two at 600–1000 px and one below 600 px. It has no regional filter,
-photo search or saved-only mode.
+uses two columns in the landscape workspace: width ≥1024 px, height ≥600 px and landscape orientation.
+There, equal cover/board panels share a viewport-height frame with independent native scrolling,
+below the existing page heading. The cover image and caption sit above its collection controls.
+Elsewhere the board stays below the cover, with three columns above 1000 px, two at 600–1000 px
+and one below 600 px. It has no regional filter, photo search or saved-only mode. Collection changes
+restart only the board's scroll; closing a photograph dialog preserves its position.
 
 Open a photograph's details or use the cover action, then choose **Explore in FirstSight**. The
 `/first-sight?look=<id>` link resolves a canonical authored reference, displays its celebrity/title
@@ -48,7 +52,7 @@ Every successful Analyze run returns the same five prepared choices:
 
 Selecting a study updates its dossier, archive edit, Inspire edit and four contextual references together without replacing the uploaded photo. The counts above are per-study memberships; the shared fixture catalogue contains eighteen unique offers.
 
-Each idle dossier shows a central product image surrounded by four compact feature labels connected to image points. Hover, focus or tap reveals that detail's name and short explanation in a floating card without expanding the layout. Design concept, key features, craftsmanship and common materials remain in a separate optional disclosure. The resale bar, cultural-story disclosure and four contextual references remain available. SVG connectors follow the rendered elements as the dossier resizes.
+Each idle dossier shows a central product image surrounded by four compact feature labels connected to image points. Hover, focus or tap reveals that detail's name and short explanation in a floating card without expanding the layout. Design concept, key features, craftsmanship and common materials remain in a separate optional disclosure. The cultural-story disclosure and four contextual references remain available. The resale bar is commented out at the user's request for the current business model; its fixture data remains unchanged. SVG connectors follow the rendered elements as the dossier resizes.
 
 In dossier containers up to 329 px wide, overlapping image hit areas become decorative markers;
 all four large labelled controls retain the same actions and keyboard access. Coordinates and
@@ -57,7 +61,7 @@ deliberate pointer input returns ownership to pointer interaction.
 
 Recognition scores, era matches and valuations are authored sample data. The selected image stays in browser memory and is never uploaded or inspected by a recognition model. Generic garments do not claim a real maker, verified production date or celebrity product match.
 
-Chloé's design history and the pictured reissue's specifications link to primary references in the cultural story. The reissue is distinct from the original vintage design. The resale percentages and **€700–€1,000** suggested range remain an illustrative scenario, not measured retention rates or a current market appraisal. Purchase prices, conditions, sizes, inventory and partner-preview offers are fictional.
+Chloé's design history and the pictured reissue's specifications link to primary references in the cultural story. The reissue is distinct from the original vintage design. The retained resale percentages and **€700–€1,000** range are sample fixture data; their dossier section is disabled. They are not measured retention rates or a current market appraisal. Purchase prices, conditions, sizes, inventory and partner-preview offers are fictional.
 
 ## Archive and Inspire action boundaries
 
@@ -95,7 +99,7 @@ Context cards, their detail dialogs and PDP notes display the authored relations
 | Authored studies and explicit archive/style/reference IDs | `recognition.ts` / `recognitionStudies` |
 | Chloé photograph, factual/source copy, sample resale and four references | `chloe.ts` |
 | Choice cards and sample scores | `components/RecognitionResults.tsx`, `components/recognition-results.css` |
-| Magazine labels, floating details, connectors and resale bar | `components/FashionDossier.tsx`, `components/fashion-dossier.css` |
+| Magazine labels, floating details, connectors and commented-out resale bar | `components/FashionDossier.tsx`, `components/fashion-dossier.css` |
 | Prices and wardrobe IDs / stock, variant and condition enrichment | `src/data/catalog.ts` / `fixtures.ts` |
 | Track predicates, listing/relationship labels and canonical archive SKU resolution | `commerce.ts` |
 | Archive cards / archive PDP with cultural notes and opt-in prompt | `components/PurchaseGrid.tsx` / `components/ProductDetailPanel.tsx`, `components/product-detail.css` |

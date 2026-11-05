@@ -62,8 +62,9 @@ test('direct Discover entry keeps four authored covers and six-look boards @resp
     for (const badge of await board.locator('.fs-look-region').all()) await expect(badge).toHaveText(/^(Korea|Japan|China|Global)$/);
     await expect(board.locator('.fs-look-relationship')).toHaveCount(0);
     const columns = await board.locator('.fs-masonry').evaluate(element => getComputedStyle(element).columnCount);
-    const width = page.viewportSize()!.width;
-    expect(columns).toBe(String(width > 1000 ? 3 : width >= 600 ? 2 : 1));
+    const { width, height } = page.viewportSize()!;
+    const landscape = width >= 1024 && height >= 600 && width > height;
+    expect(columns).toBe(String(landscape ? 2 : width > 1000 ? 3 : width >= 600 ? 2 : 1));
     await expectLoadedImages(board.locator('.fs-look-open > img'));
   }
 });

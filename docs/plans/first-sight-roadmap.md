@@ -258,3 +258,15 @@ authorised committing and pushing P18, then integrating through `new-home-page` 
 The later expressive magazine animation phase remains deferred until Discover's layout is settled
 and its separate plan is agreed. P18 staging, committing, pushing and main integration are explicitly
 authorised by the latest delivery instruction. No later feature work is included in that instruction.
+
+### P18 follow-up — Landscape inspiration workspace
+
+After delivery of P18 (`d64b349`, merged to main as `ad73d91`), the user approved the
+[landscape workspace plan](discover-landscape-plan.md). Implementation and verification are complete:
+116 affected browser executions, 31 axe scans, seven preview checks, both typechecks and 40 Node
+tests pass. On
+landscape displays at least 1024×600, the hero and board share a viewport-height frame with native
+independent scrolling. Portrait, narrow and short windows keep stacked page flow. The earlier P18
+Git authorisation did not initially cover this follow-up. The user has now explicitly authorised
+a local EC-style commit, including the commented-out `fs-dossier-resale` patch. Do not push or merge
+this follow-up without a separate instruction. Expressive magazine animation remains a later task.

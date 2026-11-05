@@ -1,4 +1,5 @@
 /** Discover's selectable magazine cover and finite, always-visible inspiration edit. */
+import { useLayoutEffect, useRef } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { outfitLooks } from '../../first-sight/looks';
 import type { OutfitLook, SavedLookProps } from '../../first-sight/types';
@@ -13,6 +14,12 @@ export function TrendHero({ savedLookIds, onToggleSaveLook }: SavedLookProps) {
   const collection = inspirationCollections.find(entry => entry.id === searchParams.get('collection'))
     ?? inspirationCollections[0];
   const hero = outfitLooks.find(look => look.id === collection.heroId) ?? outfitLooks[0];
+  const boardRef = useRef<HTMLDivElement>(null);
+
+  // Restart only this collection's scroll area; page position and the cover remain independent.
+  useLayoutEffect(() => {
+    if (boardRef.current) boardRef.current.scrollTop = 0;
+  }, [collection.id]);
 
   function selectCollection(id: string) {
     setSearchParams(previous => {
@@ -28,7 +35,7 @@ export function TrendHero({ savedLookIds, onToggleSaveLook }: SavedLookProps) {
   }
 
   return <section className="fs-trends" id="discover-inspiration" aria-labelledby="discover-inspiration-title">
-    <div className="fs-trend-hero">
+    <div className="fs-trend-hero" role="region" aria-label="Inspiration cover and collections" tabIndex={0}>
       <figure className="fs-trend-visual">
         <img key={hero.id} src={hero.image} alt={`${hero.celebrity}: ${hero.title}`} width={hero.width} height={hero.height} style={{ objectPosition: collection.position }} fetchPriority="high" />
         <div className="fs-trend-image-top"><span>THE DISCOVER EDIT</span><span>VOL. 01</span></div>
@@ -58,8 +65,8 @@ export function TrendHero({ savedLookIds, onToggleSaveLook }: SavedLookProps) {
       </div>
     </div>
 
-    <div className="fs-trend-board" id="fs-trend-board">
-      <div className="fs-trend-board-label"><span>{collection.title} / THE EDIT</span><span>Six looks, one feeling.</span></div>
+    <div className="fs-trend-board" id="fs-trend-board" ref={boardRef} role="region" aria-labelledby="discover-board-title" tabIndex={0}>
+      <div className="fs-trend-board-label"><span id="discover-board-title">{collection.title} / THE EDIT</span><span>Six looks, one feeling.</span></div>
       <OutfitMasonry key={collection.id} looks={collectionLooks(collection)} savedLookIds={savedLookIds}
         onToggleSaveLook={onToggleSaveLook} loadingEnabled={false} showRegionFilters={false} onExploreLook={exploreLook} />
     </div>

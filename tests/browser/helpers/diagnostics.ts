@@ -21,7 +21,11 @@ export const test = base.extend<{ diagnostics: Diagnostics }>({
     // Give this test worker disposable app data without touching the user's Firefox profile.
     const directory = await mkdtemp(join(tmpdir(), 'loomstory-firefox-home-'));
     try {
-      await use({ ...launchOptions, env: { ...process.env, ...launchOptions.env, CFFIXED_USER_HOME: directory } });
+      await use({ ...launchOptions,
+        env: { ...process.env, ...launchOptions.env, CFFIXED_USER_HOME: directory },
+        // Owned loopback servers must not inherit machine proxy routing in isolated test profiles.
+        firefoxUserPrefs: { ...launchOptions.firefoxUserPrefs, 'network.proxy.type': 0 },
+      });
     } finally {
       try { await rm(directory, { recursive: true, force: true }); }
       catch (error) {
