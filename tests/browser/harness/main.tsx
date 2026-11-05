@@ -69,6 +69,7 @@ function PageHost() {
   const pending = useRef<Array<{ resolve: (result: DiscoveryResult) => void; result: DiscoveryResult }>>([]);
   const saveCalls = useRef<string[]>([]);
   const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
   const [version, setVersion] = useState(0);
   const [pageKey, setPageKey] = useState(0);
   const [mounted, setMounted] = useState(true);
@@ -114,6 +115,8 @@ function PageHost() {
   return <>
     <p style={{ margin: 8 }}>Controlled FirstSight test host · version {version}</p>
     {mounted && <FirstSightPage key={pageKey} items={[]} savedIds={savedIds} gateway={gateway}
+      savedLookIds={savedLookIds} onToggleSaveLook={id => setSavedLookIds(previous => previous.includes(id)
+        ? previous.filter(value => value !== id) : [...previous, id])}
       onToggleSave={id => {
         saveCalls.current.push(id);
         setSavedIds(previous => previous.includes(id) ? previous.filter(value => value !== id) : [...previous, id]);

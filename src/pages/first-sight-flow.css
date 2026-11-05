@@ -1,7 +1,7 @@
 /*
  * Continuous FirstSight layout. Each chapter is its own framed workspace;
- * Section 2 owns the upload sticky boundary and Section 3 keeps outfits alongside shopping.
- * Component-local styling lives beside the trends, upload, and dossier components.
+ * Analysis owns the upload sticky boundary; shopping keeps outfits alongside the archive edit.
+ * Component-local styling lives beside the upload and dossier components.
  */
 .fs-continuous {
   --fs-ivory: #f7f3ef;
@@ -19,22 +19,21 @@
 .fs-continuous .fs-journey-bar nav a span { color: var(--ink); }
 .fs-continuous .fs-journey-bar nav a:hover { border-color: #b99172; background: #f7eee3; }
 .fs-continuous .fs-journey-bar nav a:focus-visible { outline: 2px solid var(--fs-brown); outline-offset: 3px; }
+.fs-continuous .fs-journey-bar nav .fs-discover-link { border-style: dashed; color: #663d45; }
+.fs-reference-unavailable { margin: 0 0 22px; color: #663d45; font-size: 13px; line-height: 1.7; }
 
 /* Real section anchors keep the full journey in the same document. */
-.fs-continuous #fs-trends,
 .fs-recognition-section,
 .fs-similar-section,
 .fs-inline-product { scroll-margin-top: 28px; }
-/* Shared frames and header strips make the three workspaces easy to scan as a dashboard.
+/* Shared frames and header strips make the two workspaces easy to scan as a dashboard.
    Overflow stays visible here so the photo workspace can remain sticky inside its own chapter. */
-.fs-continuous .fs-trends,
 .fs-recognition-section,
 .fs-similar-section { margin: 0 0 34px; padding: 0 22px 24px; border: 1px solid #d8cbbd; border-radius: 12px; background: #fffcf8; box-shadow: 0 4px 16px #4e382b06; }
 .fs-chapter-label { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 55px; margin: 0 -22px 24px; padding: 16px 22px; border-bottom: 1px solid #ded2c5; border-radius: 11px 11px 0 0; background: #eee6dc; font-size: 9px; line-height: 1.6; letter-spacing: 1.5px; color: var(--fs-muted); }
 .fs-chapter-label > span:first-child { font-weight: 600; color: #785235; }
-/* Small chapter metadata must remain readable on all three tinted header strips. */
+/* Small chapter metadata must remain readable on both tinted header strips. */
 .fs-chapter-label > span:last-child { color: #625d58; }
-.fs-continuous .fs-trends > .fs-chapter-label { background: #e9e2d6; }
 .fs-similar-section > .fs-chapter-label { background: #e9ebe1; }
 .fs-recognition-layout { display: grid; grid-template-columns: minmax(0, 35fr) minmax(0, 65fr); gap: 28px; align-items: start; }
 .fs-recognition-layout > .fs-upload-panel { position: sticky; top: 24px; min-width: 0; }
@@ -51,8 +50,8 @@
 .fs-recognition-empty { display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: #ede6db; padding: 32px 26px; gap: 20px; min-height: 490px; border: 1px solid #e0d5c8; }
 .fs-empty-copy h3 { font: 34px/1.1 Georgia, serif; letter-spacing: -.8px; margin: 19px 0; }
 .fs-empty-copy h3 em { color: var(--fs-brown); font-weight: 400; }
-.fs-empty-copy p { font-size: 12px; line-height: 1.8; color: var(--fs-muted); }
-.fs-empty-copy .fs-text-button { color: var(--fs-brown); margin-top: 16px; text-align: left; }
+.fs-empty-copy p { font-size: 12px; line-height: 1.8; color: #62584f; }
+.fs-empty-copy .fs-text-button { color: #745238; margin-top: 16px; text-align: left; }
 .fs-recognition-empty figure { margin: 0; min-width: 0; }
 .fs-recognition-empty img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; object-position: center bottom; mix-blend-mode: multiply; }
 .fs-recognition-empty figcaption { text-align: center; font-size: 8px; letter-spacing: 1.1px; margin: 15px 0; line-height: 1.7; }
@@ -73,7 +72,7 @@
 .fs-products-empty { display: flex; align-items: center; flex-wrap: wrap; gap: 25px; background: #ece6da; padding: 30px; }
 .fs-products-empty > span { font: 40px Georgia, serif; color: var(--fs-brown); }
 .fs-products-empty h3 { font: 26px/1.2 Georgia, serif; }
-.fs-products-empty p { color: var(--fs-muted); font-size: 12px; line-height: 1.7; margin-top: 8px; }
+.fs-products-empty p { color: #62584f; font-size: 12px; line-height: 1.7; margin-top: 8px; }
 .fs-products-empty .fs-text-button { margin-left: auto; }
 .fs-continuous .fs-discovery { margin-top: 25px; }
 .fs-continuous .fs-discovery .fs-feed-heading h2 { font-size: 33px; }
@@ -130,7 +129,7 @@
   .fs-continuous .fs-journey-bar nav a { flex: 1 1 130px; gap: 7px; font-size: 9px; padding: 10px; }
   .fs-continuous .fs-bag-button { margin-left: auto; padding: 8px 2px; }
   .fs-continuous .fs-bag-button { font-size: 10px; }
-  .fs-continuous .fs-trends, .fs-recognition-section, .fs-similar-section { margin-bottom: 24px; padding: 0 12px 18px; border-radius: 9px; }
+  .fs-recognition-section, .fs-similar-section { margin-bottom: 24px; padding: 0 12px 18px; border-radius: 9px; }
   .fs-chapter-label { margin: 0 -12px 18px; padding: 14px 16px; min-height: 48px; border-radius: 8px 8px 0 0; font-size: 8px; letter-spacing: 1px; }
   .fs-chapter-label > span:last-child { display: none; }
   .fs-recognition-layout { grid-template-columns: 1fr; gap: 35px; }
@@ -151,7 +150,7 @@
 }
 @media (max-width: 430px) {
   .fs-continuous .fs-journey-bar nav a { flex-basis: 100%; }
-  .fs-continuous .fs-trends, .fs-recognition-section, .fs-similar-section { padding-inline: 10px; }
+  .fs-recognition-section, .fs-similar-section { padding-inline: 10px; }
   .fs-chapter-label { margin-inline: -10px; }
   .fs-recognition-empty { grid-template-columns: 1fr; }
   .fs-recognition-empty figure { max-width: 235px; }

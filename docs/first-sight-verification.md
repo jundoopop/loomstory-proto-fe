@@ -155,3 +155,14 @@ P17 staging, committing, pushing and merging remain subject to the user's explic
   dependencies. Test dependencies add no reported advisory. A separate Vite update is recommended;
   no forced or unrelated framework upgrade is included in this slice.
 - Authentication, live recognition/content, real inventory and checkout remain outside the prototype.
+
+
+## Superseding P17 delivery note — 5 November 2026
+
+After the review recorded above, the user explicitly authorised the P17 commit and push. The
+reviewed P13–P16 implementation was committed as `d32ef3c3f700f936b409c06a5dfa7cde4f6b9252`
+and pushed to `origin/new-analysis`. No merge to `new-home-page` or `main` was performed.
+The pending-approval wording above describes the earlier checkpoint; its recorded test counts
+remain historical evidence. The approved [P18 Discover renewal](plans/discover-p18-plan.md) now begins from that
+delivered commit and remains uncommitted. See the [P18 verification record](discover-verification.md) for new
+results; historical P16 passes do not verify the changed P18 source.

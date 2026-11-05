@@ -13,9 +13,14 @@ import ItemPage from './pages/ItemPage';
 import StoriesPage from './pages/StoriesPage';
 import SubmitPage from './pages/SubmitPage';
 import FirstSightPage from './pages/FirstSightPage';
+import { outfitLooks } from './features/first-sight/looks';
+import { chloeLooks } from './features/first-sight/chloe';
+import { resolveInspirationPhoto } from './features/discover/references';
 
 // Wardrobe entries must refer to this catalog; update the catalog when adding live IDs.
 const validIds = items.map(item => item.id);
+// Both discovery photos and item-specific context can be saved without entering the wardrobe.
+const validLookIds = new Set([...outfitLooks, ...chloeLooks].map(look => look.id));
 
 /** Read stored favorites through the domain validator; unavailable storage starts empty. */
 function readSavedItems() {
@@ -27,9 +32,16 @@ function readSavedItems() {
 export default function App() {
   const [savedIds, setSavedIds] = useState(readSavedItems);
   const [notice, setNotice] = useState('');
+  const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
   const location = useLocation();
+  const requestedLookId = new URLSearchParams(location.search).get('look');
+  const inspirationPhoto = resolveInspirationPhoto(requestedLookId);
+  // A different reference is a fresh workspace even when the pathname stays the same.
+  const workspaceKey = requestedLookId === null ? 'upload' : `reference:${requestedLookId}`;
+  const routeFocusKey = location.pathname === '/first-sight'
+    ? `${location.pathname}/${workspaceKey}` : location.pathname;
   const mainRef = useRef<HTMLElement>(null);
-  const previousPath = useRef(location.pathname);
+  const previousPath = useRef(routeFocusKey);
 
   // Keep route titles, keyboard focus, and scroll position in sync after navigation.
   useEffect(() => {
@@ -38,14 +50,14 @@ export default function App() {
       : location.pathname.startsWith('/submit') ? 'Submit a piece'
       : location.pathname.startsWith('/wardrobe') ? 'My wardrobe'
       : location.pathname.startsWith('/stories') ? 'Stories'
-      : location.pathname.startsWith('/about') ? 'About the prototype' : 'Every piece has a past';
+      : location.pathname.startsWith('/about') ? 'About the prototype' : 'Discover';
     document.title = `${title} — LoomStory`;
-    if (previousPath.current !== location.pathname) {
+    if (previousPath.current !== routeFocusKey) {
       mainRef.current?.focus({ preventScroll: true });
       window.scrollTo(0, 0);
-      previousPath.current = location.pathname;
+      previousPath.current = routeFocusKey;
     }
-  }, [location.pathname]);
+  }, [location.pathname, routeFocusKey]);
 
   // A new wardrobe notice replaces the previous timeout instead of clearing early.
   useEffect(() => {
@@ -77,6 +89,14 @@ export default function App() {
   };
   // Collection pages receive these dependencies rather than owning separate wardrobe copies.
   const collectionProps = { items, savedIds, onToggleSave };
+  const lookProps = {
+    savedLookIds,
+    onToggleSaveLook: (id: string) => {
+      if (!validLookIds.has(id)) return;
+      setSavedLookIds(previous => previous.includes(id)
+        ? previous.filter(value => value !== id) : [...previous, id]);
+    },
+  };
 
   return <>
     <a className="skip" href="#main">Skip to content</a>
@@ -96,8 +116,10 @@ export default function App() {
     <main id="main" ref={mainRef} tabIndex={-1}>
       {/* Route registry: FirstSight stays alongside the original comparison pages. */}
       <Routes>
-        <Route path="/" element={<DiscoverPage {...collectionProps} />} />
-        <Route path="/first-sight" element={<FirstSightPage {...collectionProps} />} />
+        <Route path="/" element={<DiscoverPage {...collectionProps} {...lookProps} />} />
+        <Route path="/first-sight" element={<FirstSightPage key={workspaceKey} {...collectionProps} {...lookProps}
+          initialPhoto={inspirationPhoto ?? undefined}
+          referenceUnavailable={requestedLookId !== null && !inspirationPhoto} />} />
         <Route path="/vault" element={<CatalogPage {...collectionProps} />} />
         <Route path="/items/:id" element={<ItemPage {...collectionProps} />} />
         <Route path="/stories" element={<StoriesPage />} />

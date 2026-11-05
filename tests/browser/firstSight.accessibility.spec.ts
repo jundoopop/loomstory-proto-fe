@@ -43,14 +43,6 @@ async function expectNoHorizontalOverflow(page: Page) {
   expect(overflow, 'The document must fit its viewport').toBeLessThanOrEqual(1);
 }
 
-async function expectCoverCaptionFits(page: Page) {
-  await expect.poll(() => page.locator('.fs-trend-visual').evaluate(visual => {
-    const frame = visual.getBoundingClientRect();
-    const caption = visual.querySelector('figcaption')!.getBoundingClientRect();
-    return caption.top >= frame.top && caption.bottom <= frame.bottom;
-  }), { message: 'The cover caption must remain readable inside its image frame' }).toBe(true);
-}
-
 async function enlargeFirstSightText(page: Page) {
   await page.evaluate(() => {
     // Capture first so inherited text is doubled once, rather than repeatedly down the tree.
@@ -64,7 +56,6 @@ async function enlargeFirstSightText(page: Page) {
 test('all five study pages have no automatically detectable accessibility failures @responsive', async ({ page }, testInfo) => {
   test.setTimeout(120_000);
   await analyseSample(page);
-  await expectCoverCaptionFits(page);
   for (const study of studies) {
     await selectStudy(page, study);
     const labels = page.locator('.fs-dossier-feature-label');
@@ -128,7 +119,7 @@ test('Inspire, bag and contextual details remain accessible when open @responsiv
   await expectNoHorizontalOverflow(page);
 });
 
-test('expanded editorial boards and explanations retain readable structure @responsive', async ({ page }, testInfo) => {
+test('expanded design notes and explanations retain readable structure @responsive', async ({ page }, testInfo) => {
   test.setTimeout(120_000);
   await analyseSample(page);
   // Pointer entry already opens this hover card; keyboard activation avoids toggling it shut.
@@ -149,11 +140,9 @@ test('expanded editorial boards and explanations retain readable structure @resp
 
   await page.locator('.fs-dossier-notes > summary').click();
   await page.locator('.fs-dossier-culture > summary').click();
-  await page.getByRole('button', { name: 'Explore collection', exact: false }).click();
-  await expect(page.locator('#fs-trend-board')).toBeVisible();
   await expect(page.locator('.fs-dossier-notes')).toHaveAttribute('open', '');
   await expect(page.locator('.fs-dossier-culture')).toHaveAttribute('open', '');
-  await expectAccessible(page, testInfo, 'expanded-notes-culture-and-trends');
+  await expectAccessible(page, testInfo, 'expanded-notes-and-culture');
   await expectNoHorizontalOverflow(page);
 });
 
@@ -205,7 +194,6 @@ test.describe('narrow text enlargement', () => {
     await page.waitForFunction(() => Boolean(window.__firstSightTestHost));
     await enlargeFirstSightText(page);
     await expectNoHorizontalOverflow(page);
-    await expectCoverCaptionFits(page);
     await page.reload();
     await page.waitForFunction(() => Boolean(window.__firstSightTestHost));
     await page.getByRole('button', { name: /Try the Chloé bag/ }).click();
@@ -220,7 +208,6 @@ test.describe('narrow text enlargement', () => {
     await testInfo.attach('inspire-200-percent-text', { body: await page.screenshot(), contentType: 'image/png' });
     await closeInspire(page);
     await expectNoHorizontalOverflow(page);
-    await expectCoverCaptionFits(page);
   });
 });
 

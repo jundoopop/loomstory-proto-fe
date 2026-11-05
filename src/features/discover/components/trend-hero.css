@@ -1,3 +1,14 @@
+/* Discover owns its editorial page frame; retained commerce sections use the shared site styles. */
+.discover-page { padding-bottom: 35px; min-width: 0; }
+.discover-heading { padding: 34px 0 28px; }
+.discover-heading h1 { font: 400 clamp(56px, 7vw, 94px)/1.05 Georgia, serif; letter-spacing: -3px; margin: 10px 0 14px; overflow-wrap: anywhere; }
+.discover-heading h1 > span { color: var(--accent); }
+.discover-heading p { font-size: 14px; line-height: 1.7; color: var(--muted); }
+.discover-page .discover-bar > *, .discover-page .search-form { min-width: 0; }
+.discover-page .search-form input, .discover-page .search-form button { min-height: 44px; }
+.discover-page .card .save { width: 44px; height: 44px; }
+.discover-page .card-meta { display: flex; align-items: center; min-height: 44px; }
+
 /* A 50/50 cover story; collection controls stay in the document flow at every width. */
 .fs-trends { margin: 0 0 68px; }
 .fs-trend-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: #ebe5d9; border: 1px solid #d8cfc1; }
@@ -21,7 +32,7 @@
 .fs-trend-eyebrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #675849; font-size: 8px; line-height: 1.7; letter-spacing: 1.6px; }
 .fs-trend-eyebrow > span:last-child { font-size: 27px; }
 /* Enlarged display type may break a long word instead of widening the document. */
-.fs-trend-copy h2 { margin: 34px 0 4px; font: 400 clamp(52px, 5.9vw, 82px)/1.04 Georgia, serif; letter-spacing: -4px; overflow-wrap: anywhere; }
+.fs-trend-copy h2 { margin: 34px 0 4px; font: 400 clamp(42px, 4.5vw, 66px)/1.04 Georgia, serif; letter-spacing: -4px; overflow-wrap: anywhere; }
 .fs-trend-copy h2 > span { color: #8a583c; }
 .fs-trend-subtitle { margin: 8px 0 0; font: italic 21px/1.4 Georgia, serif; color: #8a583c; }
 .fs-trend-introduction { color: #6b6259; font-size: 11px; line-height: 1.8; margin: 18px 0 27px; }
@@ -42,8 +53,8 @@
 .fs-trend-upload-link { display: inline-flex; align-items: center; gap: 13px; min-height: 44px; color: #5c4a3d; font-size: 10px; text-decoration: underline; text-underline-offset: 5px; }
 .fs-trend-upload-link:hover { color: #802f35; }
 
-/* The expanded edit is a finite six-look board rather than a second infinite feed. */
-.fs-trend-board:not([hidden]) { margin-top: 30px; padding: 28px; border: 1px solid #d8cfc1; background: #f1ece2; }
+/* The selected six-look edit stays visible; there is no second infinite feed. */
+.fs-trend-board { margin-top: 30px; padding: 28px; border: 1px solid #d8cfc1; background: #f1ece2; }
 .fs-trend-board-label { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #d8cfc1; color: #8a583c; font-size: 9px; letter-spacing: 1px; }
 .fs-trend-board-label > span:last-child { color: #73695e; letter-spacing: 0; }
 .fs-trend-board .fs-feed-heading h2 { font-size: 32px; }
@@ -71,8 +82,39 @@
   .fs-trend-collections > button > span:nth-child(2) { font-size: 20px; }
   .fs-trend-description { min-height: 0; font-size: 11px; }
   .fs-trend-actions { gap: 12px 20px; }
-  .fs-trend-board:not([hidden]) { padding: 20px 15px; }
-  .fs-trend-board .fs-masonry { columns: 2; }
+  .fs-trend-board { padding: 20px 15px; }
   .fs-trend-board-label { flex-wrap: wrap; gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .fs-trend-collections > button { transition: none; } }
+
+/* Discover owns its board rhythm independently of FirstSight's contextual-journal columns. */
+.discover-page .fs-trend-board .fs-masonry { columns: 3; column-gap: 22px; }
+.discover-page .fs-trend-board .fs-look-caption h3 { font-size: 15px; line-height: 1.4; }
+.discover-page .fs-trend-board .fs-look-caption p { font-size: 12px; line-height: 1.6; }
+.discover-page .fs-trend-board .fs-look-caption > a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; font-size: 12px; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; }
+.discover-page .fs-trend-board .fs-look-save, .discover-page .fs-look-dialog .fs-dialog-close { width: 44px; height: 44px; }
+.discover-page .fs-trend-board .fs-look-save { border: 1px solid #c8b4a6; background: #fffaf4; }
+.discover-page .fs-trend-board .fs-look-save:focus-visible { outline: 3px solid var(--accent); outline-offset: -5px; }
+.discover-page .fs-trend-board .fs-look-open:focus-visible { outline: 3px solid var(--accent); outline-offset: -4px; }
+.discover-page .fs-trend-collections button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.discover-page .fs-trend-credit a, .discover-page .fs-look-dialog-copy > .fs-photo-credit a { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; }
+.discover-page .fs-trend-credit a { font-size: 10px; }
+.discover-page .fs-look-dialog-copy { overflow-wrap: anywhere; min-width: 0; }
+.discover-page .fs-look-dialog-copy .fs-button { max-width: 100%; gap: 12px; }
+.discover-page .fs-look-dialog-copy > .fs-photo-credit { font-size: 12px; line-height: 1.6; }
+.discover-page .fs-feed-footnote { font-size: 11px; line-height: 1.6; }
+.discover-page .fs-feed-heading { flex-wrap: wrap; }
+.discover-page .fs-feed-heading > *, .discover-page .split-banner > div { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+.discover-page .section-head { flex-wrap: wrap; }
+.discover-page .section-head > a { display: inline-flex; align-items: center; min-height: 44px; }
+
+@media (max-width: 1000px) {
+  .discover-page .fs-trend-board .fs-masonry { columns: 2; }
+}
+@media (max-width: 599px) {
+  .discover-page .fs-trend-board .fs-masonry { columns: 1; }
+  .discover-page .fs-trend-board { padding: 20px 15px; }
+}
+@media (hover: none) {
+  .discover-page .fs-look-peek { opacity: 1; }
+}

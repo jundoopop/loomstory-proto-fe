@@ -6,6 +6,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { contextRelationshipLabel } from '../commerce';
 import type { OutfitLook, Region } from '../types';
+import './outfit-masonry.css';
 import './outfit-magazine.css';
 
 interface Props {
@@ -17,12 +18,16 @@ interface Props {
   itemContext?: boolean;
   contextName?: string;
   loadingEnabled?: boolean;
+  /** Discover uses finite editorial collections instead of an additional region filter. */
+  showRegionFilters?: boolean;
+  /** Only hosts offering an explicit photo hand-off provide this action. */
+  onExploreLook?: (look: OutfitLook) => void;
 }
 const regions: Region[] = ['All', 'Korea', 'Japan', 'China', 'Global'];
 
 /** Render the board; `contextual` adds the sample screen/social editorial cards. */
-export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, contextName, itemContext = Boolean(contextName), loadingEnabled = true }: Props) {
-  // Filtering and the visible batch belong to this board. Saved hearts live in FirstSightPage.
+export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, contextual = false, contextName, itemContext = Boolean(contextName), loadingEnabled = true, showRegionFilters = true, onExploreLook }: Props) {
+  // Filtering and the visible batch belong to this board. App owns visit-local saved hearts.
   const [region, setRegion] = useState<Region>('All');
   const [limit, setLimit] = useState(12);
   const [selected, setSelected] = useState<OutfitLook | null>(null);
@@ -67,7 +72,7 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
       : itemContext ? 'A few ways to see the silhouette anew. Selected photographs to inspire your next chapter.'
       : contextual ? 'Real celebrity references, paired here as sample styling inspiration. Not verified appearances of your piece.'
       : 'From Seoul to everywhere. A little inspiration for your next favourite piece.'}</p>
-    {!itemContext && <div className="fs-filters" role="group" aria-label="Filter outfits by region">
+    {!itemContext && showRegionFilters && <div className="fs-filters" role="group" aria-label="Filter outfits by region">
       {regions.map(value => <button type="button" key={value} aria-pressed={region === value} onClick={() => { setRegion(value); setLimit(12); }}>{value === 'All' ? 'All looks' : value}</button>)}
     </div>}
     {/* These are authored prototype context cards; sourced celebrity records follow below. */}
@@ -79,7 +84,10 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     <div className="fs-masonry">
       {filtered.slice(0, limit).map((look, index) => <article className="fs-look" key={look.id}>
         <div className="fs-look-image-wrap">
-          <button className="fs-look-open" type="button" aria-label={`View look: ${look.celebrity}. ${look.title}`} onClick={() => { setSelected(look); }}>
+          <button className="fs-look-open" type="button" aria-label={`View look: ${look.celebrity}. ${look.title}`} onClick={event => {
+            // Capture the actual opener before native modality, including WebKit pointer clicks.
+            event.currentTarget.focus({ preventScroll: true }); setSelected(look);
+          }}>
             <LookImage look={look} eager={index < 4} />
             <span className="fs-look-peek" aria-hidden="true">{magazine ? 'View ↗' : 'View look ↗'}</span>
           </button>
@@ -105,11 +113,14 @@ export function OutfitMasonry({ looks, savedLookIds: saved, onToggleSaveLook, co
     </div>
     {!filtered.length && <p className="fs-muted">This edit is still being collected. Explore another region.</p>}
     {limit < filtered.length && <div ref={sentinel} className="fs-load-more"><button type="button" className="fs-button" onClick={() => { setLimit(value => value + 8); }}>More inspiration <span aria-hidden="true">↓</span></button></div>}
-    <p className="fs-feed-footnote">{itemContext ? 'A design-family link, runway reference or styling idea. These connections do not authenticate an individual piece. Saved looks stay for this visit.' : `${filtered.length} sourced references · Saved looks stay in this page session.`}</p>
+    <p className="fs-feed-footnote">{itemContext ? 'A design-family link, runway reference or styling idea. These connections do not authenticate an individual piece. Saved looks stay for this visit.' : `${filtered.length} sourced references · Saved looks stay for this visit.`}</p>
     <span className="fs-sr-only" role="status">{status}</span>
     {/* Keep the original source, photographer and licence accessible for every look. */}
-    <dialog className="fs-look-dialog" ref={dialog} aria-labelledby={headingId} onCancel={() => setSelected(null)} onClose={() => setSelected(null)} onClick={event => { if (event.target === event.currentTarget) setSelected(null); }}>
-      {selected && <div className="fs-look-dialog-content"><button className="fs-dialog-close" aria-label="Close outfit details" onClick={() => setSelected(null)}>×</button><LookImage look={selected} eager /><div className="fs-look-dialog-copy"><span className="fs-section-kicker">{itemContext ? contextRelationshipLabel(selected.relationship) : selected.region} / STYLE REFERENCE</span><h2 id={headingId}>{selected.celebrity}</h2><h3>{selected.title}</h3><p>{selected.description}</p><div className="fs-tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{selected.sourceUrl && <a className="fs-button fs-primary" href={selected.sourceUrl} target="_blank" rel="noreferrer">Open original source <span aria-hidden="true">↗</span></a>}<p className="fs-photo-credit">Photo: {selected.credit}{selected.license && selected.licenseUrl && <><br /><a href={selected.licenseUrl} target="_blank" rel="noreferrer">{selected.license} ↗</a></>}</p><p className="fs-muted">{itemContext && selected.relationship === 'same-design' ? 'Same design describes a design-family connection. It does not identify or authenticate this individual piece, or imply an endorsement.' : 'A cultural or styling reference. It does not identify or authenticate this individual piece, or imply an endorsement.'}</p></div></div>}
+    <dialog className="fs-look-dialog" ref={dialog} aria-labelledby={headingId} onCancel={event => {
+      // A native close notification is reconciliation; Escape is an explicit dismissal request.
+      event.preventDefault(); setSelected(null);
+    }} onClick={event => { if (event.target === event.currentTarget) setSelected(null); }}>
+      {selected && <div className="fs-look-dialog-content"><button className="fs-dialog-close" aria-label="Close outfit details" onClick={() => setSelected(null)}>×</button><LookImage look={selected} eager /><div className="fs-look-dialog-copy"><span className="fs-section-kicker">{itemContext ? contextRelationshipLabel(selected.relationship) : selected.region} / STYLE REFERENCE</span><h2 id={headingId}>{selected.celebrity}</h2><h3>{selected.title}</h3><p>{selected.description}</p><div className="fs-tags">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div>{onExploreLook && <button type="button" className="fs-button fs-primary fs-look-explore" onClick={() => onExploreLook(selected)}>Explore in FirstSight <span aria-hidden="true">↗</span></button>}{selected.sourceUrl && <a className={onExploreLook ? 'fs-button' : 'fs-button fs-primary'} href={selected.sourceUrl} target="_blank" rel="noreferrer">Open original source <span aria-hidden="true">↗</span></a>}<p className="fs-photo-credit">Photo: {selected.credit}{selected.license && selected.licenseUrl && <><br /><a href={selected.licenseUrl} target="_blank" rel="noreferrer">{selected.license} ↗</a></>}</p><p className="fs-muted">{itemContext && selected.relationship === 'same-design' ? 'Same design describes a design-family connection. It does not identify or authenticate this individual piece, or imply an endorsement.' : 'A cultural or styling reference. It does not identify or authenticate this individual piece, or imply an endorsement.'}</p></div></div>}
     </dialog>
   </div>;
 }

@@ -1,6 +1,6 @@
 # LoomStory code guide
 
-This guide covers the active React/Vite application, including the P5–P12 FirstSight implementation and its repository-owned P13 browser tooling. Start with the change-location map, then open the relevant module. Module headers describe ownership; function comments explain transitions and constraints; CSS section comments identify the visual area.
+This guide covers the active React/Vite application, including the archive-first FirstSight journey, repository-owned browser tooling and the P18 Discover renewal. P18 implementation and verification are complete and remain uncommitted; see the [phase plan](plans/discover-p18-plan.md) and [Discover verification record](discover-verification.md). Start with the change-location map, then open the relevant module. Module headers describe ownership; function comments explain transitions and constraints; CSS section comments identify the visual area.
 
 ## Find the change you want to make
 
@@ -9,9 +9,11 @@ This guide covers the active React/Vite application, including the P5–P12 Firs
 | Routes, desktop navigation, mobile shortcuts | [App.tsx](../src/App.tsx) | Route registry and both navigation lists |
 | Site palette, fonts, shell, original-page styling | [styles.css](../src/styles.css) | `:root`, shared typography, header/footer |
 | Continuous FirstSight flow and commerce separation | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | `changePhoto`, `analyze`, `selectRecognition`, `openProduct`, `openStyleMatches`, guarded save/bag actions |
-| Dashboard section surfaces and Section 2 35/65 split | [first-sight-flow.css](../src/pages/first-sight-flow.css) | `.fs-recognition-layout`, sticky boundary, section headings, responsive rules |
-| Section 3 shopping/feed layout and shared FirstSight controls | [first-sight.css](../src/pages/first-sight.css) | `.fs-discovery`, no-looks full-width fallback, masonry, buttons, dialogs |
-| Tendances collections, hero photo, six-look board | [TrendHero.tsx](../src/features/first-sight/components/TrendHero.tsx), [trend-hero.css](../src/features/first-sight/components/trend-hero.css) | `collections`, `collectionLooks`, collection selection |
+| Dashboard section surfaces and Section 1 35/65 split | [first-sight-flow.css](../src/pages/first-sight-flow.css) | `.fs-recognition-layout`, sticky boundary, section headings, responsive rules |
+| Section 2 shopping/feed layout and shared FirstSight controls | [first-sight.css](../src/pages/first-sight.css) | `.fs-discovery`, no-looks full-width fallback, feature buttons and cart dialog |
+| Discover cover and always-visible six-look board | [TrendHero.tsx](../src/features/discover/components/TrendHero.tsx), [trend-hero.css](../src/features/discover/components/trend-hero.css) | `selectCollection`, `exploreLook`, `?collection=<id>`, board breakpoints |
+| Four authored collections and ordered six-look ranking | [collections.ts](../src/features/discover/collections.ts) | `inspirationCollections`, `InspirationCollection`, `collectionLooks` |
+| Discover reference hand-off | [references.ts](../src/features/discover/references.ts), [App.tsx](../src/App.tsx) | `resolveInspirationPhoto`, authored ID lookup, `workspaceKey`, route focus |
 | File formats, 5 MB limit, local decoding, persistent photo | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx), [upload-workspace.css](../src/features/first-sight/components/upload-workspace.css) | `acceptedTypes`, `select`, `cancelDecode`, explicit Analyze/Replace/Remove controls |
 | Matching-explanation floating card | [PhotoUploadPanel.tsx](../src/features/first-sight/components/PhotoUploadPanel.tsx) | `openMatching`, dismissal listeners, `.fs-matching-*` styles in `first-sight.css` |
 | Five studies, annotations, stories, related edits | [recognition.ts](../src/features/first-sight/recognition.ts) | `recognitionStudies`, `garmentStudy`, `archiveProductIds`, `styleMatchProductIds`, `contextReferenceIds` |
@@ -27,9 +29,11 @@ This guide covers the active React/Vite application, including the P5–P12 Firs
 | Opt-in modern styles, sizes and preview cards | [StyleMatchDrawer.tsx](../src/features/first-sight/components/StyleMatchDrawer.tsx), [style-match-drawer.css](../src/features/first-sight/components/style-match-drawer.css) | `StyleMatchDrawer`, `StyleMatchCard`, per-product SKUs, native modality, status feedback |
 | Cart quantities and Buy Now behaviour | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx), [CartPreview.tsx](../src/features/first-sight/components/CartPreview.tsx) | Canonical `addToCart`, `cart`, `cartOpen`; explicit dismissal requests and local checkout preview |
 | Celebrity captions, sources, dimensions, relationships | [looks.ts](../src/features/first-sight/looks.ts), [source record](first-sight-sources.md) | `outfitLooks`; keep source, author, licence, dimensions and authored relationship together |
-| Masonry, regional filters, saved looks, detail dialog | [OutfitMasonry.tsx](../src/features/first-sight/components/OutfitMasonry.tsx) | Local filter/limit/dialog state; `contextName` identifies the selected study |
+| Masonry, regional filters, saved looks, detail dialog | [OutfitMasonry.tsx](../src/features/first-sight/components/OutfitMasonry.tsx) | Local filter/limit/dialog state; `contextName`, optional `showRegionFilters` and `onExploreLook` |
+| Shared board, photo dialog and supporting controls | [outfit-masonry.css](../src/features/first-sight/components/outfit-masonry.css) | Imported by `OutfitMasonry`; Discover has no implicit FirstSight CSS dependency |
 | Wine outfit journal, ivory photo cards, caption sizes and narrow-screen columns | [outfit-magazine.css](../src/features/first-sight/components/outfit-magazine.css) | `--fs-journal-*` palette, `.fs-outfits-magazine`, `outfit-journal` container query |
 | Restore supplied Chloé photos after cloning | [setup-analysis-media.mjs](../scripts/setup-analysis-media.mjs) | `npm run setup:analysis-media`; ignored originals → ignored served copies |
+| Shared visit-local inspiration saves | [App.tsx](../src/App.tsx), [feature types](../src/features/first-sight/types.ts) | `savedLookIds`, `lookProps`, `SavedLookProps`; all forty Commons plus four Chloé IDs; no storage |
 | Wardrobe persistence | [App.tsx](../src/App.tsx), [savedItems.ts](../src/domain/savedItems.ts) | Browser storage, known catalog IDs, immutable save/toggle rules |
 | FirstSight gateway and cancellation | [contracts.ts](../src/features/first-sight/services/contracts.ts), [prototype.ts](../src/features/first-sight/services/prototype.ts) | `FirstSightGateway`, `createPrototypeGateway`, 900 ms delay, complete result assembly, abort guards |
 | Ordered cultural-reference lookup | [content/contracts.ts](../src/features/first-sight/services/content/contracts.ts), [content/prototype.ts](../src/features/first-sight/services/content/prototype.ts) | `ContextContentProvider`, `createPrototypeContextContentProvider`, registry and requested-ID validation |
@@ -39,15 +43,28 @@ This guide covers the active React/Vite application, including the P5–P12 Firs
 
 | Route | Owner | Responsibility |
 | --- | --- | --- |
-| `/` | [DiscoverPage.tsx](../src/pages/DiscoverPage.tsx) | Original editorial discovery page |
-| `/first-sight` | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | Three retained sections: inspiration, photo/dossier, archive edit and journal; modern styles require opt-in |
+| `/` | [DiscoverPage.tsx](../src/pages/DiscoverPage.tsx) | Hybrid homepage: editorial cover, selected collection, Vault search, four products and destinations |
+| `/first-sight` | [FirstSightPage.tsx](../src/pages/FirstSightPage.tsx) | Two retained sections: photo/dossier, archive edit and journal; modern styles require opt-in; `?look=<id>` prepares a reference |
 | `/vault` | [CatalogPage.tsx](../src/pages/CatalogPage.tsx) | Shared catalog search, filters, sorting |
 | `/items/:id` | [ItemPage.tsx](../src/pages/ItemPage.tsx) | Original item details and story links |
 | `/stories`, `/stories/:id` | [StoriesPage.tsx](../src/pages/StoriesPage.tsx) | Editorial list and article |
 | `/submit` | [SubmitPage.tsx](../src/pages/SubmitPage.tsx) | Original photo → details → preview flow |
 | `/wardrobe`, `/about` | [App.tsx](../src/App.tsx) | Saved items and prototype information |
 
-`main.tsx` mounts React and the router. `App.tsx` owns the shared shell and wardrobe. Original collection types live in `src/types.ts`; FirstSight's `PhotoInput`, `RecognizedItem`, `ProductAnnotation`, `PurchaseOption`, and `DiscoveryResult` live in [feature types](../src/features/first-sight/types.ts). App-wide future service interfaces in `src/integrations/contracts.ts` remain separate from FirstSight's injectable gateway.
+`main.tsx` mounts React and the router. `App.tsx` owns the shared shell, durable wardrobe and visit-local inspiration saves. Original collection types live in `src/types.ts`; FirstSight's `PhotoInput`, `RecognizedItem`, `ProductAnnotation`, `PurchaseOption`, and `DiscoveryResult` live in [feature types](../src/features/first-sight/types.ts). App-wide future service interfaces in `src/integrations/contracts.ts` remain separate from FirstSight's injectable gateway.
+
+## Discover-to-FirstSight reference flow
+
+`TrendHero` reads the selected collection from `?collection=<id>` and updates it with replacement
+navigation, preserving the edit when the visitor returns through browser Back. Cover and photo-detail
+actions navigate to `/first-sight?look=<id>`. Only `outfitLooks` IDs resolve; unknown or URL-like input
+opens the normal workspace with an unavailable-reference notice. No arbitrary image URL is fetched.
+
+`PhotoUploadPanel` displays the celebrity/title, photographer, source and licence of a reference.
+Analyse remains explicit and the adjacent disclosure explains the five prepared studies. The gateway
+never identifies the selected outfit. Reloading a valid reference URL restores that photo; changing
+its ID remounts FirstSight and aborts obsolete work. App also updates focus for a query-only reference
+change. Discover collection changes retain focus on their selected control.
 
 ## FirstSight functions and state
 
@@ -72,18 +89,19 @@ This guide covers the active React/Vite application, including the P5–P12 Firs
 | `savedIds` | `App` | Browser storage when available; shared across routes |
 | `photo`, `result`, `selectedId` | `FirstSightPage` | Current analysis; accepted upload URLs are revoked on replacement/unmount |
 | `product` | `FirstSightPage` | Current inline product detail; shopping, outfits, and earlier sections stay mounted |
-| `savedLookIds`, `cart` | `FirstSightPage` | Current page visit; survive photo changes and study selection |
+| `savedLookIds` | `App` | Current App visit; shared across Discover/FirstSight navigation, reset on full reload |
+| `cart` | `FirstSightPage` | Current mounted visit; survives photo changes and study selection |
 | `savedStyleMatchIds` | `FirstSightPage` | Current mounted FirstSight visit; independent of the persistent archive wardrobe |
 | `styleMatchOpen`, `styleMatchFocusTarget` | `FirstSightPage` | Controlled drawer visibility and the current transition's fallback destination |
 | `selectedSkusByProductId` | `StyleMatchDrawer` | Current mounted visit; one unkeyed drawer preserves choices across reopen and study switches |
-| Trend collection and expanded board | `TrendHero` | Current page visit |
+| Discover collection | `TrendHero` | `?collection=<id>` in the URL; board always visible |
 | Unfinished image decode and explanation popover | `PhotoUploadPanel` | Current panel; token guards discard stale decodes |
 | Highlighted/pinned annotation | `FashionDossier` | Selected study; its keyed component resets on study change |
 | Filter, batch limit, selected look | `OutfitMasonry` | Current mounted board |
 | Gallery view and selected SKU | `ProductDetailPanel` | Selected product |
 | Checkout-preview completion | `CartPreview` | Current dialog opening; no order is created |
 
-The upload panel owns unfinished object URLs, then transfers an accepted URL to the page. Its decode token and the page's `AbortController` protect different asynchronous boundaries. Preserve both when changing file handling.
+The upload panel owns unfinished object URLs, then transfers an accepted upload URL to the page. A `PhotoInput` reference variant carries its canonical `OutfitLook`; authored reference URLs are not revoked. App passes optional `initialPhoto`/`referenceUnavailable` props and keys FirstSight by the requested reference ID. Initial photo state is not resynchronised on ordinary rerenders, preserving Remove/Replace actions. Its decode token and the page's `AbortController` protect different asynchronous boundaries. Preserve both when changing file handling.
 
 Both Inspire triggers explicitly focus their actual button before opening the drawer. This preserves the return destination in WebKit, where pointer activation need not focus a button. The drawer captures that opener, owns exact overflow-axis restoration and falls back through `onRestoreFocus` if the opener is hidden or removed. Its user dismissal callbacks are separate from native reconciliation. `CartPreview` follows the same controlled-visibility principle: Escape/button/backdrop request closure; a queued native `close` event must not cancel a newly requested opening.
 
@@ -118,9 +136,14 @@ and local contrast colours/backings live in the feature CSS rather than the glob
 | [tests/firstSightCommerce.test.mjs](../tests/firstSightCommerce.test.mjs) | Explicit tracks, edit validation, canonical offer/SKU/stock guards |
 | [tests/firstSightContentProvider.test.mjs](../tests/firstSightContentProvider.test.mjs) | Registry integrity, order, attribution, failure, cancellation and independent result arrays |
 | [tests/savedItems.test.mjs](../tests/savedItems.test.mjs) | Storage recovery and wardrobe toggling |
+| [tests/discoverInspiration.test.mjs](../tests/discoverInspiration.test.mjs) | Four six-look edits, authored-reference resolution and canonical metadata |
 | [playwright.config.ts](../playwright.config.ts), [playwright.preview.config.ts](../playwright.preview.config.ts) | Managed browser projects, owned development/preview servers and failure artefacts |
 | [tests/browser/firstSight.flow.spec.ts](../tests/browser/firstSight.flow.spec.ts) | Real App route, five edits, archive/Inspire separation, upload, persistence and source labels |
 | [tests/browser/firstSight.resilience.spec.ts](../tests/browser/firstSight.resilience.spec.ts) | Controlled empty/error/pending/stale data and native modal regressions |
+| [tests/browser/firstSight.accessibility.spec.ts](../tests/browser/firstSight.accessibility.spec.ts) | Study/drawer/bag accessibility, keyboard, touch and text reflow |
+| [tests/browser/discover.flow.spec.ts](../tests/browser/discover.flow.spec.ts) | Four independently expected edits, reference hand-off/history, saves and retained homepage actions |
+| [tests/browser/discover.accessibility.spec.ts](../tests/browser/discover.accessibility.spec.ts) | Direct homepage/open-dialog scans, reference metadata, keyboard/focus, touch and enlarged text |
+| [expected-inspiration.ts](../tests/browser/fixtures/expected-inspiration.ts) | Independent cover and six-look ID/order expectations |
 | [browser helpers](../tests/browser/helpers/), [test host](../tests/browser/harness/) | Scoped media substitution, diagnostics and typed development-only host controls |
 
 Install with `npm ci`, then `npx playwright install chromium firefox webkit` for managed browser binaries. `@playwright/test`, `@axe-core/playwright` and direct Node typings are development dependencies; application runtime dependencies are unchanged.
@@ -137,13 +160,13 @@ npm run test:browser:preview
 git diff --check
 ```
 
-`test:browser` runs the five Chromium viewport projects. `test:browser:all` includes the declared Firefox/WebKit core cases. `test:browser:preview` needs the preceding build and checks only real App-route scenarios tagged `@preview`; it does not serve the harness. The runner owns ports 5183 and 4183 by default and fails on collision; set `FIRST_SIGHT_TEST_PORT` or `FIRST_SIGHT_PREVIEW_PORT` to use another port. Do not depend on a separately running development server.
+`test:browser:a11y` includes both FirstSight and Discover accessibility specs. `test:browser` runs the five Chromium viewport projects. `test:browser:all` includes the declared Firefox/WebKit core cases. `test:browser:preview` needs the preceding build and checks only real App-route scenarios tagged `@preview`; it does not serve the harness. The runner owns ports 5183 and 4183 by default and fails on collision; set `FIRST_SIGHT_TEST_PORT` or `FIRST_SIGHT_PREVIEW_PORT` to use another port. Do not depend on a separately running development server.
 
-The P13 checkpoint passed 35 Node tests and 49 browser executions. Final P16 verification passes
+The historical P13 checkpoint passed 35 Node tests and 49 browser executions. P16 verification passed
 74 development executions across nine projects, including 55 accessibility state scans with no
 reported violations, plus three production-preview checks. The thirty-five Node tests and both
-TypeScript checks pass after a clean install. The [verification record](first-sight-verification.md)
-contains measured corrections and the remaining manual-testing/environment limitations.
+TypeScript checks passed after a clean install. P17 delivered this checkpoint as `d32ef3c`; do not reuse its counts as evidence for changed P18 source. The [verification record](first-sight-verification.md)
+contains measured corrections and the remaining manual-testing/environment limitations. Final P18 results are recorded in the [Discover verification record](discover-verification.md): 40 Node tests, 128 development executions of 42 unique scenarios, 85 accessibility scans and six production-preview checks pass. Incomplete axe checks remain manual-review items; no complete conformance claim is made.
 
 The browser fixture substitutes original test artwork only for ignored `/local-media/chloe/*` URLs. It continues to load tracked assets normally and checks unexpected console/page/HTTP/request failures. This makes a fresh clone independent of supplied photographs; a separate exact-photo visual check is still needed. Reports, screenshots and traces stay in ignored `playwright-report/` and `test-results/` directories. The typed host is a development-only HTML entry, not a production import or test hook in the application.
 
@@ -152,6 +175,8 @@ On macOS, the Firefox worker uses disposable app data to avoid the bundled brows
 Useful searches:
 
 ```sh
+rg -n 'inspirationCollections|collectionLooks|resolveInspirationPhoto' src/features/discover
+rg -n 'workspaceKey|routeFocusKey|savedLookIds' src/App.tsx
 rg -n 'analyze|selectRecognition|openStyleMatches|addToCart' src/pages/FirstSightPage.tsx
 rg -n 'recognitionStudies|archiveProductIds|styleMatchProductIds|contextReferenceIds|annotations' src/features/first-sight/recognition.ts
 rg -n 'getReferences|createPrototypeGateway|withAbort' src/features/first-sight/services

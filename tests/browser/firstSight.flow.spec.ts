@@ -203,17 +203,10 @@ test('supported JPEG and WebP files preview locally without starting analysis @c
   }
 });
 
-test('journal relationships and source credits remain distinct from geographic trends @cross-browser', async ({ page }) => {
+test('journal relationships retain their source credits and design context @cross-browser', async ({ page }) => {
   await analyseSample(page);
-  // Geographic badges live in the deliberately opt-in inspiration board, not the hero image.
-  await page.getByRole('button', { name: /^Explore collection/ }).click();
-  const trends = page.locator('#fs-trend-board');
-  await expect(trends.getByRole('group', { name: 'Filter outfits by region' })).toBeVisible();
-  await expect(trends.locator('.fs-look-region')).toHaveCount(6);
-  for (const badge of await trends.locator('.fs-look-region').all()) {
-    await expect(badge).toHaveText(/^(Korea|Japan|China|Global)$/);
-  }
-  await expect(trends.locator('.fs-look-relationship')).toHaveCount(0);
+  // Geographic inspiration now belongs to Discover; item relationships stay beside shopping.
+  await expect(page.locator('#fs-trend-board')).toHaveCount(0);
   const journal = page.getByRole('complementary', { name: 'Contextual outfit feed' });
   await expect(journal.locator('.fs-look-relationship')).toHaveText([
     'Styling inspiration', 'Styling inspiration', 'Runway reference', 'Runway reference',

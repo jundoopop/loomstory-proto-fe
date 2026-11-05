@@ -1,0 +1,410 @@
+/*
+ * Reusable editorial board, photo details and supporting feature controls.
+ * Imported by OutfitMasonry so Discover never relies on FirstSight page CSS.
+ * The contextual wine journal remains in outfit-magazine.css.
+ */
+.fs-section-kicker {
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.fs-button {
+  border: 1px solid var(--ink);
+  padding: 14px 19px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  font-size: 11px;
+  min-height: 44px;
+  font-weight: 500;
+}
+
+.fs-button:hover {
+  background: #e4dcd0;
+}
+
+.fs-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.fs-primary:hover {
+  background: #69262c;
+}
+
+.fs-sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  padding: 0; margin: -1px; border: 0; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Outfit/purchase section headings and geographic filter chips. */
+.fs-feed-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.fs-feed-heading h2 {
+  font-size: clamp(27px, 2.8vw, 38px);
+  letter-spacing: -.8px;
+  line-height: 1.2;
+  margin-top: 7px;
+}
+
+.fs-look-count {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  text-align: right;
+  line-height: .95;
+  flex-shrink: 0;
+}
+
+.fs-look-count>span {
+  font: 8px Arial, sans-serif;
+  color: var(--muted);
+}
+
+.fs-feed-description {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 11px 0 18px;
+  max-width: 560px;
+}
+
+.fs-filters {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+}
+
+.fs-filters button {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 10px;
+  min-height: 34px;
+}
+
+.fs-filters button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.fs-filters button:hover {
+  border-color: var(--ink);
+}
+
+/* Pinterest-style columns: retain each image's natural ratio and keep cards unbroken. */
+.fs-masonry {
+  columns: 3;
+  column-gap: 15px;
+}
+
+.fs-look {
+  break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 22px;
+  vertical-align: top;
+}
+
+.fs-look-image-wrap {
+  position: relative;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #e9e2d7;
+}
+
+.fs-look-open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  position: relative;
+}
+
+.fs-look-open>img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.fs-look-region,
+.fs-look-relationship {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #f5f1e8eb;
+  font-size: 8px;
+  padding: 5px 8px;
+  letter-spacing: .4px;
+  max-width: calc(100% - 20px);
+  overflow-wrap: anywhere;
+}
+
+.fs-look-save {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  background: #f5f1e8ee;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 19px;
+}
+
+.fs-look-save[aria-pressed='true'] {
+  color: var(--accent);
+}
+
+.fs-look-peek {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: #f5f1e8eb;
+  padding: 8px 11px;
+  font-size: 9px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.fs-look-open:hover .fs-look-peek,
+.fs-look-open:focus-visible .fs-look-peek {
+  opacity: 1;
+}
+
+.fs-look-caption {
+  padding: 10px 1px 0;
+}
+
+.fs-look-caption h3 {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fs-look-caption p {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 4px 0;
+}
+
+.fs-look-caption>a {
+  display: inline-block;
+  font-size: 8px;
+  color: var(--muted);
+  padding: 4px 0;
+}
+
+.fs-look-caption>a:hover {
+  text-decoration: underline;
+}
+
+.fs-image-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #e8e0d3;
+  font: 22px Georgia, serif;
+  text-align: center;
+}
+
+.fs-image-fallback small {
+  font: 10px Arial, sans-serif;
+}
+
+.fs-load-more {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.fs-feed-footnote {
+  font-size: 9px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+  margin-top: 12px;
+}
+
+/* Native dialog shells are shared; the outfit dialog adds its image/attribution layout. */
+.fs-look-dialog {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 0;
+  max-height: 88dvh;
+  max-width: calc(100vw - 32px);
+}
+
+.fs-look-dialog::backdrop {
+  background: #17130ed1;
+}
+
+.fs-look-dialog-content {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  width: 800px;
+  max-width: 100%;
+}
+
+.fs-look-dialog-content>img {
+  height: auto;
+  max-height: 86dvh;
+  object-fit: contain;
+  align-self: center;
+}
+
+.fs-look-dialog-copy {
+  padding: 50px 30px 30px;
+}
+
+.fs-look-dialog-copy h2 {
+  font-size: 38px;
+  margin: 13px 0;
+}
+
+.fs-look-dialog-copy h3 {
+  font-size: 22px;
+}
+
+.fs-look-dialog-copy>p {
+  font-size: 12px;
+  margin: 18px 0;
+}
+
+.fs-look-dialog-copy .fs-button {
+  margin-top: 20px;
+}
+
+.fs-dialog-close {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 35px;
+  height: 35px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 25px;
+  z-index: 1;
+}
+
+.fs-look-dialog-copy>.fs-photo-credit {
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+
+.fs-muted {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.65;
+}
+
+.fs-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.fs-tags>span {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 9px;
+}
+
+
+
+/* Item references keep their natural proportions in two generous columns. */
+.fs-outfits.fs-outfits-item .fs-masonry {
+  columns: 2;
+}
+
+@media (max-width: 1200px) {
+  .fs-masonry {
+    columns: 2;
+  }
+  .fs-feed-heading {
+    align-items: start;
+  }
+}
+
+@media (max-width: 900px) {
+  .fs-look-count {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .fs-masonry {
+    columns: 3;
+    gap: 12px;
+  }
+  .fs-feed-heading h2 {
+    font-size: 33px;
+  }
+  .fs-look-count {
+    display: block;
+  }
+  .fs-look-dialog-content {
+    width: 650px;
+  }
+  .fs-look-dialog-copy {
+    padding: 50px 20px 25px;
+  }
+  .fs-look-dialog-copy h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .fs-look-save {
+    width: 32px;
+    height: 32px;
+  }
+  .fs-look-region {
+    font-size: 7px;
+    padding: 4px 5px;
+    left: 7px;
+  }
+  .fs-filters {
+    gap: 5px;
+  }
+  .fs-filters button {
+    padding: 7px 11px;
+    font-size: 9px;
+  }
+  .fs-look-dialog-content {
+    display: block;
+    width: 380px;
+  }
+  .fs-look-dialog-content>img {
+    max-height: 50dvh;
+    width: 100%;
+  }
+  .fs-look-dialog-copy {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 500px) { .fs-masonry { columns: 2; } }
+
+/* Badges describe the image; pointer input must reach its View button on either page. */
+.fs-outfits .fs-look-image-wrap > :is(.fs-look-region, .fs-look-relationship) { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .fs-outfits *, .fs-outfits *::before, .fs-outfits *::after { animation: none !important; transition: none !important; }
+}

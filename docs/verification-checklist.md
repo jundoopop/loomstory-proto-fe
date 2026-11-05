@@ -13,16 +13,22 @@ Run these checks from the `loomstory-web` folder. Empty boxes are for the person
 
 Preview captures: [desktop](previews/desktop.jpg) and [mobile](previews/mobile.jpg).
 
-## Current FirstSight verification — 5 November 2026
+## Historical P16 checkpoint and current P18 verification — 5 November 2026
 
 The record above is historical and describes the original application. The original upload
 walkthrough below belongs to `/submit`; FirstSight has a separate continuous journey.
 
-P16 has passed thirty-five Node tests, seventy-four development browser executions across nine
-projects and three production-preview checks. Both TypeScript checks and clean installation pass.
+The delivered P16 checkpoint passed thirty-five Node tests, seventy-four development browser executions across nine
+projects and three production-preview checks. Both TypeScript checks and clean installation passed.
 The nineteen accessibility executions include fifty-five scans with no reported violations; recorded
 contrast findings are corrected. See the [verification record](first-sight-verification.md) for measured
-results and the manual checks that remain unperformed.
+results and the manual checks that remain unperformed. P17 delivered that state as `d32ef3c` on
+`origin/new-analysis`. P18 is now complete and verified but uncommitted: 40 Node tests, both
+TypeScript checks, clean installation, 128 development browser executions of 42 unique scenarios
+and six production-preview checks pass. Its 38 accessibility executions contain 85 scans with zero
+reported violations. Incomplete contrast and label/name checks remain manual-review items;
+see the [Discover verification record](discover-verification.md). Historical P16 counts are
+preserved separately and were not used to certify changed P18 source.
 
 ### Install and run the durable browser checks
 
@@ -58,6 +64,29 @@ The Firefox fixture uses disposable app data on macOS to avoid the protected per
 in Firefox 157. macOS can retain protected subfolders during cleanup; the runner reports access-only
 cleanup warnings. It does not change OS permissions or the user's personal Firefox profile.
 
+### Discover and reference hand-off acceptance checks
+
+- [ ] Discover loads directly as the homepage, with its own editorial cover and visible six-photo board.
+- [ ] All four collections update the cover and independently expected six-look order together.
+- [ ] `?collection=<id>` restores the edit; an unknown collection uses the first authored edit.
+- [ ] Discover has no photo-search field, regional filters or saved-only mode; Vault search still
+  navigates to `/vault?q=...` and featured product/Stories/submission links work.
+- [ ] Cover and photo-detail actions carry the correct authored ID to `/first-sight?look=<id>`.
+- [ ] FirstSight shows that exact photograph, celebrity/title and accessible credit/source/licence.
+- [ ] Analysis stays explicit and the adjacent disclosure explains that results are prepared studies.
+- [ ] Unknown, empty and URL-like reference IDs produce the normal workspace and a useful notice.
+- [ ] Valid reload restores the reference without analysing; browser Back restores the collection.
+- [ ] Query-only reference changes initialise a fresh workspace and cancel obsolete analysis.
+- [ ] Remove/Replace remain effective after saved-heart rerenders; only upload object URLs are revoked.
+- [ ] Shared inspiration saves survive route changes, include Chloé references, reset on full reload
+  and do not change product wardrobe or Inspire saves.
+- [ ] FirstSight has two chapters and a Discover link, with no duplicate inspiration cover/board.
+- [ ] Direct homepage and open photo dialog pass keyboard, focus return, Escape/backdrop and axe checks.
+- [ ] The board has three columns above 1000 px, two at 600–1000 px and one below 600 px; images retain
+  their source proportions and 44 px controls work at 1440/1024/768/390/320 px.
+- [ ] Enlarged text, touch emulation, image failures, console/network diagnostics and production preview
+  are verified and results are recorded without implying physical-device or screen-reader coverage.
+
 ### FirstSight acceptance checks
 
 - [ ] Selecting a sample or upload leaves Analyze explicit; cancellation retains the photograph.
@@ -71,7 +100,7 @@ cleanup warnings. It does not change OS permissions or the user's personal Firef
 - [ ] PDP gallery/size survives Inspire; cultural notes and source links remain visible.
 - [ ] Escape, close/backdrop, removed opener, unmount and delayed native close keep modal state coherent.
 - [ ] Empty/mixed streams, missing context, stale SKU, failed provider/retry and late cancellation work.
-- [ ] Trend geography remains distinct from authored relationship labels in contextual views.
+- [ ] Discover geographic card labels remain distinct from authored relationship labels in contextual views.
 - [ ] The burgundy journal remains visible; no inactivity timer collapses it.
 - [ ] Whole-page and open-state accessibility scans cover all five studies and the configured widths.
 - [ ] Keyboard focus, dossier explanations, reduced motion, long text and 200% text enlargement work.

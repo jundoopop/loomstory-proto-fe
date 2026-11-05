@@ -1,10 +1,8 @@
 /*
  * The shopping sidebar reads as a small fashion journal. Its muted wine surface
  * separates inspiration from commerce without changing the marketplace's width.
- * Journal styling stays in this aside; the shared badge rule below only preserves image clicks.
+ * Journal styling stays in this aside; shared image behaviour lives in outfit-masonry.css.
  */
-/* A metadata badge sits outside the image button so its label matches the visible View action. */
-.first-sight .fs-look-image-wrap > :is(.fs-look-region, .fs-look-relationship) { pointer-events: none; }
 .first-sight .fs-context-section {
   --fs-journal-wine: #672b38;
   --fs-journal-ink: #49323a;

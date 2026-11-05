@@ -2,7 +2,7 @@
 
 The implemented application is a static React + TypeScript single-page frontend built with Vite. It demonstrates one product journey without creating backend infrastructure.
 
-For specific edits, use the [code guide and change-location map](code-guide.md). It identifies module owners, named flow functions, data sources, styling controls, and state lifetimes. The [FirstSight guide](first-sight-prototype.md) covers its separate comparison journey and future gateway integration.
+For specific edits, use the [code guide and change-location map](code-guide.md). It identifies module owners, named flow functions, data sources, styling controls, and state lifetimes. The [FirstSight guide](first-sight-prototype.md) covers the analysis/shopping journey and future gateway integration. The approved [P18 plan](plans/discover-p18-plan.md) moves inspiration to Discover; its [verification record](discover-verification.md) records the completed checks and remaining manual limitations.
 
 ```mermaid
 flowchart LR
@@ -28,6 +28,7 @@ Solid connections are implemented. Dashed connections describe the intended late
 | `components/` | Reusable presentation such as clothing cards |
 | `data/` | Shared sample clothing and bag records with stable wardrobe IDs and editorial context |
 | `domain/` | Pure saved-item rules that can be tested without rendering React |
+| `features/discover/` | Four editorial collections, deterministic six-look ranking, Discover cover and authored-reference hand-off resolver |
 | `features/first-sight/` | Continuous-page components, canonical studies, explicit archive/style commerce, authored relationships, injectable gateway and ordered local context provider |
 | `scripts/setup-analysis-media.mjs` | Restores available Chloé photographs into Git-ignored `public/local-media/chloe/`; supplied originals stay in ignored `src/images/` |
 | `integrations/contracts.ts` | Types for future services; no credentials, SDK initialization, or network traffic |
@@ -36,9 +37,13 @@ Solid connections are implemented. Dashed connections describe the intended late
 
 Search and filters act on local records. Saving an archive item changes browser-local favourites, not inventory. The upload screen reads a user-selected file into a local preview and shows a labelled sample result. Reloading or leaving that screen may discard the draft and photograph. The demo does not submit photos, authenticate users, create database records, or publish listings.
 
-FirstSight is one continuous route with three retained sections: `TrendHero` presents a 50/50 inspiration edit; Section 2 pairs the persistent `PhotoUploadPanel` with results at 35/65; Section 3 contains the selected study's related products and persistent styling feed. Distinct section surfaces and headers make each part of the continuous page easier to locate. Desktop upload stickiness ends with Section 2. Narrow screens stack the content, and the dossier adapts to its own available width.
+Discover owns inspiration on `/`: `TrendHero` presents a 50/50 cover and an always-visible six-photo board, followed by Vault search, four featured catalogue products and Stories/submission links. Four authored collections update their cover and board together. The `collection` query parameter preserves the selected edit when returning through browser history; an unknown collection displays the first authored edit. This finite board has no regional filter or photo search. Images retain their natural proportions, source links and credits.
 
-Choosing a photograph and pressing **Analyze** are separate actions. `PhotoUploadPanel` validates and decodes a browser-local file; `FirstSightPage` owns its accepted URL, request cancellation, selected study, inline PDP, bag and Inspire visibility. `DiscoveryResult.items` contains five complete `RecognizedItem` studies. Each carries identity, explanation cards, image annotations, resale scenario, cultural narrative, `commerce.archive`, `commerce.styleMatches` and resolved `looks`. `RecognitionResults` selects a study; `FashionDossier` presents it without changing the uploaded photo. Its idle magazine view emphasises the central image and four connected feature labels. Hover, keyboard focus, or tap reveals a compact floating explanation; longer analysis copy remains available through a disclosure.
+FirstSight is one continuous route with two retained sections. Section 1 pairs the persistent `PhotoUploadPanel` with results at 35/65; Section 2 contains the selected study's related products and persistent styling feed. Distinct section surfaces and headers make each part easier to locate. Desktop upload stickiness ends with Section 1. Narrow screens stack the content, and the dossier adapts to its own available width. A Discover link replaces the former inspiration-section anchor.
+
+Cover and photograph-detail actions navigate to `/first-sight?look=<id>`. `resolveInspirationPhoto` resolves only an authored `outfitLooks` ID into the reference variant of `PhotoInput`; it does not accept a query-supplied image URL. App keys the workspace by the requested ID and passes its optional initial photo/unavailable state. Photo state initialises once per mount, so a saved-heart rerender cannot restore a removed or replaced photograph. A changed reference ID remounts the workspace and restores route focus even when the pathname is unchanged. Unknown IDs leave the normal workspace available with a concise notice. Reloading a valid reference URL restores that reference without starting analysis.
+
+Choosing a photograph and pressing **Analyse** are separate actions. `PhotoUploadPanel` validates and decodes a browser-local file, or presents the canonical metadata of a Discover reference. `FirstSightPage` owns its accepted preview, request cancellation, selected study, inline PDP, bag and Inspire visibility. `DiscoveryResult.items` contains five complete `RecognizedItem` studies. Each carries identity, explanation cards, image annotations, resale scenario, cultural narrative, `commerce.archive`, `commerce.styleMatches` and resolved `looks`. `RecognitionResults` selects a study; `FashionDossier` presents it without changing the uploaded photo. Its idle magazine view emphasises the central image and four connected feature labels. Hover, keyboard focus, or tap reveals a compact floating explanation; longer analysis copy remains available through a disclosure.
 
 The styling feed remains mounted beside the selected archive edit regardless of browsing time. There is no automatic collapse or manual hide-inspiration mode. Product selection opens the existing 70/30 detail layout inline below that grid, preserving all earlier sections. A study with no styling references can use the full catalogue width as an empty-data fallback. Journal batch injection pauses while a PDP, bag or Inspire view is open; existing reference cards remain mounted.
 
@@ -62,7 +67,7 @@ flowchart TD
 
 Provider failure rejects the complete analysis and uses the page's existing photo-preserving error/retry flow. Cancellation rejects promptly as `AbortError`, including when an injected provider ignores its signal; late settlement is consumed. Stopping underlying provider work remains that provider's responsibility. A future partial-result policy would need an explicit typed contract rather than silent omission.
 
-Each of the forty-four references carries an authored `relationship`: `same-design`, `runway-reference` or `styling-inspiration`. The current records use forty-two styling and two runway assignments. Contextual cards/dialogs/PDP notes display this relationship; trends retain geographic labels. The metadata does not infer exact product identity or authenticate a photographed item. Source, credit, licence and image dimensions remain attached to the record.
+Each of the forty-four references carries an authored `relationship`: `same-design`, `runway-reference` or `styling-inspiration`. The current records use forty-two styling and two runway assignments. Contextual cards/dialogs/PDP notes display this relationship; Discover board photographs retain geographic labels without regional filtering. The metadata does not infer exact product identity or authenticate a photographed item. Source, credit, licence and image dimensions remain attached to the record.
 
 Shared catalogue IDs make archive-study products saveable across routes. Chloé facts link to primary references, while scores, prices, stock and resale figures remain prototype assumptions. Four original garment SVGs illustrate generic categories; supplied Chloé photographs stay Git-ignored. The missing TV still remains optional and excluded from the active feed.
 
@@ -76,7 +81,9 @@ The marketplace and archive PDP expose **Explore similar styles** only when the 
 | --- | --- |
 | Archive wardrobe | `App`; browser storage when available and shared across routes |
 | Photo/result/selected study | `FirstSightPage`; current analysis, with accepted URL cleanup on replacement/unmount |
-| Archive bag, saved looks and saved styles | Separate `FirstSightPage` states; current mounted visit |
+| Saved inspiration looks | `App`; shared by Discover and FirstSight for the App visit, reset on full reload; IDs cover all forty Commons and four Chloé references |
+| Archive bag and saved styles | Separate `FirstSightPage` states; current mounted visit |
+| Discover collection | `TrendHero`; `?collection=<id>` retains the edit through browser history |
 | Inspire SKU choices | `StyleMatchDrawer`; current mounted visit, retained across reopening and study switches |
 | Archive gallery/SKU | `ProductDetailPanel`; selected product, retained while Inspire opens/closes |
 | Checkout-preview completion | `CartPreview`; reset on every bag opening |
@@ -85,17 +92,24 @@ Photo, analysis, study and PDP transitions close Inspire. Opening the bag and In
 
 ## Verification architecture
 
-The thirty-five Node tests remain separate from browser rendering. They cover provider/gateway ordering and cancellation, commerce identity/stock rules, recognition integrity and saved-item storage. Repository-owned Playwright specs cover real App-route behaviour and an isolated injected-gateway/modal host. That host uses relative imports and typed controls; no production component exposes test hooks or reads React-private fields.
+Node contract tests remain separate from browser rendering. P18 adds collection/reference checks while retaining the existing thirty-five contracts. They cover provider/gateway ordering and cancellation, commerce identity/stock rules, recognition integrity and saved-item storage. Repository-owned Playwright specs cover real App-route behaviour and an isolated injected-gateway/modal host. That host uses relative imports and typed controls; no production component exposes test hooks or reads React-private fields.
 
 `playwright.config.ts` owns a dedicated local server and managed Chromium, Firefox and WebKit projects. `playwright.preview.config.ts` checks real-route `@preview` scenarios against the preceding Vite build and excludes the development host. `tsconfig.browser.json` typechecks specs, helpers, host and configs separately from application source. Testing packages are development-only dependencies; there is no runtime framework migration or hosted CI workflow in this slice.
 
 The portable suite substitutes original test artwork only for ignored Chloé URLs; tracked images still load normally and unexpected console/page/HTTP/application-request failures are asserted. This verifies controls/layout independently of private files, not the exact supplied photographs. Exact-photo checks remain separately labelled. Reports/traces/screenshots are ignored; durable commands and measured findings belong in documentation.
 
-The final P16 gate on 5 November 2026 passes 74 development browser executions across nine projects,
+The historical P16 gate on 5 November 2026 passed 74 development browser executions across nine projects,
 including 55 accessibility state scans, plus three production-preview executions and the existing
-35 Node tests. Clean installation and both TypeScript checks pass. The
+35 Node tests. Clean installation and both TypeScript checks passed. The
 [verification record](first-sight-verification.md) distinguishes actual results from remaining manual
-coverage. WebKit and touch emulation do not imply actual Safari, physical-device or screen-reader tests.
+coverage. P17 delivered that checkpoint as `d32ef3c`; P18 verification is recorded separately in the [Discover record](discover-verification.md). WebKit and touch emulation do not imply actual Safari, physical-device or screen-reader tests.
+
+P18 final verification passed 40 Node tests, both TypeScript checks and 128 development browser
+executions of 42 unique scenarios across nine projects. Its 38 accessibility executions produced
+85 state scans with zero reported violations; incomplete rule occurrences remain available for
+manual judgement. Six checks pass against the current 62-module production build. Deep comparison
+preserves all five studies, eighteen offers and forty-four references. P18 remains uncommitted.
+See the [Discover verification record](discover-verification.md) for exact counts and limitations.
 
 ## Why this fits a three-day prototype
 

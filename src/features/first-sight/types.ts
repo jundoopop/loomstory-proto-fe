@@ -49,12 +49,17 @@ export interface OutfitLook {
   description: string;
 }
 
-/** Browser-local photo preview passed into the discovery flow; this is not a storage path. */
-export interface PhotoInput {
-  kind: 'sample' | 'upload';
+/** Inspiration saves belong to the App visit, independently of product/style-match saves. */
+export interface SavedLookProps {
+  savedLookIds: string[];
+  onToggleSaveLook: (id: string) => void;
+}
+
+/** Browser-local preview or authored reference; only uploads own a revocable object URL. */
+export type PhotoInput = {
   url: string;
   name: string;
-}
+} & ({ kind: 'sample' | 'upload' } | { kind: 'reference'; reference: OutfitLook });
 
 /** Authored identity reveal. A live adapter will need statuses for uncertain or unknown matches. */
 export interface GarmentIdentity {

@@ -17,7 +17,7 @@
     "test:browser": "playwright test --project=chromium-desktop --project=chromium-1024 --project=chromium-768 --project=chromium-390 --project=chromium-320",
     "test:browser:all": "playwright test",
     "test:browser:preview": "playwright test --config=playwright.preview.config.ts",
-    "test:browser:a11y": "playwright test tests/browser/firstSight.accessibility.spec.ts --project=chromium-desktop --project=chromium-1024 --project=chromium-768 --project=chromium-390 --project=chromium-320"
+    "test:browser:a11y": "playwright test tests/browser/firstSight.accessibility.spec.ts tests/browser/discover.accessibility.spec.ts --project=chromium-desktop --project=chromium-1024 --project=chromium-768 --project=chromium-390 --project=chromium-320"
   },
   "dependencies": {
     "react": "19.2.6",

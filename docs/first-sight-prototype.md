@@ -1,14 +1,38 @@
 # FirstSight prototype
 
-Open `/first-sight` from the main or mobile navigation. All three FirstSight sections remain on this route. The original Discover (`/`) and Submit (`/submit`) pages remain available. Recognition, prices, stock and valuations are deterministic prototype data; the application does not authenticate garments or place orders.
+Open `/first-sight` from the main or mobile navigation. Both FirstSight sections remain on this route. Discover (`/`) now owns the editorial inspiration collections; Submit (`/submit`) remains available. Recognition, prices, stock and valuations are deterministic prototype data; the application does not authenticate garments or place orders.
 
 ## Walk through the continuous page
 
-1. **Tendances — inspiration.** A desktop 50/50 hero pairs a photograph with four collections: 90s Streetwear, Vintage Denim, Retro Cinema and Iconic Designer Accessories. Selection changes the hero and editorial copy. **Explore collection** opens a six-look board drawn from the sourced reference library.
-2. **Discover the Story — photo and dossier.** The desktop layout is 35/65. The `fs-upload-panel` stays on the left and is sticky only within this section. Choose a local photo or the Chloé example, then press **Analyze**. Selection alone does not start analysis. The selected image remains visible through loading and results; Replace, Remove and Cancel keep the flow controllable.
-3. **Find Your Piece — archive shopping.** The selected study supplies an archive edit beside the persistent Style Journal. Selecting an archive offer opens its 70/30 detail view inline below the retained grid. Choose an available size to add it to the local bag or preview checkout. **Explore similar styles** opens The Inspire from either the marketplace toolbar or archive PDP. Modern style matches appear in this opt-in drawer rather than the default grid or PDP sidebar.
+1. **Discover the Story — photo and dossier.** The desktop layout is 35/65. The `fs-upload-panel` stays on the left and is sticky only within this section. Choose a local photo or the Chloé example, then press **Analyze**. Selection alone does not start analysis. The selected image remains visible through loading and results; Replace, Remove and Cancel keep the flow controllable.
+2. **Find Your Piece — archive shopping.** The selected study supplies an archive edit beside the persistent Style Journal. Selecting an archive offer opens its 70/30 detail view inline below the retained grid. Choose an available size to add it to the local bag or preview checkout. **Explore similar styles** opens The Inspire from either the marketplace toolbar or archive PDP. Modern style matches appear in this opt-in drawer rather than the default grid or PDP sidebar.
 
-Distinct surfaces, numbered section headers and spacing separate the three areas like a dashboard. The sections stack on narrow screens. The dossier adapts its magazine view to its own column width, keeping the central image and compact feature labels readable.
+Distinct surfaces, numbered section headers and spacing separate the two areas like a dashboard. The sections stack on narrow screens. The dossier adapts its magazine view to its own column width, keeping the central image and compact feature labels readable.
+
+## Start with inspiration on Discover
+
+Discover is a hybrid homepage: a 50/50 editorial cover, an immediately visible six-photo collection,
+Vault search, four featured products and links to Stories and submission. Choose 90s Streetwear,
+Vintage Denim, Retro Cinema or Iconic Designer Accessories. Selection updates the cover and finite
+board together; `?collection=<id>` preserves the selected edit through browser history. The board
+uses three columns above 1000 px, two at 600–1000 px and one below 600 px. It has no regional filter,
+photo search or saved-only mode.
+
+Open a photograph's details or use the cover action, then choose **Explore in FirstSight**. The
+`/first-sight?look=<id>` link resolves a canonical authored reference, displays its celebrity/title
+and credits, and leaves **Analyse** explicit. A disclosure beside the action explains that results
+are the prepared five studies rather than an identification of the outfit. Source links remain
+separate from the hand-off action.
+
+Reloading a valid hand-off URL restores the reference without analysing it. An unknown ID leaves the
+normal upload/sample workspace available with an unavailable-reference notice. Replace and Remove
+work within the current visit and ordinary saved-heart rerenders do not restore the original image.
+Changing the reference ID starts a fresh workspace and cancels obsolete work. Browser Back returns
+to the URL-selected Discover collection.
+
+Saved photograph hearts are App-visit state shared by Discover and the contextual FirstSight feed,
+including all forty Commons and four Chloé references. They survive route navigation and reset on a
+full reload. They are separate from durable product wardrobe saves and FirstSight-only Inspire saves.
 
 ## Five selectable studies
 
@@ -43,7 +67,7 @@ Archive PDP, save and bag actions resolve membership against the selected archiv
 
 The Inspire drawer remains mounted once for the FirstSight visit. Its per-product SKU choices survive closing, reopening and switching studies. Style saves live separately in `FirstSightPage`; they never call the shared wardrobe callback. A partner preview requires an available size and produces local feedback without visiting a partner, reserving stock or changing the archive bag. Style saves and size choices reset on a fresh mounted FirstSight visit.
 
-Archive wardrobe saves use the existing app-owned browser storage and survive navigation/reload when storage is available. The sample bag, saved contextual looks and style saves are page-local. Photo changes and study switches retain the visit's bag while closing stale product or Inspire views. The bag and Inspire are coordinated so they do not remain open together.
+Archive wardrobe saves use the existing app-owned browser storage and survive navigation/reload when storage is available. The sample bag and style saves remain page-local. Saved inspiration/contextual looks now belong to `App`: they are shared across Discover and FirstSight navigation, reset on a full reload and never enter product wardrobe storage. Photo changes and study switches retain the visit's bag while closing stale product or Inspire views. The bag and Inspire are coordinated so they do not remain open together.
 
 Both Inspire triggers synchronously focus their button before opening, preserving return focus on pointer-driven WebKit as well as keyboard activation. Ordinary dismissal returns there; a removed or hidden opener uses a page-owned persistent fallback. The native bag close event is reconciliation-only: explicit Escape, close-button and backdrop actions request host state changes, so a queued earlier close cannot cancel a newly requested opening.
 
@@ -55,7 +79,7 @@ The contextual feed stays beside the selected archive edit for the browsing sess
 
 **The Style Journal** uses a muted wine surface, ivory photo cards, burgundy headings, natural image proportions and compact captions. Two-column masonry becomes one column when the panel is too narrow. The marketplace retains larger prices and filled **View piece** controls as the primary shopping destination. Edit the journal presentation in `components/outfit-magazine.css`.
 
-Context cards, their detail dialogs and PDP notes display the authored relationship: Styling inspiration, Runway reference or Same design. Geographic labels remain on the trends board. These labels do not establish ownership, endorsement, authentication or the same production edition. Sources and credits stay with each photograph; see the [relationship and source record](first-sight-sources.md#cultural-relationship-metadata).
+Context cards, their detail dialogs and PDP notes display the authored relationship: Styling inspiration, Runway reference or Same design. Geographic labels remain on Discover inspiration cards, which have no regional filter in this finite edit. These labels do not establish ownership, endorsement, authentication or the same production edition. Sources and credits stay with each photograph; see the [relationship and source record](first-sight-sources.md#cultural-relationship-metadata).
 
 ## Where to edit
 
@@ -63,8 +87,10 @@ Context cards, their detail dialogs and PDP notes display the authored relations
 | --- | --- |
 | Section coordination, analysis/cancellation, selected study, archive actions, bag and Inspire visibility | `src/pages/FirstSightPage.tsx` |
 | Dashboard surfaces, 35/65 layout, archive toolbar and Inspire trigger | `src/pages/first-sight-flow.css` |
-| Section 3 50/50 edit/journal, shared controls, masonry and dialogs | `src/pages/first-sight.css` |
-| Trend collections, hero and optional six-look board | `components/TrendHero.tsx`, `components/trend-hero.css` |
+| Section 2 50/50 edit/journal, feature controls and cart | `src/pages/first-sight.css` |
+| Discover collections, cover and always-visible six-look board | `src/features/discover/collections.ts`, `src/features/discover/components/TrendHero.tsx`, `trend-hero.css` |
+| Canonical reference hand-off / shared inspiration saves | `src/features/discover/references.ts` / `src/App.tsx` |
+| Reusable photo board/dialog styles | `components/outfit-masonry.css`, imported by `OutfitMasonry` |
 | Local validation/decoding, photo and explanation popover | `components/PhotoUploadPanel.tsx`, `components/upload-workspace.css` |
 | Authored studies and explicit archive/style/reference IDs | `recognition.ts` / `recognitionStudies` |
 | Chloé photograph, factual/source copy, sample resale and four references | `chloe.ts` |
@@ -144,12 +170,26 @@ The tests use visible roles/labels, independent expected edits and a development
 
 On macOS, the Firefox worker uses disposable app data to avoid reading protected personal Firefox data. macOS can retain protected folders inside that temporary data; access-only cleanup failures emit a warning rather than changing permissions. Other cleanup failures still fail the runner.
 
-### Final checkpoint: P16, 5 November 2026
+### Current checkpoint: P18, 5 November 2026
 
-The existing **35 Node tests**, both TypeScript checks, clean installation and production build pass.
-The final development matrix passes **74 project executions across nine projects**, including
+The Discover renewal and reference hand-off are complete and approved for Git delivery. Clean installation,
+both TypeScript checks, 40 Node tests and the 62-module production build pass. The development
+matrix passes 128 project executions of 42 unique scenarios across nine projects, with no failures,
+skips, flakes or runner errors. Six production-preview checks pass.
+
+The 38 accessibility project executions include 85 scans with zero reported violations. Axe retains
+74 incomplete contrast-rule occurrences and 82 incomplete label/name-rule occurrences across states;
+these are repeated rule occurrences, not 156 unique defects. Manual judgement remains necessary,
+and automation does not establish complete conformance. Supplemental breakpoint, query-navigation,
+Chloé-save and exact local-photo checks are recorded in the [Discover verification record](discover-verification.md).
+Actual Safari, physical devices and named screen readers remain unverified.
+
+### Historical checkpoint: P16, 5 November 2026
+
+At P16, the existing **35 Node tests**, both TypeScript checks, clean installation and production build passed.
+That development matrix passed **74 project executions across nine projects**, including
 **19 accessibility executions and 55 axe state scans with zero reported violations**. Three additional
-production-preview checks pass. See the [measured verification record](first-sight-verification.md).
+production-preview checks passed. See the [measured verification record](first-sight-verification.md). P17 delivered this checkpoint as `d32ef3c`; [P18 checks](discover-verification.md) are recorded separately and must verify the changed route ownership.
 
 The forty-five recorded workwear contrast nodes are corrected, with further sold-out/topline fixes,
 known hero-text backings and reflow at doubled text sizes. Actual local photographs were separately
@@ -167,4 +207,4 @@ The [4 November engineering and consumer-interface review](first-sight-review-20
 
 P5–P12 were committed as `0b4328086e8b44a85ddf3085a44ada69c4ff0c88`, pushed on `new-analysis`, then fast-forward merged and pushed to `new-home-page` on 5 November 2026. `main` remains at the earlier checkpoint.
 
-The approved P13–P16 slice now runs on `new-analysis` from that delivered baseline. Its source, tests and reports remain uncommitted for review. P17 requires fresh explicit authorisation before staging, committing, pushing or merging. The intended branch sequence remains `new-analysis` → `new-home-page` → `main`; implementation alone does not advance it.
+P17 committed the reviewed P13–P16 implementation as `d32ef3c3f700f936b409c06a5dfa7cde4f6b9252` and pushed it to `origin/new-analysis` on 5 November 2026. No `new-home-page` or `main` merge was performed for that checkpoint. The approved [P18 renewal](plans/discover-p18-plan.md) begins there and remained uncommitted through review. The user subsequently explicitly authorised its commit, push and integration through `new-home-page` into `main`. The detailed [commit message](plans/discover-p18-commit-message.txt) records the changes, verification and boundaries.

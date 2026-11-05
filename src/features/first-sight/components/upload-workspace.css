@@ -42,6 +42,12 @@
 .first-sight .fs-photo-workspace .fs-matching-content li p { margin: 2px 0 0; font-size: 10px; }
 .first-sight .fs-photo-workspace .fs-matching-note { margin-bottom: 0; }
 
+/* Reference credits remain readable and separate from user-upload controls. */
+.fs-workspace-reference-credit { display: grid; gap: 3px; margin: 10px 0; color: #594d46; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.fs-workspace-reference-credit strong { font-weight: 600; }
+.fs-workspace-reference-credit a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 3px; }
+.first-sight .fs-photo-workspace > .fs-reference-disclosure { margin: 10px 0 0; color: #594d46; font-size: 12px; line-height: 1.65; }
+
 /* One compact sample shortcut keeps the panel within a typical laptop viewport. */
 .first-sight .fs-workspace-sample { padding: 10px 0; gap: 10px; }
 .first-sight .fs-workspace-sample > img { width: 37px; height: 42px; border-width: 2px; object-fit: contain; background: #faf8f3; }
