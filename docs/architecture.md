@@ -43,7 +43,7 @@ FirstSight is one continuous route with two retained sections. Section 1 pairs t
 
 Cover and photograph-detail actions navigate to `/first-sight?look=<id>`. `resolveInspirationPhoto` resolves only an authored `outfitLooks` ID into the reference variant of `PhotoInput`; it does not accept a query-supplied image URL. App keys the workspace by the requested ID and passes its optional initial photo/unavailable state. Photo state initialises once per mount, so a saved-heart rerender cannot restore a removed or replaced photograph. A changed reference ID remounts the workspace and restores route focus even when the pathname is unchanged. Unknown IDs leave the normal workspace available with a concise notice. Reloading a valid reference URL restores that reference without starting analysis.
 
-Choosing a photograph and pressing **Analyse** are separate actions. `PhotoUploadPanel` validates and decodes a browser-local file, or presents the canonical metadata of a Discover reference. `FirstSightPage` owns its accepted preview, request cancellation, selected study, inline PDP, bag and Inspire visibility. `DiscoveryResult.items` contains five complete `RecognizedItem` studies. Each carries identity, explanation cards, image annotations, resale scenario, cultural narrative, `commerce.archive`, `commerce.styleMatches` and resolved `looks`. `RecognitionResults` selects a study; `FashionDossier` presents it without changing the uploaded photo. Its idle magazine view emphasises the central image and four connected feature labels. Hover, keyboard focus, or tap reveals a compact floating explanation; longer analysis copy remains available through a disclosure. The `fs-dossier-resale` section is commented out for the current business model; resale fixture data remains in the contract and is not displayed by the dossier.
+Choosing a photograph and pressing **Analyse** are separate actions. `PhotoUploadPanel` validates and decodes a browser-local file, presents a Discover reference, or selects a named celebrity example. `FirstSightPage` owns its accepted preview, request cancellation, selected study, inline PDP, bag and Inspire visibility. `DiscoveryResult.items` contains the five legacy studies or the selected example's three documented collection models. Optional `outfit` metadata records that photograph's membership and primary piece. Each study carries identity, explanation cards, cultural narrative, commerce streams and resolved references; confidence and legacy resale data are optional. `RecognitionResults` selects a study; `FashionDossier` presents it without replacing the photograph. Existing measured feature annotations retain their floating explanations. New packshots use design notes without invented annotation coordinates. The `fs-dossier-resale` section remains commented out.
 
 The styling feed remains mounted beside the selected archive edit regardless of browsing time. There is no automatic collapse or manual hide-inspiration mode. Product selection opens the existing 70/30 detail layout inline below that grid, preserving all earlier sections. A study with no styling references can use the full catalogue width as an empty-data fallback. Journal batch injection pauses while a PDP, bag or Inspire view is open; existing reference cards remain mounted.
 
@@ -52,12 +52,15 @@ The styling feed remains mounted beside the selected archive edit regardless of 
 ```mermaid
 flowchart TD
     Studies[recognitionStudies: dossier, commerce, contextReferenceIds] --> Gateway[createPrototypeGateway]
+    Examples[outfitExamples + outfitStudies: explicit sample ID] --> Gateway
     Gateway --> Delay[Cancellable 900 ms scan delay]
     Delay --> Provider[ContextContentProvider.getReferences]
-    References[chloeLooks + outfitLooks registry] --> Provider
+    References[chloeLooks + outfitLooks + outfitExampleLooks] --> Provider
     Provider --> Result[Resolved RecognizedItem: commerce + looks]
     Result --> Page[FirstSightPage selected study]
     Page --> Archive[commerce.archive → PurchaseGrid and archive PDP]
+    Page --> WholeLook[Outfit mode: aggregate archive offers + owning piece]
+    WholeLook --> Archive
     Page --> Journal[looks → Style Journal and PDP cultural notes]
     Page --> OptIn[Explicit marketplace or PDP action]
     OptIn --> Inspire[commerce.styleMatches → Inspire drawer]
@@ -67,13 +70,22 @@ flowchart TD
 
 Provider failure rejects the complete analysis and uses the page's existing photo-preserving error/retry flow. Cancellation rejects promptly as `AbortError`, including when an injected provider ignores its signal; late settlement is consumed. Stopping underlying provider work remains that provider's responsibility. A future partial-result policy would need an explicit typed contract rather than silent omission.
 
-Each of the forty-four references carries an authored `relationship`: `same-design`, `runway-reference` or `styling-inspiration`. The current records use forty-two styling and two runway assignments. Contextual cards/dialogs/PDP notes display this relationship; Discover board photographs retain geographic labels without regional filtering. The metadata does not infer exact product identity or authenticate a photographed item. Source, credit, licence and image dimensions remain attached to the record.
+Each of the forty-four legacy references carries an authored `relationship`: `same-design`, `runway-reference` or `styling-inspiration`. Those records retain forty-two styling and two runway assignments. The two new campaign references also use `styling-inspiration`. Contextual cards/dialogs/PDP notes display this relationship; Discover board photographs retain geographic labels without regional filtering. The metadata does not infer exact product identity or authenticate a photographed item. Source, credit, licence and image dimensions remain attached to the record.
 
 Shared catalogue IDs make archive-study products saveable across routes. Chloé facts link to primary references, while scores, prices, stock and resale figures remain prototype assumptions. Four original garment SVGs illustrate generic categories; supplied Chloé photographs stay Git-ignored. The missing TV still remains optional and excluded from the active feed.
 
+Two ROSÉ × PUMA examples add six real named models, six illustrative archive-study offers and two
+campaign references. Their photograph associations are curated collection references, not exact
+worn-SKU identifications. Only an explicit sample `exampleId` with its canonical photo URL selects
+these results; ordinary uploads and Discover references retain the disclosed legacy library.
+`createOutfitCommerceEdit` retains every piece's offers and their ownership when selection changes.
+The open PDP is derived by product ID from the current edit; its owner supplies cultural context
+and Inspire options. App's visit-local save registry includes the two new campaign references.
+Reviewed imagery is restored by `setup:outfit-media` into ignored local storage.
+
 ## Commerce and state ownership
 
-`commerce.track` is explicit; price never chooses a track. `createCommerceEdit` validates ordered streams and duplicate IDs. The page and `PurchaseGrid` defensively filter archive inputs. Before a bag action, `resolveArchivePurchase` resolves the current archive product and SKU, requires positive integer stock and returns canonical objects. The page clamps quantity against that stock. Incoming callbacks cannot substitute partner offers, prices or invented stock.
+`commerce.track` is explicit; price never chooses a track. `createCommerceEdit` validates ordered streams and duplicate IDs. The page and `PurchaseGrid` defensively filter archive inputs. `PurchaseGrid` formats only card display labels; canonical product records and callbacks remain unchanged. The four information fields are condition, brand, name and price. No positive-stock variant means greyscale and crossed-out card information, with an accessible unstruck status badge; viewing and wardrobe saves remain enabled. Era, listing type, source, full condition and sizes are available in the PDP. Before a bag action, `resolveArchivePurchase` resolves the current archive product and SKU, requires positive integer stock and returns canonical objects. The page clamps quantity against that stock. Incoming callbacks cannot substitute partner offers, prices or invented stock.
 
 The marketplace and archive PDP expose **Explore similar styles** only when the selected study has style matches. The PDP receives a count/action, not an automatic alternative catalogue. One unkeyed `StyleMatchDrawer` stays mounted across both entry points. It owns SKU choices and its native modal lifecycle; the page owns style saves and partner-preview callbacks. A preview revalidates the current style/SKU and emits local feedback without adding to the archive bag or navigating to a partner.
 
@@ -81,7 +93,7 @@ The marketplace and archive PDP expose **Explore similar styles** only when the 
 | --- | --- |
 | Archive wardrobe | `App`; browser storage when available and shared across routes |
 | Photo/result/selected study | `FirstSightPage`; current analysis, with accepted URL cleanup on replacement/unmount |
-| Saved inspiration looks | `App`; shared by Discover and FirstSight for the App visit, reset on full reload; IDs cover all forty Commons and four Chloé references |
+| Saved inspiration looks | `App`; shared by Discover and FirstSight for the App visit, reset on full reload; forty Commons, four Chloé and two PUMA campaign references |
 | Archive bag and saved styles | Separate `FirstSightPage` states; current mounted visit |
 | Discover collection | `TrendHero`; `?collection=<id>` retains the edit through browser history |
 | Inspire SKU choices | `StyleMatchDrawer`; current mounted visit, retained across reopening and study switches |

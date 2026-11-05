@@ -15,6 +15,7 @@ Run from the `loomstory-web` repository root:
 ```sh
 npm ci
 npm run setup:analysis-media
+npm run setup:outfit-media
 npm run dev
 ```
 
@@ -23,6 +24,10 @@ Open the Local URL printed by Vite, normally [http://127.0.0.1:5173](http://127.
 The media setup command restores available Chloé example photographs into `public/local-media/chloe/`. It first copies the supplied originals from `src/images/`, preserving their files there, and uses reviewed download URLs when no local original is available. Both directories are ignored by Git, so these photographs are not included in GitHub and need to be supplied or restored after a fresh clone. The app serves its copies at `/local-media/chloe/`; see [the source record](docs/first-sight-sources.md) for the filename mapping and provenance.
 
 The active Chloé example uses the bag and four available styling photographs. The optional TV-scene original (`styling-05.jpg`) is excluded from the active flow while unavailable. The floral-dress and dog-walking photographs use the exact local originals supplied in `src/images/`.
+
+`setup:outfit-media` restores two ROSÉ × PUMA campaign frames and six single-product reference
+photographs into ignored `public/local-media/outfits/`. Valid existing copies work offline. These
+named-model examples are curated collection references; they are not live recognition results.
 
 To check and preview a production build:
 
@@ -40,7 +45,7 @@ The production preview normally opens at [http://127.0.0.1:4173](http://127.0.0.
 | Experience | Current behavior |
 | --- | --- |
 | Discover and The Vault | Shared sample clothing and bag records, search, era/category filters, and sorting |
-| FirstSight | Continuous inspiration, photo analysis, and shopping sections; five selectable studies, interactive dossiers, sourced styling references, inline product details, and bag preview |
+| FirstSight | Photo analysis and shopping; two three-piece ROSÉ × PUMA examples, retained Chloé/five-study library, dossiers, styling references, product details and bag preview |
 | Item details and stories | Navigable editorial pages using local content |
 | My wardrobe | Save/unsave sample items; favorites persist in this browser when storage is available |
 | Submit a piece | Select a local photograph or sample, enter details, and preview the result |
@@ -62,7 +67,7 @@ src/
   integrations/     Future service contracts; no clients or requests
   images/           Ignored user-supplied originals for local media setup
 public/assets/      Tracked illustrative photography and sketches
-public/local-media/ Ignored Chloé example photographs, restored by setup:analysis-media
+public/local-media/ Ignored Chloé and outfit photographs, restored by the two media setup commands
 scripts/            Local media setup
 netlify.toml        Static build and routing configuration
 netlify/functions/  Documentation placeholder; no executable function
@@ -89,12 +94,21 @@ The Chloé analysis photographs live separately in the ignored `public/local-med
 
 ## FirstSight flow prototype
 
-Visit `/first-sight` alongside the preserved Discover and Submit pages. Its three sections stay in one continuous page, with distinct dashboard-style surfaces and section headers:
+Visit `/first-sight` alongside the preserved Discover and Submit pages. Discover owns the editorial
+hero and inspiration board. FirstSight has two retained sections:
 
-1. **Tendances:** a 50/50 editorial hero with four selectable collections and an optional six-look inspiration board.
-2. **Discover the Story:** a 35/65 photo workspace and dossier. Choose a photo, then press **Analyze**. The photo stays visible on the left; five sample choices update a magazine-style product study, feature callouts, cultural story, and resale bar on the right. Feature labels stay visible; hovering, focusing, or tapping reveals a compact explanation without expanding the layout. The upload panel is sticky only within this section on desktop.
-3. **Find Similar Pieces:** the selected study's shopping edit and styling references. Styling references stay visible beside the shopping edit throughout browsing. Product selection opens a 70/30 PDP inline below the grid; the earlier sections remain available.
+1. **Discover the Story:** choose a photograph or celebrity example, then press **Analyse photo**.
+   The city example presents PUMA's Micro Grip bag, slim long-sleeve tee and mini skirt; the track
+   example presents T7 trousers, mesh top and Speedcat PRM trainers. Each named model opens its
+   own product reference and design notes. The campaign associations are curated, not exact worn-SKU
+   identifications. Chloé, uploads and Discover references retain the five-study demonstration.
+2. **Find Your Piece:** celebrity examples retain all three pieces in the shopping edit when the
+   dossier selection changes. Product images/names open the inline PDP; saves and bag actions resolve
+   canonical product/SKU data. Affordable alternatives remain behind the opt-in Inspire drawer.
 
-The five studies cover the Chloé Paddington, leather bomber, denim jacket, oversized blazer, and workwear jacket. The Chloé example distinguishes verified design/product details from its authored **€700–€1,000** resale scenario. Scores, matching, prices, and inventory remain sample data. No AI, photo-upload service, live checkout, or payment is connected.
+The original library covers Paddington, leather bomber, denim jacket, oversized blazer and workwear
+jacket. The dossier resale section remains commented out. Prices, condition and stock are sample
+data; no AI, photo-upload service, live checkout or payment is connected. The
+[whole-outfit ledger](docs/plans/whole-outfit-example-plan.md) records the new example owners and checks.
 
 The UI depends on an injectable service port under `src/features/first-sight/services/`, with the current behavior supplied by a local adapter. Read [the flow and future API integration guide](docs/first-sight-prototype.md) and [the celebrity media source record](docs/first-sight-sources.md).

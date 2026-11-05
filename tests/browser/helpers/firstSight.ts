@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { studies, type ExpectedStudy } from '../fixtures/expected-edits';
+import { archiveCardDetails, studies, type ExpectedStudy } from '../fixtures/expected-edits';
 
 /** Enter through the public sample control; file selection alone must remain a separate action. */
 export async function analyseSample(page: Page): Promise<void> {
@@ -20,16 +20,28 @@ export async function selectStudy(page: Page, study: ExpectedStudy): Promise<voi
   await expect(page.locator('#fs-fashion-dossier h3').first()).toHaveText(study.name);
 }
 
-/** Assert authored card order, classification and counts independently of the fixture implementation. */
+/** Assert order, canonical navigation identity and display copy without importing application fixtures. */
 export async function expectArchiveEdit(page: Page, study: ExpectedStudy): Promise<void> {
   const cards = page.locator('.fs-purchase-card');
   await expect(cards).toHaveCount(study.archive.length);
-  await expect(cards.locator('h3')).toHaveText(study.archive.map(offer => offer.title));
-  await expect(cards.locator('.fs-product-badge')).toHaveText(study.archive.map(offer => offer.label));
+  const expected = study.archive.map(offer => archiveCardDetails[offer.id]);
+  await expect(cards.locator('.fs-product-name')).toHaveText(expected.map(card => card.name));
+  await expect(cards.locator('.fs-product-brand')).toHaveText(expected.map(card => card.brand));
+  await expect(cards.locator('.fs-product-condition')).toHaveText(expected.map(card => card.condition));
+  await expect(cards.locator('.fs-product-price')).toHaveText(expected.map(card => card.price));
+  await expect(cards.locator('.fs-product-badge, .fs-product-context, .fs-purchase-sizes, .fs-purchase-bottom')).toHaveCount(0);
+  for (const [index, offer] of study.archive.entries()) {
+    const card = cards.nth(index);
+    await expect(card.locator('.fs-purchase-details > *')).toHaveCount(4);
+    await expect(card.getByRole('button', { name: `View purchase options for ${offer.title}`, exact: true })).toHaveCount(1);
+  }
   await expect(page.locator('.fs-selected-edit strong')).toHaveText(study.name);
   await expect(page.locator('.fs-archive-toolbar-copy h3')).toContainText(`${study.archive.length} pieces`);
+  await expect(page.locator('.fs-archive-toolbar-copy p')).toHaveText('Sample listings · Illustrative prices and availability');
   await expect(page.locator('.fs-shop-toolbar .fs-style-match-count')).toHaveText(String(study.styles.length));
-  for (const style of study.styles) await expect(cards.getByRole('heading', { name: style.title, exact: true })).toHaveCount(0);
+  for (const style of study.styles) {
+    await expect(cards.getByRole('button', { name: `View purchase options for ${style.title}`, exact: true })).toHaveCount(0);
+  }
 }
 
 export async function openInspire(page: Page, entry: 'marketplace' | 'product' = 'marketplace'): Promise<Locator> {
@@ -49,7 +61,7 @@ export async function closeInspire(page: Page, method: 'button' | 'escape' = 'bu
 }
 
 export async function openArchiveProduct(page: Page, title: string): Promise<Locator> {
-  await page.getByRole('button', { name: `View piece: ${title}`, exact: true }).click();
+  await page.getByRole('button', { name: `View purchase options for ${title}`, exact: true }).click();
   const product = page.locator('.fs-pdp');
   await expect(product.getByRole('heading', { level: 2, name: title, exact: true })).toBeVisible();
   return product;

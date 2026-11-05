@@ -92,21 +92,12 @@
 .fs-archive-empty { padding: 28px 24px; border: 1px solid #d7c8be; background: #f4eee5; }
 .fs-archive-empty h3 { font: 27px/1.2 Georgia, serif; }
 .fs-archive-empty p { margin-top: 12px; color: var(--fs-muted); font-size: 13px; line-height: 1.7; max-width: 46ch; }
-/* Commerce stays primary beside the softer journal, with readable prices and clear purchase-entry buttons. */
-.fs-purchase-section .fs-purchase-meta { font-size: 11px; }
-.fs-purchase-section .fs-purchase-meta > span:last-child { font-size: 16px; }
+/* The separate wardrobe heart retains a generous target beside the quieter card details. */
 .fs-purchase-section .fs-look-save { width: 44px; height: 44px; }
-.fs-purchase-section .fs-purchase-bottom { flex-wrap: wrap; gap: 10px; }
-.fs-purchase-section .fs-purchase-bottom > span { font-size: 11px; }
-.fs-purchase-section .fs-purchase-bottom > button { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 44px; padding: 10px 14px; border-radius: 5px; background: #672b38; color: #fffaf4; font-size: 13px; }
-.fs-purchase-section .fs-purchase-bottom > button:hover { background: #4d202a; }
-.fs-purchase-section .fs-purchase-bottom > button:focus-visible { outline: 2px solid #672b38; outline-offset: 3px; }
 .fs-shopping-explainer { margin-top: 25px; padding: 15px 0; border-block: 1px solid var(--line); font-size: 11px; color: var(--fs-muted); }
 .fs-shopping-explainer summary { cursor: pointer; width: fit-content; }
 .fs-shopping-explainer p { max-width: 780px; margin-top: 14px; line-height: 1.8; }
 .fs-inline-product { border-top: 1px solid var(--ink); padding-top: 30px; margin-top: 55px; }
-.fs-product-context { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 10px; color: var(--fs-muted); margin: 10px 0; line-height: 1.65; }
-.fs-product-context > span:last-child { flex-basis: 100%; }
 
 /* Tablet: respect the actual dossier width, and keep upload controls within the viewport. */
 @media (max-width: 1100px) {

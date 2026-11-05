@@ -9,8 +9,8 @@ import type { CollectionProps } from '../types';
 import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVariant, SavedLookProps } from '../features/first-sight/types';
 import type { FirstSightGateway } from '../features/first-sight/services/contracts';
 import { prototypeGateway } from '../features/first-sight/services/prototype';
-import { chloePhoto } from '../features/first-sight/chloe';
-import { isArchiveOffer, isStyleMatchOffer, resolveArchivePurchase } from '../features/first-sight/commerce';
+import { outfitExamples } from '../features/first-sight/data/outfitExamples';
+import { createOutfitCommerceEdit, isArchiveOffer, isStyleMatchOffer, resolveArchivePurchase } from '../features/first-sight/commerce';
 import { PhotoUploadPanel } from '../features/first-sight/components/PhotoUploadPanel';
 import { RecognitionResults } from '../features/first-sight/components/RecognitionResults';
 import { FashionDossier } from '../features/first-sight/components/FashionDossier';
@@ -47,7 +47,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
   const [selectedId, setSelectedId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [product, setProduct] = useState<PurchaseOption | null>(null);
+  const [productId, setProductId] = useState<string | null>(null);
   const [cart, setCart] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [styleMatchOpen, setStyleMatchOpen] = useState(false);
@@ -61,9 +61,16 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
   const styleMatchFocusTarget = useRef<'recognition' | 'matches' | 'product'>('matches');
   const selected = result?.items.find(item => item.id === selectedId) ?? result?.items[0];
   // Explicit tracks choose the consumer surface. Price never decides archive membership.
-  const archiveProducts = selected?.commerce.archive.filter(isArchiveOffer) ?? [];
-  const styleMatchProducts = selected?.commerce.styleMatches.filter(isStyleMatchOffer) ?? [];
+  const outfitEdit = result?.outfit ? createOutfitCommerceEdit(result.items) : null;
+  const archiveProducts = outfitEdit?.archive ?? selected?.commerce.archive.filter(isArchiveOffer) ?? [];
+  // Derive the open PDP from the current edit, so a replaced result cannot retain stale stock.
+  const product = archiveProducts.find(candidate => candidate.id === productId) ?? null;
+  const productOwner = product && outfitEdit ? outfitEdit.ownerByProductId.get(product.id) : selected;
+  const styleOwner = productOwner ?? selected;
+  const styleMatchProducts = styleOwner?.commerce.styleMatches.filter(isStyleMatchOffer) ?? [];
   const inspireOpen = styleMatchOpen && Boolean(selected) && styleMatchProducts.length > 0;
+  const featuredProductIds = result?.outfit
+    ? result.items.find(item => item.id === result.outfit?.primaryItemId)?.commerce.archive.map(offer => offer.id) ?? [] : [];
 
   // The page owns accepted URLs; the upload workspace owns only unfinished image decodes.
   useEffect(() => () => { if (photo?.kind === 'upload') URL.revokeObjectURL(photo.url); }, [photo]);
@@ -78,24 +85,35 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
   function changePhoto(nextPhoto: PhotoInput | null) {
     closeStyleMatches('recognition');
     controller.current?.abort();
-    setPhoto(nextPhoto); setResult(null); setSelectedId(''); setProduct(null);
+    setPhoto(nextPhoto); setResult(null); setSelectedId(''); setProductId(null);
     setLoading(false); setError(''); setNotice('');
   }
 
-  /** Explicit Analyze action; choosing a file alone never starts the sample recognition. */
+  /** Explicit analysis; choosing a file or celebrity example never starts it automatically. */
   async function analyze() {
     if (!photo || loading) return;
     closeStyleMatches('recognition');
     controller.current?.abort();
     const request = new AbortController();
     controller.current = request;
-    setLoading(true); setError(''); setResult(null); setProduct(null);
+    setLoading(true); setError(''); setResult(null); setProductId(null);
     setSelectedId('');
     try {
       const response = await gateway.discover(photo, request.signal);
       if (request.signal.aborted || controller.current !== request) return;
-      setResult(response); setSelectedId(response.items[0]?.id ?? '');
-      if (!response.items.length) setError('No studies were returned. Try the sample photograph or analyze again.');
+      if (response.outfit) {
+        const ids = response.items.map(item => item.id);
+        if (photo.kind !== 'sample' || photo.exampleId !== response.outfit.id
+          || photo.url !== response.outfit.photo.url || !ids.includes(response.outfit.primaryItemId)
+          || ids.length !== response.outfit.memberIds.length
+          || ids.some((id, index) => id !== response.outfit?.memberIds[index])
+          || response.items.some(item => !item.identityEvidence)) {
+          throw new Error('The prepared outfit does not match this photograph.');
+        }
+        createOutfitCommerceEdit(response.items);
+      }
+      setResult(response); setSelectedId(response.outfit?.primaryItemId ?? response.items[0]?.id ?? '');
+      if (!response.items.length) setError('No studies were returned. Try the sample photograph or analyse again.');
     } catch {
       if (!request.signal.aborted) setError('The sample analysis could not be prepared. Your photograph is still here; please try again.');
     } finally {
@@ -113,7 +131,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
   function selectRecognition(id: string) {
     closeStyleMatches('matches');
     setSelectedId(id);
-    setProduct(null);
+    setProductId(null);
   }
 
   /** Product details open within shopping; analysis remains in the document. */
@@ -121,14 +139,17 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
     const archiveProduct = archiveProducts.find(candidate => candidate.id === nextProduct.id);
     if (!archiveProduct) return;
     closeStyleMatches('product');
-    setProduct(archiveProduct);
+    // Set the owner and PDP in one transition; selectRecognition intentionally closes a PDP.
+    const owner = outfitEdit?.ownerByProductId.get(archiveProduct.id);
+    if (owner) setSelectedId(owner.id);
+    setProductId(archiveProduct.id);
     requestAnimationFrame(() => scrollToSection(productRef.current));
   }
 
   /** Close only the inline PDP and return to the retained shopping grid. */
   function closeProduct() {
     closeStyleMatches('matches');
-    setProduct(null);
+    setProductId(null);
     requestAnimationFrame(() => scrollToSection(matchesRef.current));
   }
 
@@ -222,7 +243,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
     {/* The grid defines the sticky boundary; the upload column ends with the analysis chapter. */}
     <section id="fs-recognition" className="fs-recognition-section" ref={recognitionRef} tabIndex={-1} aria-labelledby="fs-recognition-title">
       <div className="fs-chapter-label"><span>01 / A CLOSER LOOK</span><span>FROM INSPIRATION TO UNDERSTANDING</span></div>
-      {referenceUnavailable && <p className="fs-reference-unavailable" role="status">That inspiration reference is unavailable. Choose a photograph or try the Chloé example below.</p>}
+      {referenceUnavailable && <p className="fs-reference-unavailable" role="status">That inspiration reference is unavailable. Choose a photograph or try an example below.</p>}
       <div className="fs-recognition-layout">
         <PhotoUploadPanel photo={photo} busy={loading} hasResults={Boolean(selected)}
           onPhotoChange={changePhoto} onAnalyze={() => void analyze()} onCancel={cancelAnalysis} />
@@ -232,19 +253,19 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
             <h2 id="fs-recognition-title">Discover the Story<span>.</span></h2>
             <p>Every piece has a history. Uncover the design, culture, and craftsmanship behind your inspiration.</p>
           </div>
-          <p className="fs-sr-only" role="status">{loading ? 'Preparing five demonstration studies.' : selected ? 'Five sample studies ready. Choose a piece to explore its story.' : ''}</p>
+          <p className="fs-sr-only" role="status">{loading ? 'Preparing your demonstration studies.' : selected ? result?.outfit ? `${result.items.length} collection pieces ready. Choose a piece to explore its story.` : 'Five sample studies ready. Choose a piece to explore its story.' : ''}</p>
           {error && <p className="fs-error" role="alert">{error}</p>}
           {loading ? <div className="fs-recognition-loading" aria-hidden="true">
             <span className="fs-section-kicker">LOOKING CLOSER</span><h3>A story taking shape.</h3>
-            <p>Gathering five sample studies, their design details, and a few possibilities for your wardrobe.</p>
+            <p>Gathering the prepared studies, their design details, and a few possibilities for your wardrobe.</p>
             <div className="fs-result-skeletons">{[0, 1, 2, 3, 4].map(index => <span key={index} />)}</div>
             <div className="fs-dossier-skeleton" />
           </div> : selected && result ? <>
-            <RecognitionResults items={result.items} selectedId={selected.id} onSelect={selectRecognition} />
+            <RecognitionResults items={result.items} selectedId={selected.id} onSelect={selectRecognition} outfit={result.outfit} />
             <FashionDossier key={selected.id} item={selected} onExplore={() => scrollToSection(matchesRef.current)} />
           </> : <div className="fs-recognition-empty">
-            <div className="fs-empty-copy"><span className="fs-section-kicker">AN OPEN INVITATION</span><h3>Start with a detail.<br /><em>Stay for the story.</em></h3><p>Choose a photograph, then select Analyze to explore five prepared fashion studies.</p><button className="fs-text-button" onClick={() => changePhoto(chloePhoto)}>Use the Chloé example ↗</button></div>
-            <figure><img src={chloePhoto.url} alt="Chloé Paddington Bag, a preview of the example study" /><figcaption>THE PADDINGTON / A STORY TO DISCOVER</figcaption></figure>
+            <div className="fs-empty-copy"><span className="fs-section-kicker">AN OPEN INVITATION</span><h3>Start with a detail.<br /><em>Explore the whole look.</em></h3><p>Try a celebrity example to explore real collection models, from the bag to the clothes and trainers. Choose a photograph, then select Analyse.</p><button className="fs-text-button" onClick={() => changePhoto(outfitExamples[0].photo)}>Try the celebrity look ↗</button></div>
+            <figure><img src={outfitExamples[0].photo.url} alt={outfitExamples[0].imageAlt} /><figcaption>ROSÉ × PUMA / ONE LOOK, SEVERAL STORIES</figcaption></figure>
           </div>}
         </div>
       </div>
@@ -253,7 +274,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
     {/* Shopping stays present; its edit follows the selected study rather than a separate route. */}
     <section id="fs-similar-pieces" className="fs-similar-section" ref={matchesRef} tabIndex={-1} aria-labelledby="fs-similar-title">
       <div className="fs-chapter-label"><span>02 / THE NEXT CHAPTER</span><span>CURATED POSSIBILITIES</span></div>
-      <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Your Piece<span>.</span></h2><p>Explore vintage originals, designer reissues and archive studies with a story to tell.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
+      <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Your Piece<span>.</span></h2><p>{result?.outfit ? 'Explore every documented collection piece in this prepared look.' : 'Explore vintage originals, designer reissues and archive studies with a story to tell.'}</p></div>{selected && <span className="fs-selected-edit">{result?.outfit ? 'THE WHOLE-LOOK EDIT' : 'THE CURRENT EDIT'}<strong>{result?.outfit?.title ?? selected.name}</strong></span>}</div>
 
       {selected ? <>
         <div className="fs-shop-toolbar">
@@ -270,7 +291,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
         </div>
         <div className={'fs-discovery' + (!selected.looks.length ? ' fs-discovery-focused' : '')}>
           <div className="fs-purchase-section">
-            <PurchaseGrid archiveProducts={archiveProducts} savedIds={savedIds} onToggleSave={toggleArchiveSave} onSelect={openProduct} />
+            <PurchaseGrid archiveProducts={archiveProducts} savedIds={savedIds} onToggleSave={toggleArchiveSave} onSelect={openProduct} featuredProductIds={featuredProductIds} />
           </div>
           {/* Styling stays beside the edit for as long as this study is selected. */}
           {selected.looks.length > 0 && <aside className="fs-context-section" aria-label="Contextual outfit feed">
@@ -281,17 +302,17 @@ export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, o
         <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>The archive edit contains fictional vintage, reissue and archive-study listings. Open The Inspire to explore modern style matches separately. Style previews and visit-local saves leave your archive bag and wardrobe untouched. The photographs provide context for the selected study.</p></details>
 
         {product && <div className="fs-inline-product" ref={productRef} tabIndex={-1}>
-          <ProductDetailPanel product={product} looks={selected.looks}
+          <ProductDetailPanel product={product} looks={productOwner?.looks ?? []}
             styleMatchCount={styleMatchProducts.length} onOpenStyleMatches={openStyleMatches}
             saved={savedIds.includes(product.id)} onToggleSave={toggleArchiveSave} onBack={closeProduct}
             onAddToCart={(item, variant) => addToCart(item, variant)}
             onBuyNow={(item, variant) => addToCart(item, variant, true)} />
         </div>}
-      </> : <div className="fs-products-empty"><span aria-hidden="true">↗</span><div><h3>Your next chapter starts with a story.</h3><p>Analyze a photograph above. Choose a study and its related edit will appear here.</p></div><button className="fs-text-button" onClick={() => scrollToSection(recognitionRef.current)}>Find a story ↑</button></div>}
+      </> : <div className="fs-products-empty"><span aria-hidden="true">↗</span><div><h3>Your next chapter starts with a story.</h3><p>Analyse a photograph above. Choose a study and its related edit will appear here.</p></div><button className="fs-text-button" onClick={() => scrollToSection(recognitionRef.current)}>Find a story ↑</button></div>}
     </section>
 
     {/* One mounted drawer preserves visit-local sizes across both entry points and all studies. */}
-    <StyleMatchDrawer open={inspireOpen} itemName={selected?.name ?? ''} products={styleMatchProducts}
+    <StyleMatchDrawer open={inspireOpen} itemName={styleOwner?.name ?? ''} products={styleMatchProducts}
       savedIds={savedStyleMatchIds} onClose={() => closeStyleMatches()}
       onToggleSave={toggleStyleMatchSave} onPreviewPartner={previewPartnerOffer}
       onRestoreFocus={restoreStyleMatchFocus} />

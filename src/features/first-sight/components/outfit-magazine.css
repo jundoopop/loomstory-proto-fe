@@ -41,7 +41,8 @@
 .fs-context-section .fs-outfits-magazine .fs-look-open > img { display: block; width: 100%; height: auto; }
 .fs-context-section .fs-outfits-magazine .fs-look-relationship { top: auto; bottom: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 10px; line-height: 1.4; letter-spacing: .2px; overflow-wrap: anywhere; }
 .fs-context-section .fs-outfits-magazine .fs-look-save { width: 44px; height: 44px; top: 8px; right: 8px; border: 1px solid #d1afb8; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 23px; }
-.fs-context-section .fs-outfits-magazine .fs-look-save[aria-pressed='true'] { background: var(--fs-journal-wine); border-color: var(--fs-journal-wine); color: #fffaf4; }
+/* Saving colours only the heart; keep the idle paper background and border. */
+.fs-context-section .fs-outfits-magazine .fs-look-save[aria-pressed='true'] { color: var(--fs-saved-heart-color); }
 .fs-context-section .fs-outfits-magazine .fs-look-peek { top: 10px; bottom: auto; left: 10px; padding: 7px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 11px; }
 
 /* Ivory captions keep names and provenance legible; the number gives each photo an editorial index. */

@@ -99,10 +99,11 @@ export function FashionDossier({ item, onExplore }: Props) {
   return <article id="fs-fashion-dossier" className="fs-dossier" aria-labelledby={titleId}>
     <div className="fs-dossier-sheet">
       <div className="fs-dossier-header">
-        <div className="fs-dossier-overline"><span>THE LOOMSTORY STUDY</span><span>Illustrated archive</span></div>
+        <div className="fs-dossier-overline"><span>THE LOOMSTORY STUDY</span><span>{item.identityEvidence ? 'Published design' : 'Illustrated archive'}</span></div>
         <h3 id={titleId} tabIndex={-1}>{item.name}</h3>
         <p className="fs-dossier-identity"><span>{item.era}</span><span aria-hidden="true">·</span><span>{item.category}</span></p>
         <p className="fs-dossier-intro">{item.summary}</p>
+        {item.identityEvidence && <p className="fs-dossier-evidence">{item.identityEvidence.description} <a href={item.identityEvidence.sourceUrl} target="_blank" rel="noreferrer">{item.identityEvidence.sourceLabel} ↗<span className="fs-sr-only"> (opens in a new tab)</span></a></p>}
       </div>
 
       <div className="fs-dossier-canvas" ref={canvasRef} onKeyDown={event => {
@@ -176,7 +177,7 @@ export function FashionDossier({ item, onExplore }: Props) {
           </div>;
         })}
       </div>
-      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>Use a labelled feature to look closer.</p></div>
+      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>{item.annotations.length ? 'Use a labelled feature to look closer.' : 'Open the design notes below to look closer.'}</p></div>
 
       {/* Preserve the full authored analysis without crowding the idle magazine view. */}
       <details className="fs-dossier-notes">

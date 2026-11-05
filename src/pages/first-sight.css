@@ -63,8 +63,7 @@
   margin-top: 17px;
 }
 
-.fs-prototype-pill i,
-.fs-purchase-bottom i {
+.fs-prototype-pill i {
   display: inline-block;
   width: 5px;
   height: 5px;
@@ -617,7 +616,7 @@
   padding: 12px 0;
 }
 
-/* Selectable purchase cards, size availability, and expanded-catalog column count. */
+/* Photograph-first archive cards. Full listing context lives in the product detail view. */
 .fs-purchase-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -628,106 +627,166 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Warm paper and fine rules echo the chapter frames without competing with the Style Journal. */
+.fs-purchase-card {
+  container: archive-card / inline-size;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  border: 1px solid #ded2c5;
+  border-radius: 8px;
+  background: var(--fs-antique, #fffcf9);
+}
+
+.fs-purchase-card:hover,
+.fs-purchase-card:focus-within {
+  border-color: #b49787;
+}
+
 .fs-purchase-image {
   position: relative;
-  background: #e9e2d7;
+  overflow: hidden;
+  border-bottom: 1px solid #e3d9cd;
+  border-radius: 7px 7px 0 0;
+  background: #f2ece3;
 }
 
 .fs-purchase-open {
   display: block;
   padding: 0;
   width: 100%;
+  min-height: 44px;
 }
 
 .fs-purchase-open>img {
+  display: block;
   width: 100%;
   aspect-ratio: 4 / 5;
   height: auto;
   object-fit: cover;
 }
 
-.fs-product-badge {
+.fs-product-stock {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  width: fit-content;
-  background: #f5f1e8eb;
-  padding: 6px 8px;
-  font-size: 7px;
-  letter-spacing: 1px;
+  bottom: 12px;
+  left: 12px;
+  max-width: calc(100% - 24px);
+  padding: 6px 9px;
+  border: 1px solid #d8cfc3;
+  background: #fffaf4;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.5;
   pointer-events: none;
 }
 
-.fs-purchase-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 9px;
-  margin: 15px 0 8px;
-  color: var(--muted);
+/* Brand and name lead; the quieter condition and serif price share a baseline below. */
+.fs-purchase-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  align-items: baseline;
+  gap: 6px 12px;
+  padding: 17px 16px 18px;
 }
 
-.fs-purchase-meta>span:last-child {
-  color: var(--ink);
-  font-size: 12px;
+.fs-product-condition {
+  grid-column: 1;
+  grid-row: 3;
+  min-width: 0;
+  color: #62584f;
+  font: italic 13px/1.5 Georgia, 'Times New Roman', serif;
+  overflow-wrap: anywhere;
+}
+
+.fs-product-brand {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  color: var(--accent);
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .fs-purchase-card h3 {
-  font-size: 19px;
-  line-height: 1.2;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  min-width: 0;
+  padding-bottom: 9px;
+  color: #332923;
+  font: 400 clamp(18px, 1.5vw, 23px)/1.2 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.35px;
 }
 
 .fs-purchase-card h3>button {
-  padding: 0;
-  max-width: 100%;
+  display: block;
+  padding: 4px 0;
+  width: 100%;
+  min-height: 44px;
   overflow-wrap: anywhere;
   text-align: left;
   font: inherit;
 }
 
-.fs-purchase-sizes {
-  display: flex;
-  gap: 5px;
-  margin: 13px 0;
+.fs-product-name>button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.fs-purchase-sizes>span {
-  font-size: 9px;
-  border: 1px solid var(--line);
-  padding: 5px 7px;
+.fs-product-price {
+  grid-column: 2;
+  grid-row: 3;
+  min-width: 0;
+  color: #4c3038;
+  font: 400 21px/1.3 Georgia, 'Times New Roman', serif;
+  letter-spacing: -.4px;
+  text-align: right;
+  overflow-wrap: anywhere;
 }
 
-.fs-purchase-sizes>.is-unavailable {
-  /* Availability is useful information even when the size cannot be selected. */
-  color: #6b6259;
-  text-decoration: line-through;
+/* Stack the valuation line when the card or enlarged text needs more space. */
+@container archive-card (max-width: 14em) {
+  .fs-purchase-details {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto;
+    gap: 5px;
+    padding: 13px 11px 15px;
+  }
+
+  .fs-product-condition,
+  .fs-product-price {
+    grid-column: 1;
+  }
+
+  .fs-product-price {
+    grid-row: 4;
+    text-align: left;
+    font-size: 18px;
+  }
 }
 
-.fs-purchase-bottom {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
+/* Unavailable pieces remain viewable/saveable; availability never relies on colour alone. */
+.fs-purchase-card.is-out-of-stock {
+  filter: grayscale(1);
 }
 
-.fs-purchase-bottom>span {
-  color: var(--fs-green);
-  font-size: 8px;
+.fs-purchase-card.is-out-of-stock .fs-purchase-details>*,
+.fs-purchase-card.is-out-of-stock .fs-product-name>button {
+  text-decoration-line: line-through;
+  text-decoration-thickness: 1px;
 }
 
-.fs-purchase-bottom i {
-  margin-right: 4px;
-  width: 4px;
-  height: 4px;
+.fs-purchase-open:focus-visible,
+.fs-purchase-card .fs-look-save:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -4px;
 }
 
-.fs-purchase-bottom>button {
-  font-size: 9px;
-  padding: 5px 0;
+.fs-product-name>button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* Fictional screen/social context cards sit alongside sourced celebrity references. */

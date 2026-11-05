@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { test, expect } from './helpers/diagnostics';
-import { studies } from './fixtures/expected-edits';
+import { archiveCardDetails, studies } from './fixtures/expected-edits';
 import { analyseSample, closeInspire, expectArchiveEdit, openArchiveProduct, openInspire, selectStudy } from './helpers/firstSight';
 
 const savedKey = 'loomstory-web:saved:v1';
@@ -24,6 +24,120 @@ test('explicit analysis and all five edits retain archive-first commerce @respon
     await closeInspire(page);
     await expect(page.locator('.fs-shop-toolbar .fs-style-match-trigger')).toBeFocused();
   }
+});
+
+test('unavailable archive cards remain viewable and saveable while partial stock stays available @responsive @cross-browser @preview', async ({ page, browserName }) => {
+  await analyseSample(page);
+  // macOS WebKit uses Option+Tab to include buttons; preserve its native navigation preference.
+  const nextControl = browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab';
+  const cards = page.locator('.fs-purchase-card');
+  const unavailableOffer = studies[0].archive[2];
+  const unavailable = cards.nth(2);
+  await expect(cards.locator('.fs-product-stock')).toHaveCount(1);
+  await expect(unavailable).toHaveClass(/is-out-of-stock/);
+  await expect(unavailable).toHaveCSS('filter', 'grayscale(1)');
+  for (const field of await unavailable.locator('.fs-purchase-details > *, .fs-product-name > button').all()) {
+    await expect(field).toHaveCSS('text-decoration-line', 'line-through');
+  }
+  await expect(unavailable.locator('.fs-product-stock')).toHaveText('Out of stock');
+  await expect(unavailable.locator('.fs-product-stock')).toHaveCSS('text-decoration-line', 'none');
+  const availableCards = page.locator('.fs-purchase-card:not(.is-out-of-stock)');
+  await expect(availableCards).toHaveCount(2);
+  for (const available of await availableCards.all()) {
+    await expect(available).toHaveCSS('filter', 'none');
+  }
+
+  // Tab from the image to the independent save control, then to the product name.
+  await unavailable.locator('.fs-purchase-open').focus();
+  await page.keyboard.press(nextControl);
+  const save = unavailable.locator('.fs-look-save');
+  await expect(save).toHaveAttribute('aria-label', `Save ${unavailableOffer.title}`);
+  await expect(save).toBeFocused();
+  await expect(save).toHaveCSS('outline-style', 'solid');
+  await page.keyboard.press('Space');
+  await expect(save).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => page.evaluate(key => JSON.parse(localStorage.getItem(key) ?? '[]'), savedKey))
+    .toEqual([unavailableOffer.id]);
+  await page.keyboard.press(nextControl);
+  await expect(unavailable.locator('.fs-product-name > button')).toBeFocused();
+  await page.keyboard.press('Enter');
+  let pdp = page.locator('.fs-pdp');
+  await expect(pdp.getByRole('heading', { level: 2, name: unavailableOffer.title, exact: true })).toBeVisible();
+  await expect(pdp.getByRole('button', { name: 'Add to bag', exact: true })).toBeDisabled();
+  await expect(pdp.getByRole('button', { name: 'Buy now', exact: true })).toBeDisabled();
+  await expect(pdp.getByRole('button', { name: 'Size One size, out of stock', exact: true })).toBeDisabled();
+  const specifications = pdp.locator('.fs-pdp-specifications');
+  await expect(specifications.locator('dt')).toHaveText([
+    'Material', 'Condition', 'Category', 'Colour', 'Era', 'Listing type', 'Source',
+  ]);
+  await expect(specifications.locator('dd')).toContainText([
+    'Suede calfskin', 'Excellent · sample reissue', 'Bags', 'Vintage brown', '2020s',
+    unavailableOffer.label, 'Sample offer · reference photo',
+  ]);
+  await pdp.getByRole('button', { name: 'Back to your matches' }).click();
+
+  // The image independently opens the same canonical piece after the clean title entry.
+  pdp = await openArchiveProduct(page, unavailableOffer.title);
+  await expect(pdp.getByRole('button', { name: 'Add to bag', exact: true })).toBeDisabled();
+  await pdp.getByRole('button', { name: 'Back to your matches' }).click();
+  await unavailable.getByRole('button', { name: `Unsave ${unavailableOffer.title}`, exact: true }).click();
+  await expect.poll(() => page.evaluate(key => JSON.parse(localStorage.getItem(key) ?? '[]'), savedKey)).toEqual([]);
+  await expect(page.locator('.fs-bag-button')).toHaveText('Your bag 0');
+
+  // The bomber has an exhausted S SKU, but its M/L stock must keep the card in colour.
+  await selectStudy(page, studies[1]);
+  await expect(cards.locator('.fs-product-stock')).toHaveCount(0);
+  await expect(cards.filter({ has: page.getByRole('button', {
+    name: `View purchase options for ${studies[1].archive[0].title}`, exact: true,
+  }) })).not.toHaveClass(/is-out-of-stock/);
+  pdp = await openArchiveProduct(page, studies[1].archive[0].title);
+  await expect(pdp.getByRole('button', { name: 'Size S, out of stock', exact: true })).toBeDisabled();
+  await expect(pdp.getByRole('button', { name: 'Size M, 2 available', exact: true })).toBeEnabled();
+  await pdp.getByRole('button', { name: 'Size M, 2 available', exact: true }).click();
+  await expect(pdp.getByRole('button', { name: 'Add to bag', exact: true })).toBeEnabled();
+});
+
+test('archive card names and prices reflow with doubled text and keyboard access @responsive @cross-browser', async ({ page, browserName }) => {
+  await analyseSample(page);
+  const nextControl = browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab';
+  await selectStudy(page, studies[2]);
+  await page.evaluate(() => {
+    // Capture computed values before applying them so inherited text doubles exactly once.
+    const sizes = [...document.querySelectorAll('.fs-purchase-card, .fs-purchase-card *')]
+      .filter((element): element is HTMLElement => element instanceof HTMLElement)
+      .map(element => ({ element, size: parseFloat(getComputedStyle(element).fontSize) }));
+    for (const { element, size } of sizes) if (Number.isFinite(size)) element.style.fontSize = `${size * 2}px`;
+  });
+  const cards = page.locator('.fs-purchase-card');
+  await expect(cards.locator('.fs-product-name')).toHaveText(studies[2].archive.map(offer => archiveCardDetails[offer.id].name));
+  for (const card of await cards.all()) {
+    expect(await card.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+    for (const field of await card.locator('.fs-purchase-details > *, .fs-product-name > button').all()) {
+      const overflow = await field.evaluate(element => ({
+        horizontal: element.scrollWidth - element.clientWidth,
+        vertical: element.scrollHeight - element.clientHeight,
+      }));
+      expect(overflow.horizontal).toBeLessThanOrEqual(1);
+      expect(overflow.vertical).toBeLessThanOrEqual(1);
+    }
+    for (const control of await card.getByRole('button').all()) {
+      const bounds = await control.boundingBox();
+      expect(bounds, 'Each image, heart and title has measurable geometry').not.toBeNull();
+      expect(bounds!.width).toBeGreaterThanOrEqual(44);
+      expect(bounds!.height).toBeGreaterThanOrEqual(44);
+    }
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth))
+    .toBeLessThanOrEqual(1);
+  const first = cards.first();
+  await first.locator('.fs-purchase-open').focus();
+  await page.keyboard.press(nextControl);
+  await expect(first.locator('.fs-look-save')).toBeFocused();
+  await page.keyboard.press(nextControl);
+  await expect(first.locator('.fs-product-name > button')).toBeFocused();
+  await expect(first.locator('.fs-product-name > button')).toHaveCSS('outline-style', 'solid');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.fs-pdp h2')).toHaveText(studies[2].archive[0].title);
 });
 
 test('both Inspire entries retain visit choices and PDP state without changing archive commerce @cross-browser @preview', async ({ page }) => {

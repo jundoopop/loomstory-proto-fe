@@ -58,6 +58,8 @@ test('all five study pages have no automatically detectable accessibility failur
   await analyseSample(page);
   for (const study of studies) {
     await selectStudy(page, study);
+    // Keep this keyboard-only pass independent of hover when focus scrolls labels into view.
+    await page.mouse.move(0, 0);
     const labels = page.locator('.fs-dossier-feature-label');
     await expect(labels).toHaveCount(4);
     if (page.viewportSize()!.width <= 390) {

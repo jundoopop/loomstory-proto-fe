@@ -1,5 +1,11 @@
 # FirstSight P1–P17 roadmap and Discover P18 renewal
 
+Latest implementation slice: [whole-outfit analysis examples](whole-outfit-example-plan.md),
+confirmed by the user on 5 November 2026. Two ROSÉ × PUMA samples add six documented real models
+to FirstSight's example chooser, with whole-look commerce and the original five-study library
+retained. This is separate from the proposed wider project renewal and deferred animations.
+Git delivery requires a separate explicit instruction.
+
 Recorded: 2026-11-04. Branch inspected: `new-analysis`. Starting commit: `c45cf42`.
 
 This file preserves all seventeen original FirstSight phases and the separately approved Discover P18 renewal. It is the repository reference for resuming work across chat sessions. The [engineering role](first-sight-engineering-role.md) defines how to work; the [P1–P4 plan and assessment](first-sight-p1-p4-plan.md) records the completed first slice.
@@ -270,3 +276,16 @@ independent scrolling. Portrait, narrow and short windows keep stacked page flow
 Git authorisation did not initially cover this follow-up. The user has now explicitly authorised
 a local EC-style commit, including the commented-out `fs-dossier-resale` patch. Do not push or merge
 this follow-up without a separate instruction. Expressive magazine animation remains a later task.
+
+
+### Archive product-card renewal — 5 November 2026
+
+After the landscape follow-up's local commit `00578d6`, the user approved the
+[archive-card renewal](archive-product-card-renewal.md). Simplify FirstSight cards to condition,
+brand, product name and EUR price; move listing context into the PDP. Mark only wholly unavailable
+pieces with greyscale and crossed-out information, preserving viewing and saves. Retain canonical
+catalogue data, archive/Inspire boundaries and all current uncommitted heart/dossier edits.
+Implementation and verification are authorised; staging, commit, push and merge are not included.
+The renewal is complete and verified: both TypeScript checks, 40 Node tests, 127 affected browser
+executions, 55 axe scans with zero detected violations, production build and eight preview checks
+pass. See its activity ledger and A–G assessment for exact coverage and manual-review limitations.

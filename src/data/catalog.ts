@@ -2,6 +2,7 @@
  * Edit descriptions/prices here; FirstSight derives its richer commerce fixtures from items.
  */
 import type { Item, Story } from '../types';
+import { outfitCatalogItems } from '../features/first-sight/data/outfitCatalog.ts';
 
 // Authored demo fixtures. Images illustrate a mood, not the listed physical garment.
 /** Editorial copy keyed by stable story IDs; each Item.storyId should resolve to one entry. */
@@ -86,4 +87,6 @@ export const items: Item[] = [
   { id: 'blazer-alternative', title: 'The relaxed blazer · modern study', price: 75, era: '2020s', category: 'Outerwear', size: 'M', image: '/assets/first-sight/studies/tailored-blazer.svg', description: 'An affordable tailoring concept using the same illustrated outline. Fabric, measurements, and availability would require a real catalog source.', storyId: 'city-after-hours' },
   { id: 'workwear-archive', title: 'The chore jacket · archive study', price: 110, era: 'Mid-century inspired', category: 'Outerwear', size: 'M', image: '/assets/first-sight/studies/workwear-jacket.svg', description: 'A fictional olive chore jacket with three patch pockets and a straight cut. The era describes an inspiration, not a verified manufacturing date.', storyId: 'less-but-better' },
   { id: 'workwear-alternative', title: 'The utility jacket · modern study', price: 60, era: '2020s', category: 'Outerwear', size: 'L', image: '/assets/first-sight/studies/workwear-jacket.svg', description: 'An unbranded cotton-twill utility concept at an illustrative lower price. The original drawing is shared with the archive study; this is not a real offer.', storyId: 'less-but-better' },
+  // Append new collection studies so Discover's established featured edit retains its order.
+  ...outfitCatalogItems,
 ];

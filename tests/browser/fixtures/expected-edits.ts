@@ -12,6 +12,28 @@ export interface ExpectedStudy {
   readonly styles: readonly { readonly id: string; readonly title: string }[];
 }
 
+/** Card copy is authored independently from the formatter and canonical PDP/wardrobe names. */
+export const archiveCardDetails: Readonly<Record<string, {
+  name: string;
+  brand: string;
+  condition: 'Excellent' | 'Very good' | 'Good' | 'Fair';
+  price: string;
+}>> = {
+  'chloe-paddington-archive': { name: 'Paddington', brand: 'Chloé', condition: 'Good', price: '€700' },
+  'chloe-paddington-complete': { name: 'Paddington · complete set', brand: 'Chloé', condition: 'Excellent', price: '€850' },
+  'chloe-paddington-reissue': { name: 'Paddington · reissue', brand: 'Chloé', condition: 'Excellent', price: '€1,000' },
+  'bomber-archive': { name: 'The leather bomber', brand: 'Unbranded', condition: 'Good', price: '€165' },
+  'minimalist-leather': { name: 'The minimalist leather jacket', brand: 'Unbranded', condition: 'Very good', price: '€185' },
+  'weekend-layer': { name: 'The weekend leather layer', brand: 'Unbranded', condition: 'Good', price: '€120' },
+  'denim-jacket-archive': { name: 'The denim jacket', brand: 'Unbranded', condition: 'Good', price: '€95' },
+  'archive-denim': { name: 'The straight-leg archive jean', brand: 'Unbranded', condition: 'Very good', price: '€78' },
+  'record-shop-denim': { name: 'The record-shop jean', brand: 'Unbranded', condition: 'Good', price: '€65' },
+  'blazer-archive': { name: 'The oversized blazer', brand: 'Unbranded', condition: 'Very good', price: '€145' },
+  'city-coat': { name: 'The city wool coat', brand: 'Unbranded', condition: 'Very good', price: '€145' },
+  'gallery-coat': { name: 'The gallery coat', brand: 'Unbranded', condition: 'Good', price: '€175' },
+  'workwear-archive': { name: 'The chore jacket', brand: 'Unbranded', condition: 'Good', price: '€110' },
+};
+
 // Do not import recognitionStudies here: a broken grouping must not generate its own expected result.
 export const studies: readonly ExpectedStudy[] = [
   {

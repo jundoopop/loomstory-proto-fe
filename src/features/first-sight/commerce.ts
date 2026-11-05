@@ -2,7 +2,7 @@
  * FirstSight commerce rules, independent of fixtures and React presentation.
  * Track membership follows authored listing intent; prices are display data.
  */
-import type { CommerceEdit, ContextRelationship, ListingKind, PurchaseOption, PurchaseVariant } from './types.ts';
+import type { CommerceEdit, ContextRelationship, ListingKind, PurchaseOption, PurchaseVariant, RecognizedItem } from './types.ts';
 
 const listingKindLabels = {
   'vintage-original': 'Vintage original',
@@ -74,4 +74,33 @@ export function createCommerceEdit(
     }
   }
   return { archive: [...archive], styleMatches: [...styleMatches] };
+}
+
+/**
+ * One photograph can own several pieces. Resolve their offers as one displayed edit while
+ * retaining the owning study for PDP context. Ambiguous identity must fail before bag actions.
+ */
+export function createOutfitCommerceEdit(items: readonly RecognizedItem[]): {
+  archive: PurchaseOption[];
+  ownerByProductId: Map<string, RecognizedItem>;
+} {
+  const archive: PurchaseOption[] = [];
+  const ownerByProductId = new Map<string, RecognizedItem>();
+  const skus = new Set<string>();
+  const memberIds = new Set<string>();
+  for (const item of items) {
+    if (memberIds.has(item.id)) throw new Error(`Outfit repeats item ID: ${item.id}`);
+    memberIds.add(item.id);
+    for (const product of item.commerce.archive) {
+      if (!isArchiveOffer(product)) throw new Error(`Outfit archive contains a partner offer: ${product.id}`);
+      if (ownerByProductId.has(product.id)) throw new Error(`Outfit repeats offer ID: ${product.id}`);
+      for (const variant of product.variants) {
+        if (skus.has(variant.sku)) throw new Error(`Outfit repeats SKU: ${variant.sku}`);
+        skus.add(variant.sku);
+      }
+      ownerByProductId.set(product.id, item);
+      archive.push(product);
+    }
+  }
+  return { archive, ownerByProductId };
 }

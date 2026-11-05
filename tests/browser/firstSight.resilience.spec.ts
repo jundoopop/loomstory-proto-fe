@@ -2,6 +2,8 @@
 import type { Page } from '@playwright/test';
 import { test, expect } from './helpers/diagnostics';
 import type { HarnessMode, StyleChange } from './harness/main';
+import { studies } from './fixtures/expected-edits';
+import { expectArchiveEdit } from './helpers/firstSight';
 
 async function openHost(page: Page, screen: 'page' | 'modals' = 'page') {
   await page.goto(`/tests/browser/harness/?screen=${screen}`);
@@ -43,10 +45,8 @@ for (const mode of ['archive-empty', 'style-empty', 'both-empty', 'no-context'] 
 
 test('misplaced commerce entries are filtered without changing authored track counts', async ({ page }) => {
   await analyseHost(page, 'mixed');
-  await expect(page.locator('.fs-purchase-card')).toHaveCount(3);
-  await expect(page.locator('.fs-purchase-card .fs-product-badge')).toHaveText([
-    'Vintage original', 'Vintage original', 'Designer reissue',
-  ]);
+  // Independently check exact archive identities/order, not the intentionally removed listing badges.
+  await expectArchiveEdit(page, studies[0]);
   const drawer = await openHostInspire(page);
   await expect(drawer.locator('.fs-style-match-card')).toHaveCount(1);
   await expect(drawer.locator('.fs-style-match-label')).toHaveText('Partner-offer preview');

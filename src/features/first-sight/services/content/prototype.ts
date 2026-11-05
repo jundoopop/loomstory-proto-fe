@@ -1,6 +1,7 @@
 /** Ordered local context lookup; this adapter never downloads media or analyses a photograph. */
 import { chloeLooks } from '../../chloe.ts';
 import { outfitLooks } from '../../looks.ts';
+import { outfitExampleLooks } from '../../data/outfitExamples.ts';
 import type { OutfitLook } from '../../types';
 import type { ContextContentProvider } from './contracts';
 
@@ -42,4 +43,5 @@ export function createPrototypeContextContentProvider(
 export const prototypeContextContentProvider = createPrototypeContextContentProvider([
   ...chloeLooks,
   ...outfitLooks,
+  ...outfitExampleLooks,
 ]);

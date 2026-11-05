@@ -1,0 +1,31 @@
+/* Example selection is part of the retained photo workspace, not a second discovery feed. */
+.fs-example-chooser { margin-top: 8px; border-top: 1px solid #d8cbbb; padding-top: 16px; }
+.first-sight .fs-example-heading { display: grid; gap: 4px; margin: 0 0 10px; font: 20px/1.2 Georgia, serif; color: #352b28; }
+.fs-example-heading > span { color: #685b50; font: 11px/1.5 Arial, sans-serif; }
+.fs-example-option { display: grid; grid-template-columns: 58px minmax(0, 1fr) 16px; align-items: center; gap: 12px; width: 100%; min-height: 76px; margin: 0 0 8px; padding: 9px; border: 1px solid #d8cbbb; border-radius: 5px; color: #3e302c; background: #faf7f1; text-align: left; cursor: pointer; }
+.fs-example-option:hover { background: #f1e7dc; border-color: #a88675; }
+.fs-example-option[aria-pressed='true'] { background: #efe2d7; border-color: #802f35; box-shadow: inset 3px 0 #802f35; }
+.fs-example-option > img { width: 58px; height: 58px; border-radius: 3px; object-fit: cover; object-position: center; }
+.fs-example-option > span:not(.fs-example-arrow) { display: grid; gap: 5px; min-width: 0; }
+.fs-example-option strong { font: 16px/1.25 Georgia, serif; }
+.fs-example-option small { font: 11px/1.5 Arial, sans-serif; color: #685b50; }
+.fs-example-arrow { color: #802f35; }
+.fs-example-legacy { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; width: 100%; padding: 8px 2px; text-align: left; color: #802f35; font: 12px/1.5 Arial, sans-serif; cursor: pointer; }
+.fs-example-option:focus-visible, .fs-example-legacy:focus-visible { outline: 2px solid #802f35; outline-offset: 3px; }
+.fs-example-option:disabled, .fs-example-legacy:disabled { cursor: wait; opacity: .6; }
+
+/* Non-destructive central framing keeps the complete visible outfit legible in this panel. */
+.first-sight .fs-workspace-photo.is-outfit-photo { height: clamp(240px, 35dvh, 360px); min-height: 240px; }
+.first-sight .is-outfit-photo .fs-workspace-preview { object-fit: cover; object-position: 50% 50%; }
+.first-sight .fs-workspace-photo.is-outfit-photo > .fs-workspace-photo-label { top: auto; bottom: 10px; }
+
+/* The evidence is readable outside the feature diagram; no uncertain feature targets are added. */
+.first-sight .fs-dossier-evidence { margin: 12px 0 0; color: #685b50; font: 12px/1.65 Arial, sans-serif; }
+.fs-dossier-evidence a { display: inline-flex; align-items: center; min-height: 44px; color: #802f35; text-decoration: underline; text-underline-offset: 3px; }
+.fs-purchase-card.is-featured { border-color: #802f35; }
+.fs-product-featured { position: absolute; left: 10px; bottom: 10px; pointer-events: none; padding: 6px 9px; border-radius: 3px; color: #fff9f2; background: #702b35; font: 10px/1.4 Arial, sans-serif; letter-spacing: .3px; }
+
+@media (max-width: 380px) {
+  .fs-example-option { grid-template-columns: 46px minmax(0, 1fr) 14px; gap: 9px; }
+  .fs-example-option > img { width: 46px; height: 58px; }
+}

@@ -10,4 +10,7 @@ export async function substituteLocalMedia(page: Page) {
   await page.route('**/local-media/chloe/**', route => route.fulfill({
     status: 200, contentType: 'image/png', body: testPhoto,
   }));
+  await page.route('**/local-media/outfits/**', route => route.fulfill({
+    status: 200, contentType: 'image/png', body: testPhoto,
+  }));
 }

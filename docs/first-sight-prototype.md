@@ -40,7 +40,7 @@ full reload. They are separate from durable product wardrobe saves and FirstSigh
 
 ## Five selectable studies
 
-Every successful Analyze run returns the same five prepared choices:
+Chloé, arbitrary uploads and Discover references return the same five prepared choices:
 
 | Study | Example era | Central image | Archive offers | Inspire offers |
 | --- | --- | --- | ---: | ---: |
@@ -65,7 +65,28 @@ Chloé's design history and the pictured reissue's specifications link to primar
 
 ## Archive and Inspire action boundaries
 
-`selected.commerce.archive` supplies the default marketplace and archive PDP. `selected.commerce.styleMatches` supplies The Inspire. Explicit `commerce.track` metadata chooses the surface; price does not decide whether an offer belongs to the archive. Cards use Vintage original, Designer reissue, Archive study or Partner-offer preview labels as appropriate.
+`selected.commerce.archive` supplies the default marketplace and archive PDP. `selected.commerce.styleMatches` supplies The Inspire. Explicit `commerce.track` metadata chooses the surface; price does not decide whether an offer belongs to the archive.
+
+Archive cards show the photograph, separate wardrobe heart, condition, brand, clean product name and
+EUR price. Condition uses the authored Excellent, Very good, Good or Fair grade; the current fixtures
+need no invented Fair piece. Card formatting removes only known sample suffixes. Canonical names,
+prices, IDs and callbacks remain intact, and the toolbar still discloses sample listings.
+
+The visual treatment follows the site's chapter frames: warm ivory cards, fine borders, burgundy
+branding and serif product names/prices. Brand and name lead; the condition and price share a lower
+baseline where space permits and stack on narrow cards or with enlarged text. The condition is
+quiet italic text rather than a separate chip. Cards align their information within each grid row.
+
+Open a piece through its photograph or name. The PDP keeps full condition text and size availability,
+and now includes era, listing type (Vintage original, Designer reissue or Archive study) and source
+in its specification list. Cards no longer repeat the era, source, listing badge, sizes or stock
+sentence, and there is no separate View piece footer. Partner-offer preview labels remain in Inspire.
+
+Only a piece with no positive-stock SKU becomes greyscale. Its condition, brand, name and price are
+crossed out; the Out of stock badge remains readable and unstruck. It can still be opened and saved,
+but unavailable PDP sizes and purchase actions stay disabled. A piece with one unavailable size and
+another available size retains its normal appearance. The stock badge also describes the image,
+name and save controls for assistive technology.
 
 Archive PDP, save and bag actions resolve membership against the selected archive edit. `resolveArchivePurchase` re-resolves the canonical product and SKU and requires positive integer stock before a bag update. Quantities cannot exceed that canonical sample stock. Callback objects cannot substitute partner offers, prices or invented inventory.
 
@@ -81,7 +102,7 @@ If an archive stream is empty, show the archive empty state without substituting
 
 The contextual feed stays beside the selected archive edit for the browsing session. It does not expire or collapse, and there is no manual hide-inspiration mode. Opening the PDP, bag or Inspire leaves the underlying journal mounted. Dynamic batch injection pauses while those views are open. Switching studies changes the edit and references together; no-reference data can use the full catalogue width. The former 45-second collapse timer and its domain modules have been removed.
 
-**The Style Journal** uses a muted wine surface, ivory photo cards, burgundy headings, natural image proportions and compact captions. Two-column masonry becomes one column when the panel is too narrow. The marketplace retains larger prices and filled **View piece** controls as the primary shopping destination. Edit the journal presentation in `components/outfit-magazine.css`.
+**The Style Journal** uses a muted wine surface, ivory photo cards, burgundy headings, natural image proportions and compact captions. Two-column masonry becomes one column when the panel is too narrow. The marketplace retains prominent prices and image/name entry points as the primary shopping destination. Edit the journal presentation in `components/outfit-magazine.css`.
 
 Context cards, their detail dialogs and PDP notes display the authored relationship: Styling inspiration, Runway reference or Same design. Geographic labels remain on Discover inspiration cards, which have no regional filter in this finite edit. These labels do not establish ownership, endorsement, authentication or the same production edition. Sources and credits stay with each photograph; see the [relationship and source record](first-sight-sources.md#cultural-relationship-metadata).
 
@@ -102,7 +123,7 @@ Context cards, their detail dialogs and PDP notes display the authored relations
 | Magazine labels, floating details, connectors and commented-out resale bar | `components/FashionDossier.tsx`, `components/fashion-dossier.css` |
 | Prices and wardrobe IDs / stock, variant and condition enrichment | `src/data/catalog.ts` / `fixtures.ts` |
 | Track predicates, listing/relationship labels and canonical archive SKU resolution | `commerce.ts` |
-| Archive cards / archive PDP with cultural notes and opt-in prompt | `components/PurchaseGrid.tsx` / `components/ProductDetailPanel.tsx`, `components/product-detail.css` |
+| Four-field archive cards, stock styling / archive PDP with full listing specifications and opt-in prompt | `components/PurchaseGrid.tsx` / `components/ProductDetailPanel.tsx`, `components/product-detail.css` |
 | Inspire modal lifecycle, retained SKU choices and partner-preview cards | `components/StyleMatchDrawer.tsx`, `components/style-match-drawer.css` |
 | Local bag quantity controls and checkout preview | `components/CartPreview.tsx` |
 | Ordered context lookup / delayed, cancellable study composition | `services/content/prototype.ts` / `services/prototype.ts` |
@@ -110,17 +131,42 @@ Context cards, their detail dialogs and PDP notes display the authored relations
 
 Paths without `src/` are relative to `src/features/first-sight/`. Use the [code guide](code-guide.md) for named functions and state lifetimes. The older `ItemAnalysisResult`, flattened `RecognizedItem.products` and `PurchaseOption.affordable` bridge are absent from the active feature.
 
+## Celebrity whole-outfit examples
+
+Inside the retained photo workspace, **Try an example** offers two ROSÉ × PUMA looks alongside
+**Try the Chloé bag**. Choosing one replaces the photograph and clears stale results; it never
+starts analysis. Press **Analyse photo** to reveal that example's three real collection models:
+
+- **City look:** Micro Grip Bag, Slim Longsleeve Tee and Slim Micro Mini Skirt. The bag is initially
+  selected and carries a restrained featured-piece cue in the marketplace.
+- **Track look:** T7 Relaxed Track Pants, Relaxed Mesh Top and Speedcat PRM trainers. The trousers
+  are initially selected; no bag or other invisible piece is assigned to this frame.
+
+Result buttons select the linked product photograph and four design notes. These models are named
+in PUMA's published collection release; their relationship to the campaign photographs is curated,
+not a brand-confirmed worn-SKU list or automated image recognition. Scores and valuations are
+omitted. New packshots do not receive invented feature coordinates.
+
+All three sample offers remain visible when the selected piece changes. Opening the top while the
+bag is selected also changes PDP ownership, so its details, context, sizes, wardrobe save and bag
+actions resolve the correct canonical product. Photograph saves remain visit-local and independent
+of persistent product wardrobe saves. No new style-match alternatives are fabricated.
+
+Uploads, Discover references and the retained Chloé shortcut still use the five-study library.
+See the [activity ledger and A–G assessment](plans/whole-outfit-example-plan.md) for exact owners and
+verification. No live service, authentication or checkout was added.
+
 ## Local media and portable test artwork
 
-For a local review with the supplied Chloé photographs, run `npm run setup:analysis-media`. It prefers originals in ignored `src/images/`, copies them into ignored `public/local-media/chloe/` and uses reviewed download URLs as fallbacks. Source originals are preserved. Active references are 01–04; missing TV still 05 is optional and excluded.
+For a local review with the supplied Chloé photographs, run `npm run setup:analysis-media`. It prefers originals in ignored `src/images/`, copies them into ignored `public/local-media/chloe/` and uses reviewed download URLs as fallbacks. Source originals are preserved. Active references are 01–04; missing TV still 05 is optional and excluded. Run `npm run setup:outfit-media` for the two ROSÉ frames and six product references in ignored `public/local-media/outfits/`; valid existing files skip network access.
 
 Keep supplied photographs and screenshots containing them out of Git. Original garment-study and alternative-bag SVGs remain tracked, together with the attributed Commons library. An ignored public asset is still copied into a local Vite build when present; Git exclusion does not remove it from a future deployment.
 
-The repository-owned browser suite does not require those private files or media downloads. `tests/browser/helpers/media.ts` substitutes only `/local-media/chloe/*` with the original generated `tests/browser/fixtures/test-photo.png`. Tracked assets load normally and unexpected failures remain test errors. This verifies controls/layout with portable artwork; it does not establish that the exact supplied photograph rendered correctly. Check real-photo framing separately when the local media is present. Reports, screenshots and traces are ignored generated output.
+The repository-owned browser suite does not require those private files or media downloads. `tests/browser/helpers/media.ts` substitutes only `/local-media/chloe/*` and `/local-media/outfits/*` with the original generated `tests/browser/fixtures/test-photo.png`. Tracked assets load normally and unexpected failures remain test errors. This verifies controls/layout with portable artwork; it does not establish that the exact supplied photograph rendered correctly. Check real-photo framing separately when the local media is present. Reports, screenshots and traces are ignored generated output.
 
 ## Provider composition and future services
 
-The page accepts `FirstSightGateway` through its `gateway` prop. `createPrototypeGateway` keeps the 900 ms demonstration delay, then requests references for every canonical `RecognitionStudy` through an injected `ContextContentProvider`. Concurrent completion preserves authored study order. The local provider preserves requested reference order, returns fresh arrays and rejects missing, repeated or ambiguous IDs instead of silently omitting references.
+The page accepts `FirstSightGateway` through its `gateway` prop. `createPrototypeGateway` selects either the explicit example's members or the legacy library, keeps the 900 ms demonstration delay, then requests references for those canonical `RecognitionStudy` records through an injected `ContextContentProvider`. Concurrent completion preserves authored study order. The local provider preserves requested reference order, returns fresh arrays and rejects missing, repeated or ambiguous IDs instead of silently omitting references.
 
 ```ts
 interface FirstSightGateway {
