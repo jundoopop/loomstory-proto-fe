@@ -4,7 +4,7 @@
  * product navigation, wardrobe saves, cart changes, and purchase-preview actions.
  */
 import { useState } from 'react';
-import { contextRelationshipLabel } from '../commerce';
+import { contextRelationshipLabel, listingKindLabel } from '../commerce';
 import type { OutfitLook, PurchaseOption, PurchaseVariant } from '../types';
 import './product-detail.css';
 
@@ -125,6 +125,10 @@ function ProductDetailContent({
                 <div><dt>Condition</dt><dd>{product.condition}</dd></div>
                 <div><dt>Category</dt><dd>{product.category}</dd></div>
                 <div><dt>Colour</dt><dd>{product.color}</dd></div>
+                {/* Deeper listing context belongs here, keeping the archive cards easy to scan. */}
+                {product.era && <div><dt>Era</dt><dd>{product.era}</dd></div>}
+                <div><dt>Listing type</dt><dd>{listingKindLabel(product.commerce.listingKind)}</dd></div>
+                {product.sourceLabel && <div><dt>Source</dt><dd>{product.sourceLabel}</dd></div>}
               </dl>
             </div>
           </div>

@@ -9,7 +9,7 @@ const baseURL = `http://127.0.0.1:${port}`;
 // Use one object: defineConfig(shared, overrides) concatenates servers/projects instead of replacing them.
 export default defineConfig({
   ...shared,
-  testMatch: ['**/firstSight.flow.spec.ts', '**/discover.flow.spec.ts'],
+  testMatch: ['**/firstSight.flow.spec.ts', '**/firstSight.outfits.spec.ts', '**/firstSight.dossier.spec.ts', '**/discover.flow.spec.ts', '**/discover.landscape.spec.ts'],
   grep: /@preview/,
   outputDir: 'test-results/preview',
   reporter: [['list'], ['html', { outputFolder: 'playwright-report/preview', open: 'never' }]],

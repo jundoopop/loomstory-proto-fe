@@ -39,9 +39,6 @@ export function FashionDossier({ item, onExplore }: Props) {
   // Scrolling a keyboard-focused label under the pointer must not replace its explanation.
   const activeId = focusedAnnotation ?? hoveredAnnotation ?? selectedAnnotation;
   const titleId = `fs-dossier-title-${item.id}`;
-  const currency = new Intl.NumberFormat('en-IE', {
-    style: 'currency', currency: item.analysis.resale.currency, maximumFractionDigits: 0,
-  });
 
   /** Recalculate endpoints after wrapping, resizing, or image loading, without fixed pixel paths. */
   useLayoutEffect(() => {
@@ -95,17 +92,20 @@ export function FashionDossier({ item, onExplore }: Props) {
   }, []);
 
   /** Click/tap pins a detail, while pointer hover and keyboard focus offer temporary previews. */
-  const toggleAnnotation = (id: string) => {
+  const toggleAnnotation = (id: string, button: HTMLButtonElement) => {
+    // WebKit may leave pointer-activated buttons unfocused; keep Escape inside this canvas.
+    button.focus({ preventScroll: true });
     setSelectedAnnotation(current => current === id ? null : id);
   };
 
   return <article id="fs-fashion-dossier" className="fs-dossier" aria-labelledby={titleId}>
     <div className="fs-dossier-sheet">
       <div className="fs-dossier-header">
-        <div className="fs-dossier-overline"><span>THE LOOMSTORY STUDY</span><span>Illustrated archive</span></div>
+        <div className="fs-dossier-overline"><span>THE LOOMSTORY STUDY</span><span>{item.identityEvidence ? 'Published design' : 'Illustrated archive'}</span></div>
         <h3 id={titleId} tabIndex={-1}>{item.name}</h3>
         <p className="fs-dossier-identity"><span>{item.era}</span><span aria-hidden="true">·</span><span>{item.category}</span></p>
         <p className="fs-dossier-intro">{item.summary}</p>
+        {item.identityEvidence && <p className="fs-dossier-evidence">{item.identityEvidence.description} <a href={item.identityEvidence.sourceUrl} target="_blank" rel="noreferrer">{item.identityEvidence.sourceLabel} ↗<span className="fs-sr-only"> (opens in a new tab)</span></a></p>}
       </div>
 
       <div className="fs-dossier-canvas" ref={canvasRef} onKeyDown={event => {
@@ -143,7 +143,7 @@ export function FashionDossier({ item, onExplore }: Props) {
                 onPointerLeave={() => setHoveredAnnotation(null)}
                 onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
                 onBlur={() => setFocusedAnnotation(null)}
-                onClick={() => toggleAnnotation(annotation.id)}
+                onClick={event => toggleAnnotation(annotation.id, event.currentTarget)}
               ><span aria-hidden="true" /></button>)}
               {/* Narrow images use the equivalent large label buttons; preserve these visual anchors. */}
               {item.annotations.map(annotation => <span key={annotation.id}
@@ -168,8 +168,13 @@ export function FashionDossier({ item, onExplore }: Props) {
               aria-pressed={selectedAnnotation === annotation.id}
               onFocus={event => { if (event.currentTarget.matches(':focus-visible')) setFocusedAnnotation(annotation.id); }}
               onBlur={() => setFocusedAnnotation(null)}
-              onClick={() => toggleAnnotation(annotation.id)}
-            ><span aria-hidden="true">{annotationNumber(annotation, item.analysis.cards)}</span>{annotation.label}</button>
+              onClick={event => toggleAnnotation(annotation.id, event.currentTarget)}
+            >
+              {/* Decorations stay outside the accessible name; open and pinned remain distinct. */}
+              <span className="fs-dossier-feature-number" aria-hidden="true">{annotationNumber(annotation, item.analysis.cards)}</span>
+              <span className="fs-dossier-feature-text">{annotation.label}</span>
+              <span className="fs-dossier-feature-toggle" aria-hidden="true">{expanded ? '−' : '+'}</span>
+            </button>
             {/* Absolute positioning keeps the magazine composition still when a card opens. */}
             <div className="fs-dossier-popover" hidden={!expanded}>
               <section id={`fs-dossier-detail-${annotation.id}`} className="fs-dossier-panel" aria-labelledby={labelId}>
@@ -179,7 +184,7 @@ export function FashionDossier({ item, onExplore }: Props) {
           </div>;
         })}
       </div>
-      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>Use a labelled feature to look closer.</p></div>
+      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>{item.annotations.length ? 'Use a labelled feature to look closer.' : 'Open the design notes below to look closer.'}</p></div>
 
       {/* Preserve the full authored analysis without crowding the idle magazine view. */}
       <details className="fs-dossier-notes">
@@ -190,15 +195,16 @@ export function FashionDossier({ item, onExplore }: Props) {
         </section>)}</div>
       </details>
 
-      {/* Resale remains explicitly illustrative until a marketplace-backed provider replaces the fixture. */}
-      <section className="fs-dossier-resale" aria-labelledby={`fs-dossier-resale-${item.id}`}>
+      {/* Keep resale disabled for the current business model; retain the sample markup for review.
+          Restore its currency formatter before re-enabling this section. */}
+      {/* <section className="fs-dossier-resale" aria-labelledby={`fs-dossier-resale-${item.id}`}>
         <div className="fs-dossier-panel-heading"><span aria-hidden="true">05</span><h4 id={`fs-dossier-resale-${item.id}`}>Resale value</h4></div>
         <p>{item.analysis.resale.description}</p>
         <div className="fs-dossier-valuation">
           <div><span>Suggested resale range</span><small>Illustrative estimate · condition dependent</small></div>
           <strong>{currency.format(item.analysis.resale.minimum)}<span>–</span>{currency.format(item.analysis.resale.maximum)}</strong>
         </div>
-      </section>
+      </section> */}
 
       <details className="fs-dossier-culture">
         <summary><span><small>CULTURAL SIGNIFICANCE</small><strong>The story behind the piece</strong></span><span className="fs-dossier-culture-toggle" aria-hidden="true">+</span></summary>

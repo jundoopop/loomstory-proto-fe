@@ -59,7 +59,25 @@ export interface SavedLookProps {
 export type PhotoInput = {
   url: string;
   name: string;
-} & ({ kind: 'sample' | 'upload' } | { kind: 'reference'; reference: OutfitLook });
+} & ({ kind: 'sample'; exampleId?: string } | { kind: 'upload' } | { kind: 'reference'; reference: OutfitLook });
+
+/** One authored photograph and its documented model references; never an arbitrary upload match. */
+export interface OutfitExample {
+  id: string;
+  title: string;
+  description: string;
+  photo: PhotoInput & { kind: 'sample'; exampleId: string };
+  imageAlt: string;
+  width: number;
+  height: number;
+  credit: string;
+  sourceUrl: string;
+  sourceLabel: string;
+  primaryItemId: string;
+  memberIds: readonly string[];
+  // Model identities are published; associating the models with a campaign frame is curated.
+  evidenceNote: string;
+}
 
 /** Authored identity reveal. A live adapter will need statuses for uncertain or unknown matches. */
 export interface GarmentIdentity {
@@ -86,7 +104,7 @@ export interface ItemAnalysis {
   // Trim only known empty studio background; annotation coordinates still use the original image.
   imagePresentation?: 'full' | 'trim-top-space';
   cards: AnalysisCard[];
-  resale: {
+  resale?: {
     description: string;
     minimum: number;
     maximum: number;
@@ -143,7 +161,14 @@ export interface RecognizedItem {
   era: string;
   summary: string;
   // A seeded demonstration score, never a measured probability for the uploaded photograph.
-  confidence: number;
+  confidence?: number;
+  // Published product identity is distinct from proof of the exact SKU worn in a photograph.
+  identityEvidence?: {
+    sourceUrl: string;
+    sourceLabel: string;
+    description: string;
+    relationship: 'campaign-collection-reference';
+  };
   identity: GarmentIdentity;
   analysis: ItemAnalysis;
   annotations: ProductAnnotation[];
@@ -164,6 +189,7 @@ export type RecognitionStudy = Omit<RecognizedItem, 'looks'> & {
 /** Gateway response: selection stays in the page; the provider returns independent studies. */
 export interface DiscoveryResult {
   items: RecognizedItem[];
+  outfit?: OutfitExample;
 }
 
 /** A selected SKU in the page-owned bag; quantity is capped by its variant's sample stock. */

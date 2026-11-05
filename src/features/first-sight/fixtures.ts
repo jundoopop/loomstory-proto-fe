@@ -3,10 +3,14 @@
  * with the wardrobe; no record here represents a seller, live stock, or a real offer.
  */
 import { items } from '../../data/catalog.ts';
+import { outfitOfferDetails } from './data/outfitCatalog.ts';
 import type { CommerceProfile, PurchaseOption } from './types';
 
 /** Keep editable offer assumptions beside the catalog mapping, outside presentation components. */
 interface OfferDetails {
+  brand?: string;
+  sizes?: string[];
+  sourceLabel?: string;
   condition: string;
   stock: number;
   material: string;
@@ -15,6 +19,7 @@ interface OfferDetails {
 }
 
 const offerDetails: Record<string, OfferDetails> = {
+  ...outfitOfferDetails,
   // Vintage-original describes these fictional listings; their photo remains a reissue reference.
   'chloe-paddington-archive': {
     condition: 'Good · sample condition', stock: 1, material: 'Suede calfskin · pictured reissue reference', color: 'Vintage brown',
@@ -103,11 +108,11 @@ const sampleOffers = new Map<string, PurchaseOption>(items
     const isIllustration = item.image.endsWith('.svg');
     const isPaddington = item.id.startsWith('chloe-paddington-');
     // Garment-size labels and numeric jean sizes are deliberately kept distinct.
-    const sizes = isBag ? ['One size'] : /^\d+$/.test(item.size) ? [item.size] : ['S', 'M', 'L'];
+    const sizes = details.sizes ?? (isBag ? ['One size'] : /^\d+$/.test(item.size) ? [item.size] : ['S', 'M', 'L']);
     const offer: PurchaseOption = {
       id: item.id,
       title: item.title,
-      brand: isPaddington ? 'Chloé · sample offer' : 'Unbranded · sample offer',
+      brand: details.brand ?? (isPaddington ? 'Chloé · sample offer' : 'Unbranded · sample offer'),
       price: item.price,
       image: item.image,
       category: item.category,
@@ -116,7 +121,7 @@ const sampleOffers = new Map<string, PurchaseOption>(items
       material: details.material,
       condition: details.condition,
       era: item.era,
-      sourceLabel: isIllustration ? 'Illustrated sample offer' : 'Sample offer · reference photo',
+      sourceLabel: details.sourceLabel ?? (isIllustration ? 'Illustrated sample offer' : 'Sample offer · reference photo'),
       variants: sizes.map((size, index) => ({
         sku: `LS-${item.id.toUpperCase()}-${isBag ? 'OS' : size}`,
         size,

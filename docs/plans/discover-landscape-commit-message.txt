@@ -1,0 +1,83 @@
+feat(discover): add landscape workspace and disable dossier resale
+
+Present the inspiration cover and its six-photo edit together on landscape
+screens. Replace the sequential cover-and-board layout at eligible sizes with
+parallel native-scroll panels while retaining the stacked mobile journey.
+Keep illustrative dossier resale hidden for the current business model.
+
+A. Requirement
+
+Place the hero image, copy and collection controls on the left and the photo
+board on the right. Keep the site header and Discover heading above the
+workspace and retain access to shopping and editorial sections below it.
+
+B. Scope and boundaries
+
+Enable the workspace at widths of at least 1024 px, heights of at least
+600 px and landscape orientation. Keep narrower, portrait and short windows
+in the existing stacked layout. Preserve the four collections, six-photo
+boards, attribution, visit-local saves and explicit FirstSight hand-off.
+Retain all five studies, eighteen offers and forty-four cultural references.
+Add no runtime dependency, public contract, gateway or data-fixture change.
+
+C. Technical approach
+
+Use equal CSS grid columns, a 24 px gap and calc(100dvh - 48px) height.
+Stack the cover image above its caption and controls, keeping captions in
+normal flow so long and enlarged text remains reachable without clipping.
+Use two natural-proportion masonry columns in the landscape photo board.
+Keep native scrollbars and scroll chaining; avoid page locks, intercepted
+wheel events and automatic page scrolling.
+
+D. Interaction and accessibility
+
+Name both panel regions and make them keyboard focusable with visible focus.
+Reset only the board's internal scroll position when the collection changes.
+Preserve its position and focus when a photograph dialog closes. Retain
+collection selection and saves through resizing and rotation. Preserve all
+photograph credits, source actions and existing 44 px controls.
+
+E. Requested patch and implementation owners
+
+- Update TrendHero.tsx and trend-hero.css for the two-panel workspace.
+- Update Discover column assertions and add focused landscape browser coverage.
+- Include landscape geometry in the production-preview configuration.
+- Disable proxy routing in disposable macOS Firefox test profiles to reach
+  owned loopback servers; leave personal profiles and OS settings untouched.
+- Keep fs-dossier-resale commented out in FashionDossier.tsx as requested.
+- Remove its unused currency formatter and tidy the disabled markup comment.
+- Retain resale fixture data and CSS hooks without rendering the resale bar.
+- Update the architecture, code guide, walkthrough, roadmap, ledger and evidence.
+- Leave unrelated dossier CSS and OutfitMasonry indentation out of this commit.
+
+F. Verification
+
+Verify the staged source through an isolated export with the installed
+runtime and browser-test dependencies:
+
+- Application and browser TypeScript checks: pass.
+- Existing Node tests: 40 pass.
+- Affected browser suite: 116 executions of 27 scenarios pass in nine projects.
+- Cover Chromium, Firefox and WebKit, responsive layouts and retained hand-offs.
+- Browser failures, skips, flakes and runner errors: zero.
+- Accessibility scans: 31, with zero detected violations and no rule exclusions.
+- Retain incomplete contrast and label/name checks for human judgement.
+- Production build and all seven production-preview checks: pass.
+- Verify the five landscape sizes, seven fallbacks and doubled-text access.
+- Verify native panel scrolling, boundary chaining, collection reset and dialogs.
+- Confirm canonical fixture files remain unchanged and diff checks pass.
+- Retain the additional 21 successful cross-browser Ultra-review executions
+  and the two independent reviews with no blocking findings.
+
+Disclose unperformed actual Safari, physical-device and screen-reader checks.
+Keep the existing development-tool advisory and manual accessibility review
+outside any claim of complete accessibility conformance.
+
+G. Local delivery
+
+Apply the user's explicit authorisation to commit on new-analysis, including
+the commented-out resale patch. Preserve unrelated working-tree edits.
+Record the detailed assessment in docs/plans/discover-landscape-plan.md and
+verification evidence in docs/discover-verification.md. Keep generated logs,
+screenshots and supplied photographs outside Git. Leave push, merge and
+expressive magazine animation for separate explicit instructions.

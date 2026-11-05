@@ -25,6 +25,11 @@
 .fs-recognition-action > span { font-size: 14px; }
 .fs-recognition-note { margin: 7px 0 0; color: #6b6259; font: 10px/1.5 Arial, sans-serif; }
 
+/* Same-photo examples own a smaller, variable set; legacy five-study layout stays independent. */
+.fs-recognition-results.is-outfit .fs-recognition-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fs-recognition-results.is-outfit .fs-recognition-image { height: 155px; }
+.fs-recognition-evidence { display: block; margin-top: auto; color: #765a44; font: 10px/1.5 Arial, sans-serif; }
+
 @container recognition-results (max-width: 699px) {
   .fs-recognition-strip { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 166px; gap: 11px; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #bba38f transparent; padding: 4px 3px 12px; }
   .fs-recognition-strip > li { scroll-snap-align: start; }
@@ -34,6 +39,7 @@
   .fs-recognition-description { font-size: 12px; min-height: 55px; }
   .fs-recognition-score { font-size: 9px; }
   .fs-recognition-action { font-size: 10px; }
+  .fs-recognition-results.is-outfit .fs-recognition-strip { grid-template-columns: none; }
 }
 
 @media (prefers-reduced-motion: reduce) { .fs-recognition-card { transition: none; } }

@@ -12,6 +12,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "setup:analysis-media": "node scripts/setup-analysis-media.mjs",
+    "setup:outfit-media": "node scripts/setup-outfit-media.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "typecheck:browser": "tsc --noEmit -p tsconfig.browser.json",
     "test:browser": "playwright test --project=chromium-desktop --project=chromium-1024 --project=chromium-768 --project=chromium-390 --project=chromium-320",

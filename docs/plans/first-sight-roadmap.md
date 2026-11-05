@@ -1,5 +1,17 @@
 # FirstSight P1–P17 roadmap and Discover P18 renewal
 
+Latest approved follow-up: [dossier features and editorial tags](dossier-feature-tags-plan.md),
+adding four measured features per ROSÉ model and the shared feature-button redesign. This preserves
+the wider project/animation boundaries. The user has now authorised its EC-style commit, push
+and integration through `new-home-page` into `main`.
+
+Latest implementation slice: [whole-outfit analysis examples](whole-outfit-example-plan.md),
+confirmed by the user on 5 November 2026. Two ROSÉ × PUMA samples add six documented real models
+to FirstSight's example chooser, with whole-look commerce and the original five-study library
+retained. This is separate from the proposed wider project renewal and deferred animations.
+Supporting card/outfit changes are committed as `8fe0d9a`; the reviewed dossier commit follows.
+Historical Git restrictions below refer to their implementation checkpoints.
+
 Recorded: 2026-11-04. Branch inspected: `new-analysis`. Starting commit: `c45cf42`.
 
 This file preserves all seventeen original FirstSight phases and the separately approved Discover P18 renewal. It is the repository reference for resuming work across chat sessions. The [engineering role](first-sight-engineering-role.md) defines how to work; the [P1–P4 plan and assessment](first-sight-p1-p4-plan.md) records the completed first slice.
@@ -258,3 +270,28 @@ authorised committing and pushing P18, then integrating through `new-home-page` 
 The later expressive magazine animation phase remains deferred until Discover's layout is settled
 and its separate plan is agreed. P18 staging, committing, pushing and main integration are explicitly
 authorised by the latest delivery instruction. No later feature work is included in that instruction.
+
+### P18 follow-up — Landscape inspiration workspace
+
+After delivery of P18 (`d64b349`, merged to main as `ad73d91`), the user approved the
+[landscape workspace plan](discover-landscape-plan.md). Implementation and verification are complete:
+116 affected browser executions, 31 axe scans, seven preview checks, both typechecks and 40 Node
+tests pass. On
+landscape displays at least 1024×600, the hero and board share a viewport-height frame with native
+independent scrolling. Portrait, narrow and short windows keep stacked page flow. The earlier P18
+Git authorisation did not initially cover this follow-up. The user has now explicitly authorised
+a local EC-style commit, including the commented-out `fs-dossier-resale` patch. Do not push or merge
+this follow-up without a separate instruction. Expressive magazine animation remains a later task.
+
+
+### Archive product-card renewal — 5 November 2026
+
+After the landscape follow-up's local commit `00578d6`, the user approved the
+[archive-card renewal](archive-product-card-renewal.md). Simplify FirstSight cards to condition,
+brand, product name and EUR price; move listing context into the PDP. Mark only wholly unavailable
+pieces with greyscale and crossed-out information, preserving viewing and saves. Retain canonical
+catalogue data, archive/Inspire boundaries and all current uncommitted heart/dossier edits.
+Implementation and verification are authorised; staging, commit, push and merge are not included.
+The renewal is complete and verified: both TypeScript checks, 40 Node tests, 127 affected browser
+executions, 55 axe scans with zero detected violations, production build and eight preview checks
+pass. See its activity ledger and A–G assessment for exact coverage and manual-review limitations.

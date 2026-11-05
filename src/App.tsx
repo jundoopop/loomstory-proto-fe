@@ -15,12 +15,13 @@ import SubmitPage from './pages/SubmitPage';
 import FirstSightPage from './pages/FirstSightPage';
 import { outfitLooks } from './features/first-sight/looks';
 import { chloeLooks } from './features/first-sight/chloe';
+import { outfitExampleLooks } from './features/first-sight/data/outfitExamples';
 import { resolveInspirationPhoto } from './features/discover/references';
 
 // Wardrobe entries must refer to this catalog; update the catalog when adding live IDs.
 const validIds = items.map(item => item.id);
 // Both discovery photos and item-specific context can be saved without entering the wardrobe.
-const validLookIds = new Set([...outfitLooks, ...chloeLooks].map(look => look.id));
+const validLookIds = new Set([...outfitLooks, ...chloeLooks, ...outfitExampleLooks].map(look => look.id));
 
 /** Read stored favorites through the domain validator; unavailable storage starts empty. */
 function readSavedItems() {

@@ -1,0 +1,351 @@
+{
+  "researchedOn": "2026-11-05",
+  "status": "research-only; not imported by the application",
+  "firstBatchSize": 6,
+  "cases": [
+    {
+      "id": "lady-dior",
+      "name": "Dior Lady Dior",
+      "category": "Bags",
+      "batch": "first",
+      "identity": "1995 design; modern Small Lady Dior M0618ONGE_M900 used for specifications",
+      "specimen": "https://www.dior.com/en_int/fashion/products/M0618ONGE_M900",
+      "history": "https://www.galeriedior.com/en/mini-stories/lady-diana",
+      "contexts": [
+        {
+          "subject": "Princess Diana",
+          "sourceType": "historical-appearance",
+          "scope": "1995 gift and a separate midnight-blue satin version at the 1996 Met Gala",
+          "sourceUrl": "https://www.galeriedior.com/en/mini-stories/lady-diana"
+        },
+        {
+          "subject": "JISOO",
+          "sourceType": "official-campaign",
+          "scope": "Lady Dior family; campaign interpretations rather than an asserted SKU match",
+          "sourceUrl": "https://www.dior.com/en_id/fashion/news-savoir-faire/folder-news-and-events/the-lady-dior-campaign-embodied-by-jisoo"
+        }
+      ],
+      "caution": "Lady 95.22 is a separate 2022 reinterpretation; do not interchange its campaign images with the selected Lady Dior.",
+      "additionalSources": [
+        "https://www.dior.cn/zh_cn/fashion/news-savoir-faire/folder-news-and-events/the-lady-9522-bag-campaign"
+      ]
+    },
+    {
+      "id": "fendi-baguette",
+      "name": "Fendi Baguette",
+      "category": "Bags",
+      "batch": "first",
+      "identity": "1997 design; Fall/Winter 2026-27 Baguette 26424, reference 8BR850B28HF0QA1",
+      "specimen": "https://www.fendi.com/us-en/woman/new-in/baguette-26424-black-leather-bag-8br850b28hf0qa1",
+      "history": "https://www.palaisgalliera.paris.fr/sites/galliera/files/cp_dp_visuels/dossiers_de_presse/dp_1997_uk_bd_0.pdf",
+      "contexts": [
+        {
+          "subject": "Carrie Bradshaw / Sarah Jessica Parker",
+          "sourceType": "screen-reference",
+          "scope": "Sex and the City design-family association; no modern black-SKU or episode claim",
+          "sourceUrl": "https://prtimes.jp/main/html/rd/p/000000280.000003876.html"
+        },
+        {
+          "subject": "MINA, Ren Meguro, Song Yuqi and Bang Chan",
+          "sourceType": "official-campaign",
+          "scope": "Named cast in the 2026 Baguette 26424 release",
+          "sourceUrl": "https://prtimes.jp/main/html/rd/p/000000624.000003876.html"
+        },
+        {
+          "subject": "Sarah Jessica Parker, Emma D’Arcy and Jessica Alba",
+          "sourceType": "official-campaign",
+          "scope": "Further named cast in the same release",
+          "sourceUrl": "https://prtimes.jp/main/html/rd/p/000000624.000003876.html"
+        },
+        {
+          "subject": "Song Hye-kyo",
+          "sourceType": "official-styling-appearance",
+          "scope": "2023 Palazzo Fendi Seoul appearance; silver Selleria Baguette, a separate version",
+          "sourceUrl": "https://prtimes.jp/main/html/rd/p/000000365.000003876.html"
+        }
+      ],
+      "caution": "Keep original, screen, Selleria and 2026 editions separate. The 2026 release specifies a 16 July launch.",
+      "additionalSources": []
+    },
+    {
+      "id": "levis-501",
+      "name": "Levi’s 501",
+      "category": "Denim",
+      "batch": "first",
+      "identity": "1873 riveted-jeans origin; 501 lot number from 1890; 005013279 technical reference",
+      "specimen": "https://www.levi.com/US/en_US/clothing/men/jeans/straight/501-original-fit-mens-jeans/p/005013279",
+      "history": "https://www.levistrauss.com/2016/05/19/happy-143rd-blue-jeans/",
+      "contexts": [
+        {
+          "subject": "NewJeans",
+          "sourceType": "official-campaign",
+          "scope": "2023 partnership names 501 Original and 501 ’81; keep the fits distinct",
+          "sourceUrl": "https://www.levistrauss.com/2023/03/14/k-pop-group-newjeans-partners-with-levis/"
+        },
+        {
+          "subject": "Beyoncé",
+          "sourceType": "official-campaign",
+          "scope": "2024 REIIMAGINE image metadata identifies 90s 501s",
+          "sourceUrl": "https://www.levistrauss.com/2024/09/29/levis-beyonce-campaign/"
+        },
+        {
+          "subject": "Bruce Springsteen",
+          "sourceType": "album-cover-reference",
+          "scope": "Manufacturer historian documents the Born in the U.S.A. cover jeans",
+          "sourceUrl": "https://www.levistrauss.com/2026/05/27/bruce-springsteen-levis/"
+        }
+      ],
+      "caution": "Do not merge every 501 fit into one pattern or confuse the 1890 lot number with the 1873 origin.",
+      "additionalSources": []
+    },
+    {
+      "id": "burberry-heritage-trench",
+      "name": "Burberry Heritage Trench",
+      "category": "Outerwear",
+      "batch": "first",
+      "identity": "Gabardine 1879; Tielocken precursor 1912; First World War trench development; modern Kensington reference",
+      "specimen": "https://uk.burberry.com/mid-length-kensington-heritage-trench-coat-p81172431",
+      "history": "https://www.burberryplc.com/company/history",
+      "contexts": [
+        {
+          "subject": "J.Y. Park and Sora Choi",
+          "sourceType": "official-campaign",
+          "scope": "The Trench, Portraits of an Icon, 2 March 2026",
+          "sourceUrl": "https://www.burberryplc.com/news/brand/2026/burberry-unveils-the-trench-portraits-of-an-icon"
+        },
+        {
+          "subject": "Hikaru Utada and Wu Lei",
+          "sourceType": "official-campaign",
+          "scope": "Japanese and Chinese participants in the same trench-family campaign",
+          "sourceUrl": "https://www.burberryplc.com/news/brand/2026/burberry-unveils-the-trench-portraits-of-an-icon"
+        },
+        {
+          "subject": "Jonathan Bailey, Kate Moss and Daisy Edgar-Jones",
+          "sourceType": "official-campaign",
+          "scope": "Further named participants; not one shared Kensington SKU",
+          "sourceUrl": "https://www.burberryplc.com/news/brand/2026/burberry-unveils-the-trench-portraits-of-an-icon"
+        }
+      ],
+      "caution": "The campaign includes multiple outerwear silhouettes. Do not label every pictured coat as the selected Kensington.",
+      "additionalSources": [
+        "https://int.burberry.com/c/burberry-world/heritage/outerwear-2024-campaign/"
+      ]
+    },
+    {
+      "id": "air-jordan-1",
+      "name": "Air Jordan 1",
+      "category": "Footwear",
+      "batch": "first",
+      "identity": "1985 original by Peter Moore; High OG Royal IQ5495-005 technical reference",
+      "specimen": "https://www.nike.com/t/air-jordan-1-high-og-royal-mens-shoes-p8vLeLAd/IQ5495-005",
+      "history": "https://www.nike.com/jordan/air-jordan-1",
+      "contexts": [
+        {
+          "subject": "Michael Jordan",
+          "sourceType": "athlete-history",
+          "scope": "Original basketball connection documented in Nike’s archive",
+          "sourceUrl": "https://www.nike.com/jordan/air-jordan-1"
+        },
+        {
+          "subject": "Miles Morales",
+          "sourceType": "screen-reference",
+          "scope": "Across the Spider-Verse; Next Chapter DV1748-601 is a separate film-linked edition",
+          "sourceUrl": "https://www.nike.com/sg/launch/t/air-jordan-1-next-chapter"
+        },
+        {
+          "subject": "Spider-Verse production designer",
+          "sourceType": "official-design-interview",
+          "scope": "Nike’s footwear-design interview for the film",
+          "sourceUrl": "https://www.nike.com/launch/s/behind-the-design-air-jordan-1-next-chapter-part-2/1"
+        }
+      ],
+      "caution": "Royal, Chicago, Next Chapter and original black/red editions differ. Keep Nike’s Air Ship/AJ1 history distinction.",
+      "additionalSources": [
+        "https://www.nike.com/a/air-jordan-banned-history"
+      ]
+    },
+    {
+      "id": "onitsuka-mexico-66",
+      "name": "Onitsuka Tiger MEXICO 66",
+      "category": "Footwear",
+      "batch": "first",
+      "identity": "2002 revival under the present name; 1961/1966 design heritage; 1183C102.752 specimen",
+      "specimen": "https://www.onitsukatiger.com/gb/en-gb/mexico-66/p/1183c102-752.html",
+      "history": "https://www.onitsukatiger.com/gb/en-gb/brand/75th-anniversary/history-2nd-vol1",
+      "contexts": [
+        {
+          "subject": "Tomohisa Yamashita",
+          "sourceType": "official-collaboration",
+          "scope": "MEXICO 66 NM L9, a separate collaboration variant",
+          "sourceUrl": "https://www.onitsukatiger.com/jp/ja-jp/innovative-factory"
+        },
+        {
+          "subject": "MOMO",
+          "sourceType": "official-campaign",
+          "scope": "DENIVITA 2026 names MEXICO 66 SQUARE BOOTS, not the classic low-top",
+          "sourceUrl": "https://www.onitsukatiger.com/jp/en-gl/backnumber/news_denivita-momo.html"
+        }
+      ],
+      "caution": "Do not label the modern name simply as a 1966 release, or identify it as the exact Kill Bill shoe.",
+      "additionalSources": [
+        "https://www.onitsukatiger.com/fr/en-fr/mexico-66/p/1183c692-100.html"
+      ]
+    },
+    {
+      "id": "margiela-tabi",
+      "name": "Maison Margiela Tabi",
+      "category": "Footwear",
+      "batch": "second",
+      "identity": "1988 first presentation / 1989 debut collection; S58WU0273P3753T8013 boot reference",
+      "specimen": "https://www.maisonmargiela.com/en-gb/tabi-ankle-boots-8058260051050.html",
+      "history": "https://www.maisonmargiela.com/en-us/mm-brand-glossary-tabi.html",
+      "contexts": [
+        {
+          "subject": "Debut runway",
+          "sourceType": "runway-reference",
+          "scope": "Split-toe footprints form part of the house’s presentation history",
+          "sourceUrl": "https://www.maisonmargiela.com/en-us/mm-brand-glossary-tabi.html"
+        },
+        {
+          "subject": "MoMu archive",
+          "sourceType": "museum-reference",
+          "scope": "Museum-held ensembles cover multiple seasons",
+          "sourceUrl": "https://www.momu.be/nl/collection-stories/martin-margiela"
+        },
+        {
+          "subject": "Chengdu collector exhibition",
+          "sourceType": "official-exhibition",
+          "scope": "April 2026 exhibition reconstructs nine collectors’ wardrobes",
+          "sourceUrl": "https://www.maisonmargiela.com/wx/mm-brand-folders-exhibitions.html"
+        }
+      ],
+      "caution": "Use the verified runway/museum/collector context; no Korean celebrity wearer was verified for this pack.",
+      "additionalSources": []
+    },
+    {
+      "id": "onitsuka-tai-chi",
+      "name": "Onitsuka Tiger TAI-CHI",
+      "category": "Footwear",
+      "batch": "second",
+      "identity": "Early-2000s model; 2003 screen reference; current TAI-CHI OG 1183C759.750 specimen",
+      "specimen": "https://www.onitsukatiger.com/gb/en-gb/tai-chi-og/p/1183c759-750.html",
+      "history": "https://www.onitsukatiger.com/gb/en-gb/brand/75th-anniversary/history-2nd-vol1",
+      "contexts": [
+        {
+          "subject": "Uma Thurman / Kill Bill",
+          "sourceType": "screen-reference",
+          "scope": "Manufacturer identifies the screen model family as TAI-CHI",
+          "sourceUrl": "https://www.onitsukatiger.com/gb/en-gb/brand/75th-anniversary/history-2nd-vol1"
+        },
+        {
+          "subject": "2010 limited revival",
+          "sourceType": "brand-archive",
+          "scope": "A later limited edition, separate from the film shoes",
+          "sourceUrl": "https://www.onitsukatiger.com/in/en-in/brand-history"
+        }
+      ],
+      "caution": "The current reissue is not the physical screen-worn object; keep the MEXICO 66 family separate.",
+      "additionalSources": []
+    },
+    {
+      "id": "gucci-jackie",
+      "name": "Gucci Jackie 1961",
+      "category": "Bags",
+      "batch": "second",
+      "identity": "1961 design; 2020 reinterpretation; Fall/Winter 2024 black medium 810232 AAD5V 1060 reference",
+      "specimen": "https://www.gucci.com/us/en/pr/women/handbags/crossbody-bags-for-women/gucci-jackie-1961-medium-bag-p-810232AAD5V1060",
+      "history": "https://www.gucci.com/us/en/st/stories/article/jackie-1961-handbag-shoppable",
+      "contexts": [
+        {
+          "subject": "Fall/Winter 2020 men’s show",
+          "sourceType": "runway-reference",
+          "scope": "Official debut of the reinterpretation",
+          "sourceUrl": "https://www.gucci.com/us/en/st/stories/article/jackie-1961-handbag-shoppable"
+        },
+        {
+          "subject": "Ni Ni, Zhang Mo and Dan Bao",
+          "sourceType": "official-campaign",
+          "scope": "Mind Travelers features different Jackie 1961 versions",
+          "sourceUrl": "https://www.gucci.com/no/en_gb/st/stories/article/mind-travelers-hymn-to-style"
+        },
+        {
+          "subject": "Dakota Johnson",
+          "sourceType": "official-campaign",
+          "scope": "Commissioned Los Angeles campaign scenes, not candid sightings",
+          "sourceUrl": "https://www.gucci.com/us/en/st/stories/article/dakota-johnson-jackie-1961"
+        }
+      ],
+      "caution": "Jackie Notte and Jackie 1961 are separate model labels; do not merge their photographs as exact matches.",
+      "additionalSources": []
+    },
+    {
+      "id": "louis-vuitton-speedy",
+      "name": "Louis Vuitton Speedy",
+      "category": "Bags",
+      "batch": "second",
+      "identity": "1930 Express family; 1965 Speedy 25 commission; modern Bandoulière 25 N40575 specimen",
+      "specimen": "https://us.louisvuitton.com/eng-us/products/speedy-bandouliere-25-damier-ebene-nvprod5320018v/N40575",
+      "history": "https://ca.louisvuitton.com/eng-ca/stories/speedy",
+      "contexts": [
+        {
+          "subject": "Audrey Hepburn",
+          "sourceType": "historical-design-reference",
+          "scope": "Official guide attributes the 1965 Speedy 25 commission to Hepburn",
+          "sourceUrl": "https://us.louisvuitton.com/eng-us/recommendations/speedy-size-guide"
+        },
+        {
+          "subject": "Zendaya",
+          "sourceType": "official-campaign",
+          "scope": "Monogram anniversary feature, rather than the identical Damier specimen",
+          "sourceUrl": "https://ca.louisvuitton.com/eng-ca/stories/speedy"
+        }
+      ],
+      "caution": "Hepburn’s classic 25, a Monogram campaign version and the selected modern Damier Bandoulière are distinct.",
+      "additionalSources": []
+    },
+    {
+      "id": "louis-vuitton-noe",
+      "name": "Louis Vuitton Noé",
+      "category": "Bags",
+      "batch": "second",
+      "identity": "1932 design family; campaign-ready, exact pictured technical specimen pending",
+      "specimen": null,
+      "history": "https://en.louisvuitton.com/eng-nl/magazine/articles/heritage",
+      "contexts": [
+        {
+          "subject": "Liu Yifei",
+          "sourceType": "official-campaign",
+          "scope": "Official Monogram anniversary Noé feature",
+          "sourceUrl": "https://fr.louisvuitton.com/fra-fr/histoires/noe"
+        }
+      ],
+      "caution": "Context-ready reserve: do not activate a complete dossier until the product version, image and materials are selected.",
+      "additionalSources": []
+    },
+    {
+      "id": "schott-perfecto",
+      "name": "Schott Perfecto",
+      "category": "Outerwear",
+      "batch": "reserve",
+      "identity": "1928 family; modern 613 One Star representative specimen",
+      "specimen": "https://www.schottnyc.com/products/613-one-star-perfecto-leather-motorcycle-jacket",
+      "history": "https://www.schottnyc.com/pages/story",
+      "contexts": [
+        {
+          "subject": "The Ramones",
+          "sourceType": "brand-history-reference",
+          "scope": "Debut-cover association in Schott’s history; exact 613 identification not established",
+          "sourceUrl": "https://www.schottnyc.com/pages/story"
+        },
+        {
+          "subject": "Bruce Springsteen / Born to Run",
+          "sourceType": "brand-history-reference",
+          "scope": "1975 cover connection in the manufacturer’s account; exact costume SKU not established",
+          "sourceUrl": "https://www.schottnyc.com/pages/story"
+        }
+      ],
+      "caution": "This research does not establish Brando’s exact film-costume maker or SKU; do not attach that claim to the modern 613.",
+      "additionalSources": []
+    }
+  ]
+}
