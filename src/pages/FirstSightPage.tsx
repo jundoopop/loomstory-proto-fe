@@ -1,7 +1,7 @@
 /**
  * FirstSight's continuous editorial → recognition → shopping journey.
  * Sections stay mounted while photo/selection state changes. The page owns
- * request cancellation, object URLs, wardrobe callbacks, and the local cart.
+ * request cancellation, object URLs, archive wardrobe/bag actions and visit-local style saves.
  */
 import { useEffect, useRef, useState } from 'react';
 import type { CollectionProps } from '../types';
@@ -9,6 +9,7 @@ import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVar
 import type { FirstSightGateway } from '../features/first-sight/services/contracts';
 import { prototypeGateway } from '../features/first-sight/services/prototype';
 import { chloePhoto } from '../features/first-sight/chloe';
+import { isArchiveOffer, isStyleMatchOffer, resolveArchivePurchase } from '../features/first-sight/commerce';
 import { TrendHero } from '../features/first-sight/components/TrendHero';
 import { PhotoUploadPanel } from '../features/first-sight/components/PhotoUploadPanel';
 import { RecognitionResults } from '../features/first-sight/components/RecognitionResults';
@@ -17,6 +18,7 @@ import { OutfitMasonry } from '../features/first-sight/components/OutfitMasonry'
 import { PurchaseGrid } from '../features/first-sight/components/PurchaseGrid';
 import { ProductDetailPanel } from '../features/first-sight/components/ProductDetailPanel';
 import { CartPreview } from '../features/first-sight/components/CartPreview';
+import { StyleMatchDrawer } from '../features/first-sight/components/StyleMatchDrawer';
 import './first-sight.css';
 import './first-sight-flow.css';
 
@@ -43,13 +45,20 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   const [cart, setCart] = useState<CartLine[]>([]);
   const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [styleMatchOpen, setStyleMatchOpen] = useState(false);
+  const [savedStyleMatchIds, setSavedStyleMatchIds] = useState<string[]>([]);
   const [notice, setNotice] = useState('');
 
   const controller = useRef<AbortController | null>(null);
   const recognitionRef = useRef<HTMLElement>(null);
   const matchesRef = useRef<HTMLElement>(null);
   const productRef = useRef<HTMLDivElement>(null);
+  const styleMatchFocusTarget = useRef<'recognition' | 'matches' | 'product'>('matches');
   const selected = result?.items.find(item => item.id === selectedId) ?? result?.items[0];
+  // Explicit tracks choose the consumer surface. Price never decides archive membership.
+  const archiveProducts = selected?.commerce.archive.filter(isArchiveOffer) ?? [];
+  const styleMatchProducts = selected?.commerce.styleMatches.filter(isStyleMatchOffer) ?? [];
+  const inspireOpen = styleMatchOpen && Boolean(selected) && styleMatchProducts.length > 0;
 
   // The page owns accepted URLs; the upload workspace owns only unfinished image decodes.
   useEffect(() => () => { if (photo?.kind === 'upload') URL.revokeObjectURL(photo.url); }, [photo]);
@@ -62,6 +71,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
 
   /** Replace/remove invalidates recognition immediately while preserving the visit's cart. */
   function changePhoto(nextPhoto: PhotoInput | null) {
+    closeStyleMatches('recognition');
     controller.current?.abort();
     setPhoto(nextPhoto); setResult(null); setSelectedId(''); setProduct(null);
     setLoading(false); setError(''); setNotice('');
@@ -70,6 +80,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   /** Explicit Analyze action; choosing a file alone never starts the sample recognition. */
   async function analyze() {
     if (!photo || loading) return;
+    closeStyleMatches('recognition');
     controller.current?.abort();
     const request = new AbortController();
     controller.current = request;
@@ -95,39 +106,95 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
 
   /** Switching a study updates both sections together without scrolling or replacing the photo. */
   function selectRecognition(id: string) {
+    closeStyleMatches('matches');
     setSelectedId(id);
     setProduct(null);
   }
 
   /** Product details open within Section 3; every earlier section remains in the document. */
   function openProduct(nextProduct: PurchaseOption) {
-    setProduct(nextProduct);
+    const archiveProduct = archiveProducts.find(candidate => candidate.id === nextProduct.id);
+    if (!archiveProduct) return;
+    closeStyleMatches('product');
+    setProduct(archiveProduct);
     requestAnimationFrame(() => scrollToSection(productRef.current));
   }
 
   /** Close only the inline PDP and return to the retained shopping grid. */
   function closeProduct() {
+    closeStyleMatches('matches');
     setProduct(null);
     requestAnimationFrame(() => scrollToSection(matchesRef.current));
   }
 
-  /** Clamp cart quantities to the chosen sample SKU's stock, including rapid repeated clicks. */
+  /** Archive actions resolve the current edit; callbacks cannot supply a partner or invented stock. */
+  function toggleArchiveSave(id: string) {
+    if (archiveProducts.some(candidate => candidate.id === id)) onToggleSave(id);
+  }
+
+  /** Keep the two modals mutually exclusive without remounting the drawer's SKU state. */
+  function openBag() {
+    closeStyleMatches('matches');
+    setCartOpen(true);
+  }
+
+  /** Both entry points share the selected study and preserve the drawer's existing size choices. */
+  function openStyleMatches() {
+    if (!styleMatchProducts.length) return;
+    styleMatchFocusTarget.current = product ? 'product' : 'matches';
+    setCartOpen(false);
+    setNotice('');
+    setStyleMatchOpen(true);
+  }
+
+  /** Record the transition's fallback before closing, in case its original trigger is removed. */
+  function closeStyleMatches(target: 'recognition' | 'matches' | 'product' = 'matches') {
+    styleMatchFocusTarget.current = target;
+    setStyleMatchOpen(false);
+  }
+
+  /** The drawer returns to its opener normally; the host handles a removed or hidden trigger. */
+  function restoreStyleMatchFocus() {
+    const target = styleMatchFocusTarget.current === 'recognition' ? recognitionRef.current
+      : styleMatchFocusTarget.current === 'product' ? productRef.current ?? matchesRef.current
+        : matchesRef.current;
+    target?.focus({ preventScroll: true });
+  }
+
+  /** Modern-style saves are page-local and never call the durable archive wardrobe callback. */
+  function toggleStyleMatchSave(id: string) {
+    if (!styleMatchProducts.some(candidate => candidate.id === id)) return;
+    setSavedStyleMatchIds(current => current.includes(id)
+      ? current.filter(candidate => candidate !== id) : [...current, id]);
+  }
+
+  /** A partner preview acknowledges a currently available style without reserving or buying it. */
+  function previewPartnerOffer(nextProduct: PurchaseOption, requestedVariant: PurchaseVariant) {
+    const current = styleMatchProducts.find(candidate => candidate.id === nextProduct.id);
+    const variant = current?.variants.find(candidate => candidate.sku === requestedVariant.sku && candidate.stock > 0);
+    if (!current || !variant) return;
+    setNotice(`Partner preview: ${current.title}, size ${variant.size}. Your archive bag is unchanged.`);
+  }
+
+  /** Resolve canonical stock, then clamp quantities even when the action is activated repeatedly. */
   function addToCart(nextProduct: PurchaseOption, variant: PurchaseVariant, buyNow = false) {
-    if (!variant.stock) return;
-    const existing = cart.find(line => line.sku === variant.sku);
-    if (existing && existing.quantity >= variant.stock) {
+    const purchase = resolveArchivePurchase(archiveProducts, nextProduct.id, variant.sku);
+    if (!purchase) return;
+    const { product: archiveProduct, variant: archiveVariant } = purchase;
+    const existing = cart.find(line => line.sku === archiveVariant.sku);
+    if (existing && existing.quantity >= archiveVariant.stock) {
       setNotice('Your bag already contains the available sample stock for this option.');
-      if (buyNow) setCartOpen(true);
+      if (buyNow) openBag();
       return;
     }
     setCart(current => {
-      const line = current.find(item => item.sku === variant.sku);
+      const line = current.find(item => item.sku === archiveVariant.sku);
       return line
-        ? current.map(item => item.sku === variant.sku ? { ...item, quantity: Math.min(item.quantity + 1, variant.stock) } : item)
-        : [...current, { product: nextProduct, sku: variant.sku, size: variant.size, quantity: 1 }];
+        ? current.map(item => item.sku === archiveVariant.sku ? { ...item, quantity: Math.min(item.quantity + 1, archiveVariant.stock) } : item)
+        : [...current, { product: archiveProduct, sku: archiveVariant.sku, size: archiveVariant.size, quantity: 1 }];
     });
-    setNotice(nextProduct.title + ' added to your sample bag.');
-    if (buyNow) setCartOpen(true);
+    setNotice(archiveProduct.title + ' added to your sample bag.');
+    if (buyNow) openBag();
   }
 
   const count = cart.reduce((total, line) => total + line.quantity, 0);
@@ -148,7 +215,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
         <a href="#fs-recognition">02 <span>Discover the story</span></a>
         <a href="#fs-similar-pieces">03 <span>Find your piece</span></a>
       </nav>
-      <button className="fs-bag-button" onClick={() => setCartOpen(true)}>Your bag <span>{count}</span></button>
+      <button className="fs-bag-button" onClick={openBag}>Your bag <span>{count}</span></button>
     </div>
 
     <TrendHero {...lookSaveProps} />
@@ -186,31 +253,45 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
     {/* This section is always present. Its edit follows the selected study, not a separate route. */}
     <section id="fs-similar-pieces" className="fs-similar-section" ref={matchesRef} tabIndex={-1} aria-labelledby="fs-similar-title">
       <div className="fs-chapter-label"><span>03 / THE NEXT CHAPTER</span><span>CURATED POSSIBILITIES</span></div>
-      <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Similar Pieces<span>.</span></h2><p>Continue the story. Discover pieces with a similar design heritage.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
+      <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Your Piece<span>.</span></h2><p>Explore vintage originals, designer reissues and archive studies with a story to tell.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
 
       {selected ? <>
-        <div className="fs-shop-toolbar"><span>ILLUSTRATIVE PRICES & INVENTORY</span></div>
+        <div className="fs-shop-toolbar">
+          <div className="fs-archive-toolbar-copy"><h3>The archive edit <span>{archiveProducts.length} {archiveProducts.length === 1 ? 'piece' : 'pieces'}</span></h3><p>Sample listings · Illustrative prices and availability</p></div>
+          {styleMatchProducts.length > 0 && <button type="button" className="fs-style-match-trigger"
+            aria-haspopup="dialog" aria-expanded={inspireOpen} onClick={openStyleMatches}>
+            <span><small>THE INSPIRE</small>Explore similar styles</span>
+            <span className="fs-style-match-count" aria-label={`${styleMatchProducts.length} similar ${styleMatchProducts.length === 1 ? 'style' : 'styles'}`}>{styleMatchProducts.length}</span>
+            <span aria-hidden="true">↗</span>
+          </button>}
+        </div>
         <div className={'fs-discovery' + (!selected.looks.length ? ' fs-discovery-focused' : '')}>
           <div className="fs-purchase-section">
-            <PurchaseGrid products={selected.products} savedIds={savedIds} onToggleSave={onToggleSave} onSelect={openProduct} />
+            <PurchaseGrid archiveProducts={archiveProducts} savedIds={savedIds} onToggleSave={toggleArchiveSave} onSelect={openProduct} />
           </div>
           {/* Styling stays beside the edit for as long as this study is selected. */}
           {selected.looks.length > 0 && <aside className="fs-context-section" aria-label="Contextual outfit feed">
             <OutfitMasonry key={selected.id} looks={selected.looks} {...lookSaveProps} contextual
-              contextName={selected.name} loadingEnabled={!product && !cartOpen} />
+              contextName={selected.name} loadingEnabled={!product && !cartOpen && !inspireOpen} />
           </aside>}
         </div>
-        <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>These are fictional offers, paired with styling references for the selected study. The outfits remain alongside your finds while you browse. Your photograph and dossier remain above.</p></details>
+        <details className="fs-shopping-explainer"><summary>How this sample edit works</summary><p>The archive edit contains fictional vintage, reissue and archive-study listings. Open The Inspire to explore modern style matches separately. Style previews and visit-local saves leave your archive bag and wardrobe untouched. The photographs provide context for the selected study.</p></details>
 
         {product && <div className="fs-inline-product" ref={productRef} tabIndex={-1}>
-          <ProductDetailPanel product={product} alternatives={selected.products} looks={selected.looks}
-            saved={savedIds.includes(product.id)} onToggleSave={onToggleSave} onBack={closeProduct}
-            onSelectProduct={openProduct} onAddToCart={(item, variant) => addToCart(item, variant)}
+          <ProductDetailPanel product={product} looks={selected.looks}
+            styleMatchCount={styleMatchProducts.length} onOpenStyleMatches={openStyleMatches}
+            saved={savedIds.includes(product.id)} onToggleSave={toggleArchiveSave} onBack={closeProduct}
+            onAddToCart={(item, variant) => addToCart(item, variant)}
             onBuyNow={(item, variant) => addToCart(item, variant, true)} />
         </div>}
       </> : <div className="fs-products-empty"><span aria-hidden="true">↗</span><div><h3>Your next chapter starts with a story.</h3><p>Analyze a photograph above. Choose a study and its related edit will appear here.</p></div><button className="fs-text-button" onClick={() => scrollToSection(recognitionRef.current)}>Find a story ↑</button></div>}
     </section>
 
+    {/* One mounted drawer preserves visit-local sizes across both entry points and all studies. */}
+    <StyleMatchDrawer open={inspireOpen} itemName={selected?.name ?? ''} products={styleMatchProducts}
+      savedIds={savedStyleMatchIds} onClose={() => closeStyleMatches()}
+      onToggleSave={toggleStyleMatchSave} onPreviewPartner={previewPartnerOffer}
+      onRestoreFocus={restoreStyleMatchFocus} />
     <CartPreview open={cartOpen} lines={cart} onClose={() => setCartOpen(false)} onChange={setCart} />
     <div className="fs-toast" role="status" aria-live="polite" data-visible={Boolean(notice)}>{notice}</div>
   </div>;

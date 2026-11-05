@@ -1,0 +1,108 @@
+feat(first-sight): separate archive shopping from opt-in style matches
+
+A. Requirement
+
+Replace the mixed default shopping edit and automatic PDP alternatives with an
+archive-first FirstSight journey. Keep the cultural Style Journal visible and
+make modern style matches available through an explicit Inspire action.
+
+Complete P8-P12 on top of the uncommitted P5-P7 work. Keep the existing local
+prototype, page sections, five studies and preserved Discover/Submit routes.
+
+B. Assumptions and scope
+
+Keep recognition, prices, stock and partner offers illustrative. Keep uploaded
+photographs local and user media outside Git. Do not connect live services.
+
+Keep archive wardrobe persistence in its existing owner. Keep style saves and
+drawer size choices local to the mounted FirstSight visit. Leave the global
+Vault, shared catalogue, route migration and broader P13-P17 work deferred.
+
+C. Technical approach
+
+Derive archiveProducts and styleMatchProducts from the selected commerce edit
+in FirstSightPage. Mount StyleMatchDrawer once across both entry points and
+coordinate its visibility with photo, study, PDP and bag transitions.
+
+Resolve archive actions against the current canonical product and SKU through
+resolveArchivePurchase. Reject partner offers, unknown identities, missing
+SKUs and stock that is not a positive whole number. Bound bag quantities by
+the canonical stock rather than incoming callback objects.
+
+Keep toggleStyleMatchSave and previewPartnerOffer separate from archive saves
+and purchases. Revalidate the current style/SKU before local preview feedback.
+
+Use native dialog modality, explicit scroll locking and a host-owned focus
+fallback when the original opener is removed or hidden. Ignore a stale bag
+close event when CartPreview has already reopened.
+
+D. Trade-offs and assessment
+
+Retain local React state, typed commerce contracts and native browser controls
+without adding dependencies. Preserve the P5-P7 provider boundary for future
+services. Defensive track filtering keeps misplaced data off the wrong surface.
+
+Strengthen the previous slice's evidence by testing the drawer inside the real
+page, both consumer entry points, canonical action guards and modal transitions.
+Record independent source review and baseline preservation with no identified
+blocking regression in this scope.
+
+Keep browser QA scripts outside the repository for this slice. Recommend durable
+integration tests in P13, updated general guides in P14 and broader accessibility
+and browser coverage in P15-P16. Do not treat scoped axe results as certification.
+
+E. Implementation
+
+- P8: add FirstSightPage orchestration, isolated style saves, canonical archive
+  guards, both Inspire entry points and one stable drawer mount.
+- P9: make PurchaseGrid archive-only, show listing-kind labels and provide an
+  archive-empty state without substituting partner offers.
+- P10: remove PDP alternative cards and price sorting; retain gallery/SKU/bag
+  behaviour and add cultural notes with an opt-in Inspire prompt.
+- P11: show relationship labels in contextual cards, dialogs and PDP notes;
+  retain geographic trend labels, source links, attribution and licences.
+- P12: add archive counts, a restrained burgundy trigger, responsive toolbar
+  stacking, empty-state styling and scoped focus/contrast treatment.
+- Remove RecognizedItem.products, PurchaseOption.affordable, their projections
+  and obsolete alternative styles after migrating their consumers and tests.
+- Correct inherited disabled-button opacity and the shopping chapter contrast.
+- Correct hidden-opener focus restoration and delayed native bag-close handling.
+- Update the role, roadmap, exact file/symbol map, activity ledger and assessment
+  in docs/plans/first-sight-p8-p12-plan.md.
+
+F. Verification
+
+Record the following completed checks:
+
+- npm run typecheck: passed.
+- npm test: 35 passed, 0 failed, including four new canonical archive guard cases.
+- npm run build and git diff --check: passed; no new dependencies.
+- Runtime preservation comparison: five studies, eighteen offers and forty-four
+  references unchanged apart from the intended compatibility-field removal.
+- Fifteen primary and four supplemental Chrome browser check groups: passed.
+- All studies: archive counts 3/3/3/3/2 and Inspire counts 1/1/1/1/2.
+- Both openers, PDP state, separate saves/previews, stock limits, source labels,
+  empty/mixed streams, stale SKUs, cancellation and error/retry: passed.
+- Local JPG replacement and fresh analysis: passed with a browser blob preview
+  and no upload request; modal closure clears stale results.
+- Layout at 1440, 1024, 768, 390 and 320 px: no checked horizontal overflow.
+- Keyboard return, reduced motion, 44 px new controls, touch scroll containment,
+  long copy, doubled text and delayed native-close regression: passed.
+- Scoped marketplace and drawer axe scans: zero violations at all five widths.
+- Exercised routes/harness: no console, page or HTTP errors and no application
+  fetch/POST requests.
+
+Disclose the remaining whole-page result: one serious colour-contrast rule with
+45 affected nodes in earlier inspiration, recognition, dossier and upload areas
+in the checked 1440 px workwear view. Safari, Firefox, physical-device touch and
+screen-reader sessions were not checked. Local QA evidence is disposable.
+
+G. Next action and repository state
+
+Present the local implementation and this detailed message for review. Recommend
+a separately authorised P13-P16 slice for durable regression coverage, general
+documentation updates, existing contrast fixes and broader browser verification.
+
+Leave P5-P12 uncommitted on new-analysis. Keep HEAD and origin/new-analysis at
+df562e293f445f0d7cc19e73f5e622ac36b623dd. Do not stage, commit, push or merge until
+the user explicitly authorises the relevant action. This file is report text.

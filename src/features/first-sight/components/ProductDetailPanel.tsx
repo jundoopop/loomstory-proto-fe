@@ -4,18 +4,19 @@
  * product navigation, wardrobe saves, cart changes, and purchase-preview actions.
  */
 import { useState } from 'react';
+import { contextRelationshipLabel } from '../commerce';
 import type { OutfitLook, PurchaseOption, PurchaseVariant } from '../types';
 import './product-detail.css';
 
 /** Page-owned data and callbacks. No service adapter or cart storage is used here. */
 export interface ProductDetailPanelProps {
   product: PurchaseOption;
-  alternatives: PurchaseOption[];
+  styleMatchCount: number;
   looks: OutfitLook[];
   saved: boolean;
   onToggleSave: (id: string) => void;
   onBack: () => void;
-  onSelectProduct: (product: PurchaseOption) => void;
+  onOpenStyleMatches: () => void;
   onAddToCart: (product: PurchaseOption, variant: PurchaseVariant) => void;
   onBuyNow: (product: PurchaseOption, variant: PurchaseVariant) => void;
 }
@@ -29,8 +30,8 @@ export function ProductDetailPanel(props: ProductDetailPanelProps) {
 
 /** Render one product's gallery, available variants, specifications, and cross-sell content. */
 function ProductDetailContent({
-  product, alternatives, looks, saved, onToggleSave, onBack,
-  onSelectProduct, onAddToCart, onBuyNow,
+  product, styleMatchCount, looks, saved, onToggleSave, onBack,
+  onOpenStyleMatches, onAddToCart, onBuyNow,
 }: ProductDetailPanelProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [selectedSku, setSelectedSku] = useState<string | null>(null);
@@ -39,14 +40,9 @@ function ProductDetailContent({
   // Resolve selection against current stock so every purchase callback receives an available SKU.
   const selectedVariant = product.variants.find(variant => variant.sku === selectedSku && variant.stock > 0);
   const availableVariants = product.variants.filter(variant => variant.stock > 0);
-  // Limit sidebar content here; matching/category selection is supplied by the page's adapter result.
-  const affordableAlternatives = alternatives
-    .filter(alternative => alternative.id !== product.id && alternative.price < product.price)
-    .sort((left, right) => Number(Boolean(right.affordable)) - Number(Boolean(left.affordable)) || left.price - right.price)
-    .slice(0, 2);
+  // The sidebar owns cultural presentation; partner offers stay behind the page's Inspire action.
   // Pending originals remain visible as board slots; the compact sidebar uses sourced references.
   const styleLooks = looks.filter(look => look.sourceUrl).slice(0, 2);
-  const inspirationCount = Math.max(styleLooks.length, affordableAlternatives.length);
 
   return <section className="fs-pdp" aria-labelledby="fs-pdp-title">
     <div className="fs-pdp-topline">
@@ -87,7 +83,7 @@ function ProductDetailContent({
             </div>
             <p className="fs-pdp-description">{product.description}</p>
 
-            <div className="fs-pdp-color"><span>Color</span><strong>{product.color}</strong></div>
+            <div className="fs-pdp-color"><span>Colour</span><strong>{product.color}</strong></div>
 
             <fieldset className="fs-pdp-size-picker" aria-describedby="fs-pdp-size-help">
               <legend>Select your size</legend>
@@ -128,7 +124,7 @@ function ProductDetailContent({
                 <div><dt>Material</dt><dd>{product.material}</dd></div>
                 <div><dt>Condition</dt><dd>{product.condition}</dd></div>
                 <div><dt>Category</dt><dd>{product.category}</dd></div>
-                <div><dt>Color</dt><dd>{product.color}</dd></div>
+                <div><dt>Colour</dt><dd>{product.color}</dd></div>
               </dl>
             </div>
           </div>
@@ -141,43 +137,36 @@ function ProductDetailContent({
         </div>
       </div>
 
-      {/* Interleave a styling reference and an affordable option without claiming an exact match. */}
+      {/* Cultural notes remain in the archive PDP; modern styles require an explicit opt-in. */}
       <aside className="fs-pdp-sidebar" aria-labelledby="fs-pdp-inspiration-title" tabIndex={0}>
-        <div className="fs-pdp-sidebar-heading"><span className="fs-pdp-small-label">THE STYLE NOTES</span><h3 id="fs-pdp-inspiration-title">Wear it your way.</h3><p>People, proportions, and another possibility.</p></div>
-        {Array.from({ length: inspirationCount }, (_, index) => <div className="fs-pdp-inspiration-pair" key={index}>
-          {styleLooks[index] && <StyleNote look={styleLooks[index]} />}
-          {affordableAlternatives[index] && <AlternativeNote product={affordableAlternatives[index]} onSelect={onSelectProduct} />}
-        </div>)}
-        {!inspirationCount && <p className="fs-pdp-sidebar-empty">More styling notes are on their way. Explore your matches for another silhouette.</p>}
-        <p className="fs-pdp-sidebar-disclosure">Style references provide inspiration; they do not verify that this product was worn by the person pictured. Alternatives are curated sample silhouette matches.</p>
+        <div className="fs-pdp-sidebar-heading"><span className="fs-pdp-small-label">THE STYLE NOTES</span><h3 id="fs-pdp-inspiration-title">Wear it your way.</h3><p>People, proportions and a little inspiration.</p></div>
+        {styleMatchCount > 0 && <div className="fs-pdp-inspire-prompt">
+          <span className="fs-pdp-small-label">THE INSPIRE</span>
+          <h4>Another way to wear it.</h4>
+          <p>Explore modern styles inspired by this study's silhouette and details.</p>
+          <button type="button" className="fs-style-match-trigger" aria-haspopup="dialog" onClick={onOpenStyleMatches}>
+            <span>Explore similar styles</span><span className="fs-style-match-count">{styleMatchCount}</span>
+          </button>
+        </div>}
+        <div className="fs-pdp-style-list">{styleLooks.map(look => <StyleNote key={look.id} look={look} />)}</div>
+        {!styleLooks.length && <p className="fs-pdp-sidebar-empty">More styling notes are on their way. Explore your matches for another silhouette.</p>}
+        <p className="fs-pdp-sidebar-disclosure">References connect this study with a design family, a runway moment or a styling idea. They do not authenticate this individual piece or imply an endorsement.</p>
       </aside>
     </div>
   </section>;
 }
 
-/** Show a source-linked reference; a reuse license is displayed only when one is supplied. */
+/** Keep the authored relationship and attribution alongside each source-linked reference. */
 function StyleNote({ look }: { look: OutfitLook }) {
   const Source = look.sourceUrl ? 'a' : 'div';
   return <article className="fs-pdp-style-note">
-    <div className="fs-pdp-note-label"><span>IN GOOD COMPANY</span><span>{look.region}</span></div>
+    <div className="fs-pdp-note-label"><span>{contextRelationshipLabel(look.relationship)}</span><span>STYLE REFERENCE</span></div>
     <Source href={look.sourceUrl} target={look.sourceUrl ? '_blank' : undefined} rel={look.sourceUrl ? 'noreferrer' : undefined} className="fs-pdp-look-link" aria-label={look.sourceUrl ? `${look.celebrity}: ${look.title}. View source in a new tab.` : undefined}>
       <img src={look.image} width={look.width} height={look.height} alt={`${look.celebrity} — ${look.title}`} loading="lazy" />
       <h4>{look.celebrity}</h4><p>{look.title}</p><span className="fs-pdp-source">{look.sourceLabel} {look.sourceUrl && <span aria-hidden="true">↗</span>}</span>
     </Source>
     <p className="fs-pdp-look-description">{look.description}</p>
     <details className="fs-pdp-image-credit"><summary>Photo credit</summary><p>{look.credit}{look.license && look.licenseUrl && <> · <a href={look.licenseUrl} target="_blank" rel="noreferrer">{look.license} ↗</a></>}</p></details>
-  </article>;
-}
-
-/** Open an alternative in the same PDP flow while retaining the page's shared state. */
-function AlternativeNote({ product, onSelect }: { product: PurchaseOption; onSelect: (product: PurchaseOption) => void }) {
-  return <article className="fs-pdp-alternative">
-    <div className="fs-pdp-note-label"><span>THE SAME FEELING, FOR LESS</span><span aria-hidden="true">↗</span></div>
-    <button type="button" className="fs-pdp-alternative-button" onClick={() => onSelect(product)} aria-label={`View ${product.title}, ${priceFormat.format(product.price)}`}>
-      <img src={product.image} alt={`${product.title} — ${product.image.endsWith('.svg') ? 'silhouette illustration' : 'reference photograph'}`} loading="lazy" />
-      <span className="fs-pdp-alternative-copy"><span className="fs-pdp-alternative-brand">{product.brand}</span><strong>{product.title}</strong><span>{priceFormat.format(product.price)} <small>sample price</small></span></span>
-    </button>
-    <p>Similar silhouette · Curated alternative</p>
   </article>;
 }
 

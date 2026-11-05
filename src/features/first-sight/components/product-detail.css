@@ -11,7 +11,7 @@
 .fs-pdp-step { color: var(--muted); text-align: right; }
 .fs-pdp-layout { display: grid; grid-template-columns: minmax(0, 7fr) minmax(245px, 3fr); gap: 34px; align-items: start; padding-top: 30px; }
 .fs-pdp-main, .fs-pdp-product > *, 
-/* Sticky cross-sell column: independent scrolling keeps long references accessible. */
+/* Sticky cultural column: independent scrolling keeps long references accessible. */
 .fs-pdp-sidebar { min-width: 0; }
 .fs-pdp-product { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: 28px; }
 
@@ -29,7 +29,7 @@
 .fs-pdp-thumbnails span { padding: 0 2px 3px; line-height: 1.4; }
 .fs-pdp-photo-note { color: var(--muted); font-size: 9px; margin: 12px 0 0; }
 
-/* Product identity, pricing, description, and color specification. */
+/* Product identity, pricing, description and colour specification. */
 .fs-pdp-brand { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.7; color: var(--accent); }
 .fs-pdp-brand > span { color: var(--muted); }
 .fs-pdp-information h2 { font-size: clamp(30px, 3.2vw, 47px); line-height: 1.05; letter-spacing: -1.5px; margin: 12px 0 20px; }
@@ -82,9 +82,10 @@
 .fs-pdp-sidebar-heading h3 { font-size: 31px; line-height: 1.1; letter-spacing: -.7px; margin: 9px 0 8px; }
 .fs-pdp-sidebar-heading > p { font-size: 10px; color: var(--muted); }
 
-/* Source-linked celebrity styling cards and their attribution disclosure. */
+/* Cultural references remain visible independently of the opt-in modern-style catalogue. */
+.fs-pdp-style-list { display: grid; gap: 24px; min-width: 0; }
 .fs-pdp-style-note { border-top: 1px solid var(--line); padding-top: 14px; }
-.fs-pdp-note-label { display: flex; justify-content: space-between; gap: 8px; font-size: 8px; letter-spacing: 1px; line-height: 1.6; font-weight: 700; margin-bottom: 12px; }
+.fs-pdp-note-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 9px; letter-spacing: .5px; line-height: 1.6; font-weight: 700; margin-bottom: 12px; overflow-wrap: anywhere; }
 .fs-pdp-note-label > span:last-child { color: var(--muted); }
 .fs-pdp-look-link { display: block; }
 .fs-pdp-look-link img { width: 100%; height: auto; max-height: 300px; object-fit: contain; background: #e9e2d8; }
@@ -97,18 +98,16 @@
 .fs-pdp-image-credit summary { cursor: pointer; width: fit-content; }
 .fs-pdp-image-credit p { margin-top: 5px; }
 
-/* Affordable-product cards interleaved between editorial references. */
-.fs-pdp-alternative { background: #eae3d9; padding: 15px; margin: 22px 0; }
-.fs-pdp-alternative .fs-pdp-note-label { font-size: 7px; letter-spacing: .8px; }
-.fs-pdp-alternative-button { display: grid; grid-template-columns: minmax(60px, .65fr) minmax(0, 1fr); gap: 12px; text-align: left; width: 100%; padding: 0; }
-.fs-pdp-alternative-button > img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
-.fs-pdp-alternative-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 7px; min-width: 0; }
-.fs-pdp-alternative-brand { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
-.fs-pdp-alternative-copy strong { font: 19px/1.1 Georgia, 'Times New Roman', serif; letter-spacing: -.3px; }
-.fs-pdp-alternative-copy > span:last-child { font-size: 12px; }
-.fs-pdp-alternative-copy small { font-size: 8px; color: var(--muted); white-space: nowrap; }
-.fs-pdp-alternative-button:hover strong { color: var(--accent); }
-.fs-pdp-alternative > p { font-size: 8px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 11px; margin-top: 13px; }
+/* A deliberate entry near the heading introduces The Inspire without showing partner offers. */
+.fs-pdp-inspire-prompt { padding: 18px 16px; margin-bottom: 24px; border: 1px solid #d4b7be; border-radius: 8px; background: #f4e9eb; color: #49323a; }
+.fs-pdp-inspire-prompt > .fs-pdp-small-label { color: #672b38; }
+.fs-pdp-inspire-prompt h4 { margin: 10px 0; font: 25px/1.15 Georgia, 'Times New Roman', serif; overflow-wrap: anywhere; }
+.fs-pdp-inspire-prompt p { margin-bottom: 16px; font-size: 12px; line-height: 1.65; color: #6d5159; }
+.fs-pdp-inspire-prompt .fs-style-match-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; min-height: 44px; padding: 11px 12px; border: 1px solid #672b38; border-radius: 5px; background: #fffaf4; color: #672b38; font-size: 12px; line-height: 1.5; text-align: left; overflow-wrap: anywhere; }
+.fs-pdp-inspire-prompt .fs-style-match-trigger > span:first-child { min-width: 0; }
+.fs-pdp-inspire-prompt .fs-style-match-trigger:hover { background: #ead9de; }
+.fs-pdp-inspire-prompt .fs-style-match-trigger:focus-visible { outline: 2px solid #672b38; outline-offset: 3px; }
+.fs-pdp-inspire-prompt .fs-style-match-count { display: grid; place-items: center; flex-shrink: 0; min-width: 24px; min-height: 24px; padding: 2px 6px; border-radius: 50%; background: #ead9de; font-size: 11px; }
 .fs-pdp-sidebar-disclosure, .fs-pdp-sidebar-empty { font-size: 9px; line-height: 1.7; color: var(--muted); padding: 15px 0; border-top: 1px solid var(--line); }
 
 /* Wide displays: add breathing room while retaining the 70/30 structure. */
@@ -150,14 +149,14 @@
   .fs-pdp-editor-note { margin-top: 30px; padding: 24px 0; }
   .fs-pdp-editor-note h3 { font-size: 30px; }
   .fs-pdp-sidebar { position: static; max-height: none; overflow: visible; border-left: 0; padding: 30px 0 0; margin-top: 15px; }
-  .fs-pdp-inspiration-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
-  .fs-pdp-alternative { margin: 0 0 22px; padding: 12px; }
-  .fs-pdp-alternative-button { display: flex; flex-direction: column; }
-  .fs-pdp-alternative-button > img { aspect-ratio: 4 / 5; }
-  .fs-pdp-style-note { margin-bottom: 25px; }
+  .fs-pdp-style-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .fs-pdp-inspire-prompt { padding: 18px; }
   .fs-pdp-look-link h4 { font-size: 23px; }
-  .fs-pdp-note-label { flex-wrap: wrap; font-size: 7px; letter-spacing: .7px; }
+  .fs-pdp-note-label { letter-spacing: .3px; }
 }
+
+/* Keep captions and source controls readable inside the narrowest product views. */
+@media (max-width: 430px) { .fs-pdp-style-list { grid-template-columns: minmax(0, 1fr); } }
 
 /* Respect the operating system preference for reduced interface motion. */
 @media (prefers-reduced-motion: reduce) {

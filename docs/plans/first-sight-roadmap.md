@@ -4,18 +4,25 @@ Recorded: 2026-11-04. Branch inspected: `new-analysis`. Starting commit: `c45cf4
 
 This file preserves all seventeen phases from the agreed planning conversation. It is the repository reference for resuming work across chat sessions. The [engineering role](first-sight-engineering-role.md) defines how to work; the [P1–P4 plan and assessment](first-sight-p1-p4-plan.md) records the completed first slice.
 
+The current slice is documented in the [detailed P8–P12 plan](first-sight-p8-p12-plan.md), including its dependency boundaries, exact files/functions, acceptance criteria, self-assessment and verification workflow. The [P5–P7 assessment](first-sight-p5-p7-plan.md) remains the prior slice's historical record. Use British English for new communication and prose.
+
 ## Current status and authorization
 
 - Planning documents: saved before implementation and retained here.
 - User approval: P1–P4, received 2026-11-04.
-- Application implementation: P1–P4 complete and verified on `new-analysis`.
+- Application implementation: P1–P12 complete within their slice boundaries and verified on `new-analysis`; the P7 drawer is integrated through P8.
+- Remote checkpoint: `df562e293f445f0d7cc19e73f5e622ac36b623dd` was pushed to `origin/new-analysis` at the user's request on 4 November 2026. The local branch now tracks that remote branch.
+- Current slice: the user authorised P8–P12 end to end, with plan assessment, autonomous implementation, an activity ledger and A–G/EC-format reporting. Implementation and verification are complete; the strengthened plan records the final assessment and review-only message.
+- Delivery authorisation, 5 November 2026: the user explicitly authorised the combined P5–P12 commit, a push of `new-analysis`, and merging/pushing that work to `new-home-page`. This supersedes the earlier review-only restriction for this checkpoint. `main` remains outside the authorised merge.
 - Checkpoint authorization: the user requested a detailed P1–P4 Git commit after the assessment, following EU System v1.15.0 conventions. Include the implementation, tests, role, roadmap, and assessment in that checkpoint.
-- Verification: typecheck, 18 tests, production build, diff check, baseline-data comparison, independent code review, and Chrome desktop/mobile regression passed. Details are in the slice assessment.
-- P5–P17: retained here as deferred work; do not implement them during the P1–P4 slice.
+- P1–P4 verification: typecheck, 18 tests, production build, diff check, baseline-data comparison, independent code review, and Chrome desktop/mobile regression passed.
+- P5–P7 verification: typecheck, 31 tests, production build, preservation comparison, provider error/retry/cancel in the real page, existing page regression and four-width drawer checks passed. Axe reported zero violations in the checked drawer views. Details and limitations are in the P5–P7 assessment.
+- P8–P12 verification: typecheck, 35 tests, production build, diff check, baseline comparison and independent source review passed. Fifteen primary and four supplemental Chrome check groups passed, including five widths, both entry points, state isolation, empty/failure cases, local upload, touch and native-dialog transitions. Scoped marketplace/drawer axe checks passed; 45 existing whole-page contrast findings remain documented in the assessment.
+- P13–P17 remain deferred as broader phases. The combined P5–P12 checkpoint and its delivery to `new-home-page` are separately authorised; the final P17 feature delivery is still deferred.
 - Verification necessary for P1–P4 is part of that slice even though the broader testing phase is P13.
-- The final P17 feature commit, pushing, merging, route changes, and global Vault migration remain deferred. The separately authorized P1–P4 checkpoint does not advance those phases.
+- Further implementation, route changes, the global Vault migration and merging to `main` remain deferred. The separately authorised P1–P4 and P5–P12 checkpoints do not complete the broader P13–P17 phases.
 
-The previous full plan assumed a single migration across all phases. Splitting it at P4 requires temporary compatibility fields. Retain `RecognizedItem.products`, `PurchaseOption.affordable`, and the `recognitionItems` export until their consumers migrate. Canonical data will be `commerce`, with compatibility values derived from it. Keep `looksFor()` until P5 introduces the content provider. Define `ContextRelationship` now; populate a required `OutfitLook.relationship` in P6.
+The previous full plan assumed a single migration across all phases. Splitting it required temporary compatibility fields. P5 removed `recognitionItems`, `toRecognizedItem()` and `looksFor()`; the gateway resolves references through its provider. P6 populated required `OutfitLook.relationship`. P8–P10 removed `RecognizedItem.products` and `PurchaseOption.affordable` after migrating their consumers. Canonical commerce data is `commerce` throughout the current interface. Phase descriptions below preserve the original planned sequence; use the ledger and compatibility checklist for final status.
 
 ## Phase ledger
 
@@ -25,14 +32,14 @@ The previous full plan assumed a single migration across all phases. Splitting i
 | P2 | Pure commerce rules and presentation labels | Complete; verified 2026-11-04 |
 | P3 | Classify all eighteen existing sample offers | Complete; verified 2026-11-04 |
 | P4 | Split the five recognition edits with a compatible output | Complete; verified 2026-11-04 |
-| P5 | Local content-provider boundary and future adapter documentation | Deferred |
-| P6 | Authored cultural relationship metadata | Deferred |
-| P7 | Opt-in Inspire drawer and its interaction design | Deferred |
-| P8 | FirstSight page state, archive defaults, and drawer orchestration | Deferred |
-| P9 | Archive-only PurchaseGrid contract and labels | Deferred |
-| P10 | Cultural PDP sidebar with an opt-in Inspire entry | Deferred |
-| P11 | Relationship labels in journal cards and dialogs | Deferred |
-| P12 | Toolbar, responsive controls, and Section 3 styling | Deferred |
+| P5 | Local content-provider boundary and future adapter documentation | Complete; verified 2026-11-04; included in authorised P5–P12 checkpoint |
+| P6 | Authored cultural relationship metadata | Complete; all 44 references; included in authorised P5–P12 checkpoint |
+| P7 | Opt-in Inspire drawer and its interaction design | Complete; independently verified and integrated through P8; included in checkpoint |
+| P8 | FirstSight page state, archive defaults, and drawer orchestration | Complete; integration verified 2026-11-04; included in checkpoint |
+| P9 | Archive-only PurchaseGrid contract and labels | Complete; integration verified 2026-11-04; included in checkpoint |
+| P10 | Cultural PDP sidebar with an opt-in Inspire entry | Complete; integration verified 2026-11-04; included in checkpoint |
+| P11 | Relationship labels in journal cards and dialogs | Complete; integration verified 2026-11-04; included in checkpoint |
+| P12 | Toolbar, responsive controls, and Section 3 styling | Complete; five-width checks passed; included in checkpoint |
 | P13 | Complete contract and interaction verification | Deferred; data checks start in P1–P4 |
 | P14 | Update existing architecture, source, and code guides | Deferred |
 | P15 | Browser simulation and accessibility checks | Deferred; basic regression check in current slice |
@@ -204,11 +211,11 @@ Use the requested EC type/scope/subject/body conventions; review current changes
 
 | Temporary construct | Added/retained in | Removal condition |
 | --- | --- | --- |
-| `recognitionItems` export | P4 | P5 gateway and tests consume canonical studies/provider composition |
-| `toRecognizedItem()` local adapter | P4 | P5 owns asynchronous context composition |
-| `looksFor()` local resolver | Existing; retained P4 | P5 content provider resolves all references |
-| `RecognizedItem.products` | Existing; retained P1–P4 | P8 page consumes both `commerce` streams |
-| `PurchaseOption.affordable` | Existing; derived P3 | P9 grid and P10 PDP remove all reads |
+| `recognitionItems` export | P4 | Removed in P5; gateway/tests consume provider composition |
+| `toRecognizedItem()` local adapter | P4 | Removed in P5; gateway owns asynchronous context composition |
+| `looksFor()` local resolver | Existing; retained P4 | Removed in P5; content provider resolves all references |
+| `RecognizedItem.products` | Existing; retained P1–P4 | Removed in P8; page/tests consume explicit `commerce` streams |
+| `PurchaseOption.affordable` | Existing; derived P3 | Removed after P9/P10 migrated the last readers |
 
 ## Separate future sitewide decision
 

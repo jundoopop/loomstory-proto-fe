@@ -21,7 +21,7 @@ export interface CommerceEdit {
   styleMatches: PurchaseOption[];
 }
 
-/** Vocabulary for P6's authored context metadata; existing look records migrate in that phase. */
+/** Authored design-family association, runway context or visual inspiration; never object authentication. */
 export type ContextRelationship = 'same-design' | 'runway-reference' | 'styling-inspiration';
 
 /** A sourced styling reference, including the metadata needed for credit and image layout. */
@@ -44,6 +44,8 @@ export interface OutfitLook {
   licenseUrl?: string;
   tags: string[];
   kind: 'Celebrity style' | 'Editorial' | 'On screen';
+  // Describe the reference's relation to its study; source attribution alone does not prove identity.
+  relationship: ContextRelationship;
   description: string;
 }
 
@@ -96,7 +98,7 @@ export interface PurchaseVariant {
   stock: number;
 }
 
-/** Product information used by purchase cards, the PDP, alternatives, and the local bag. */
+/** Product information shared by the archive grid/PDP, Inspire drawer and local bag. */
 export interface PurchaseOption {
   // Prototype IDs match the shared catalog so the existing wardrobe can recognize them.
   id: string;
@@ -116,8 +118,6 @@ export interface PurchaseOption {
   // Labels distinguish illustrative photographs from front/back silhouette sketches.
   gallery: { src: string; label: string }[];
   commerce: CommerceProfile;
-  /** @deprecated Derived from commerce.track for the existing grid/PDP; remove after P9/P10. */
-  affordable?: boolean;
 }
 
 /** Coordinates are percentages of the product-image frame, not of the whole dossier. */
@@ -148,13 +148,11 @@ export interface RecognizedItem {
     sources: { title: string; url: string }[];
   };
   commerce: CommerceEdit;
-  /** @deprecated Flattened from commerce for the current page; remove when P8 migrates it. */
-  products: PurchaseOption[];
   looks: OutfitLook[];
 }
 
-/** Authored input before context resolution and the temporary legacy-product projection. */
-export type RecognitionStudy = Omit<RecognizedItem, 'products' | 'looks'> & {
+/** Authored input before the context provider resolves reference IDs. */
+export type RecognitionStudy = Omit<RecognizedItem, 'looks'> & {
   contextReferenceIds: string[];
 };
 

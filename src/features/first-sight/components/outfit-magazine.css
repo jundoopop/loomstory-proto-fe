@@ -4,7 +4,7 @@
  * Journal styling stays in this aside; the shared badge rule below only preserves image clicks.
  */
 /* A metadata badge sits outside the image button so its label matches the visible View action. */
-.first-sight .fs-look-image-wrap > .fs-look-region { pointer-events: none; }
+.first-sight .fs-look-image-wrap > :is(.fs-look-region, .fs-look-relationship) { pointer-events: none; }
 .first-sight .fs-context-section {
   --fs-journal-wine: #672b38;
   --fs-journal-ink: #49323a;
@@ -41,7 +41,7 @@
 .fs-context-section .fs-outfits-magazine .fs-look { margin-bottom: 17px; border: 1px solid #dcc5c9; border-radius: 12px; background: var(--fs-journal-paper); overflow: hidden; box-shadow: 0 3px 8px #55233308; }
 .fs-context-section .fs-outfits-magazine .fs-look-image-wrap { border-radius: 0; background: #dac3c9; }
 .fs-context-section .fs-outfits-magazine .fs-look-open > img { display: block; width: 100%; height: auto; }
-.fs-context-section .fs-outfits-magazine .fs-look-region { top: auto; bottom: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 10px; line-height: 1.4; letter-spacing: .2px; }
+.fs-context-section .fs-outfits-magazine .fs-look-relationship { top: auto; bottom: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 10px; line-height: 1.4; letter-spacing: .2px; overflow-wrap: anywhere; }
 .fs-context-section .fs-outfits-magazine .fs-look-save { width: 44px; height: 44px; top: 8px; right: 8px; border: 1px solid #d1afb8; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 23px; }
 .fs-context-section .fs-outfits-magazine .fs-look-save[aria-pressed='true'] { background: var(--fs-journal-wine); border-color: var(--fs-journal-wine); color: #fffaf4; }
 .fs-context-section .fs-outfits-magazine .fs-look-peek { top: 10px; bottom: auto; left: 10px; padding: 7px 8px; border-radius: 4px; background: var(--fs-journal-paper); color: var(--fs-journal-wine); font-size: 11px; }

@@ -128,8 +128,6 @@ const sampleOffers = new Map<string, PurchaseOption>(items
         label: isIllustration ? 'Original silhouette illustration · sample only' : 'Reference photograph · not the condition of listed stock',
       }],
       commerce: details.commerce,
-      // Compatibility for the current grid/PDP; remove with their P9/P10 migration.
-      affordable: details.commerce.track === 'style-match',
     };
     return [item.id, offer] as const;
   }));

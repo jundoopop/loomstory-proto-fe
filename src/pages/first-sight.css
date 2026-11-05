@@ -641,7 +641,8 @@
   object-fit: contain;
 }
 
-.fs-look-region {
+.fs-look-region,
+.fs-look-relationship {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -649,6 +650,8 @@
   font-size: 8px;
   padding: 5px 8px;
   letter-spacing: .4px;
+  max-width: calc(100% - 20px);
+  overflow-wrap: anywhere;
 }
 
 .fs-look-save {

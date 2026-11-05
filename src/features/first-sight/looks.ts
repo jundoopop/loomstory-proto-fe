@@ -27,6 +27,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A black halter silhouette framed by white trim and finished with gold-tone buttons."
   },
   {
@@ -48,6 +49,7 @@ export const outfitLooks: OutfitLook[] = [
       "Street style"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A fitted grey long-sleeve crop top paired with a gathered, body-skimming skirt."
   },
   {
@@ -69,6 +71,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A black tuxedo, white shirt and bow tie make a clean formal silhouette."
   },
   {
@@ -90,6 +93,7 @@ export const outfitLooks: OutfitLook[] = [
       "Street style"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A cropped black leather top with a short dark denim skirt and a shoulder bag."
   },
   {
@@ -111,6 +115,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A floor-length dress with layers of pale, textured embellishment at the Busan International Film Festival."
   },
   {
@@ -132,6 +137,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A flowing white gown with sculptural folds, a high slit and feather-like detailing."
   },
   {
@@ -153,6 +159,7 @@ export const outfitLooks: OutfitLook[] = [
       "Color"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A checked blazer layered over a bright pink knit, with a red beret and statement glasses."
   },
   {
@@ -174,6 +181,7 @@ export const outfitLooks: OutfitLook[] = [
       "Casual"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A loose black blouse tucked into light blue jeans for a simple everyday pairing."
   },
   {
@@ -195,6 +203,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A sheer black lace layer over a dark dress at the Cannes red carpet."
   },
   {
@@ -216,6 +225,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A shimmering blue jacket brings texture to a dark, slim stage look."
   },
   {
@@ -237,6 +247,7 @@ export const outfitLooks: OutfitLook[] = [
       "Texture"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A voluminous black dress with textured sleeves and a short hem, pictured in a promotional shoot."
   },
   {
@@ -258,6 +269,7 @@ export const outfitLooks: OutfitLook[] = [
       "Casual"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A blue-and-gold patterned blouse paired with blue jeans and dark accessories."
   },
   {
@@ -279,6 +291,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "An open red shirt and short blue shorts make a bright, relaxed performance outfit."
   },
   {
@@ -300,6 +313,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A white dress with narrow straps and a softly draped neckline."
   },
   {
@@ -321,6 +335,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A black leather jacket over a black top, with the zip and seams adding subtle contrast."
   },
   {
@@ -342,6 +357,7 @@ export const outfitLooks: OutfitLook[] = [
       "Color"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A red collared jacket worn over a plain white crew-neck T-shirt."
   },
   {
@@ -363,6 +379,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A white polo shirt worn for a day on the golf course."
   },
   {
@@ -384,6 +401,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "An open-knit white top layered over white, with fringe adding soft movement."
   },
   {
@@ -405,6 +423,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark double-breasted suit paired with a white shirt and narrow dark tie."
   },
   {
@@ -426,6 +445,7 @@ export const outfitLooks: OutfitLook[] = [
       "Layers"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A short black leather jacket layered over a long, patterned skirt."
   },
   {
@@ -447,6 +467,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A blue stage jacket with dark lapels and sparkling trim over a dark shirt."
   },
   {
@@ -468,6 +489,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A relaxed white graphic T-shirt keeps the stage styling uncomplicated."
   },
   {
@@ -489,6 +511,7 @@ export const outfitLooks: OutfitLook[] = [
       "Jewellery"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark off-shoulder look paired with a statement necklace, photographed in black and white."
   },
   {
@@ -510,6 +533,7 @@ export const outfitLooks: OutfitLook[] = [
       "Monochrome"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark suit and tie finished with a small decorative lapel detail."
   },
   {
@@ -531,6 +555,7 @@ export const outfitLooks: OutfitLook[] = [
       "Relaxed fit"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark jacket, warm-toned top and loose trousers styled for a seated conversation."
   },
   {
@@ -552,6 +577,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A strapless neutral-toned top with gathered fabric across the neckline."
   },
   {
@@ -573,6 +599,7 @@ export const outfitLooks: OutfitLook[] = [
       "Tailoring"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A printed sleeveless piece layered over a crisp white collared top."
   },
   {
@@ -594,6 +621,7 @@ export const outfitLooks: OutfitLook[] = [
       "Street style"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A grey hooded layer paired with a chain-strap bag for an airport appearance."
   },
   {
@@ -615,6 +643,7 @@ export const outfitLooks: OutfitLook[] = [
       "Layers"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A pale, textured jacket with patch pockets layered over a white high-neck top."
   },
   {
@@ -636,6 +665,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A white sleeveless look with a curved neckline, finished with gold-tone jewellery."
   },
   {
@@ -657,6 +687,7 @@ export const outfitLooks: OutfitLook[] = [
       "Layers"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A white collared shirt with a narrow black tie gives a simple tailored contrast."
   },
   {
@@ -678,6 +709,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A textured green outer layer worn open with visible layered accessories."
   },
   {
@@ -699,6 +731,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A black sleeveless leather vest, layered necklaces and a bright belt create a detailed stage look."
   },
   {
@@ -720,6 +753,7 @@ export const outfitLooks: OutfitLook[] = [
       "Color"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A pale floral dress with gathered shoulders and a contrasting dark waist detail."
   },
   {
@@ -741,6 +775,7 @@ export const outfitLooks: OutfitLook[] = [
       "Street style"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A pale checked shirt with an open collar and loosely worn black tie."
   },
   {
@@ -762,6 +797,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark fitted bodice with a sculptural white off-shoulder detail."
   },
   {
@@ -783,6 +819,7 @@ export const outfitLooks: OutfitLook[] = [
       "Stage"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A blue polka-dot stage look with a flared, layered hem."
   },
   {
@@ -804,6 +841,7 @@ export const outfitLooks: OutfitLook[] = [
       "Layers"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A dark collared jacket layered over a black top for a restrained monochrome look."
   },
   {
@@ -825,6 +863,7 @@ export const outfitLooks: OutfitLook[] = [
       "Evening"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A pale one-shoulder dress finished with dark piping and a small structured clutch."
   },
   {
@@ -846,6 +885,7 @@ export const outfitLooks: OutfitLook[] = [
       "Texture"
     ],
     "kind": "Celebrity style",
+    "relationship": "styling-inspiration",
     "description": "A black jacket with a soft sheen layered over a black top with a squared neckline."
   }
 ];

@@ -2,7 +2,7 @@
  * FirstSight commerce rules, independent of fixtures and React presentation.
  * Track membership follows authored listing intent; prices are display data.
  */
-import type { CommerceEdit, ContextRelationship, ListingKind, PurchaseOption } from './types.ts';
+import type { CommerceEdit, ContextRelationship, ListingKind, PurchaseOption, PurchaseVariant } from './types.ts';
 
 const listingKindLabels = {
   'vintage-original': 'Vintage original',
@@ -17,12 +17,12 @@ const relationshipLabels = {
   'styling-inspiration': 'Styling inspiration',
 } satisfies Record<ContextRelationship, string>;
 
-/** Central wording for the grid, PDP, and future Inspire drawer. */
+/** Central wording for the archive grid, PDP and Inspire drawer. */
 export function listingKindLabel(kind: ListingKind): string {
   return listingKindLabels[kind];
 }
 
-/** P6/P11 will populate and display this vocabulary on cultural references. */
+/** Present the authored relationship consistently across cultural references. */
 export function contextRelationshipLabel(relationship: ContextRelationship): string {
   return relationshipLabels[relationship];
 }
@@ -35,6 +35,21 @@ export function isArchiveOffer(product: PurchaseOption): boolean {
 /** Modern silhouette alternatives use the opt-in track regardless of their displayed price. */
 export function isStyleMatchOffer(product: PurchaseOption): boolean {
   return product.commerce.track === 'style-match';
+}
+
+/**
+ * Resolve an archive bag request against the current edit, never a callback's copied stock.
+ * Returning the canonical objects preserves current pricing, sizing and inventory ownership.
+ */
+export function resolveArchivePurchase(
+  archiveProducts: readonly PurchaseOption[],
+  productId: string,
+  sku: string,
+): { product: PurchaseOption; variant: PurchaseVariant } | null {
+  const product = archiveProducts.find(candidate => candidate.id === productId && isArchiveOffer(candidate));
+  const variant = product?.variants.find(candidate =>
+    candidate.sku === sku && Number.isInteger(candidate.stock) && candidate.stock > 0);
+  return product && variant ? { product, variant } : null;
 }
 
 /**

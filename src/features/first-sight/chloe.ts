@@ -93,6 +93,7 @@ export const chloeLooks: OutfitLook[] = [
     image: `${assetDirectory}/styling-01.jpg`, width: 922, height: 1560,
     sourceUrl: `${assetDirectory}/styling-01.jpg`, sourceLabel: 'Provided photograph',
     credit: 'User-provided styling reference', tags: ['Paddington', 'Street style', 'Leather'], kind: 'Celebrity style',
+    relationship: 'styling-inspiration',
     description: 'A brown padlock bag worn over the shoulder with a colorful floral dress. Supplied as a styling reference for this example.',
   },
   {
@@ -101,6 +102,7 @@ export const chloeLooks: OutfitLook[] = [
     image: `${assetDirectory}/styling-02.jpg`, width: 934, height: 1600,
     sourceUrl: 'https://www.allure.com/story/past-it-bags-comeback', sourceLabel: 'Allure · style archive',
     credit: 'Splash News, via Allure', tags: ['Paddington', 'Denim', 'Leather'], kind: 'Celebrity style',
+    relationship: 'styling-inspiration',
     description: 'A brown padlock bag carried beside denim and a dark jacket. Supplied as a street-style reference for this example.',
   },
   {
@@ -109,6 +111,7 @@ export const chloeLooks: OutfitLook[] = [
     image: `${assetDirectory}/styling-03.jpg`, width: 2001, height: 3000,
     sourceUrl: 'https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch', sourceLabel: 'Who What Wear · runway archive',
     credit: 'Courtesy of Chloé, via Who What Wear', tags: ['Paddington', 'Runway', 'Layers'], kind: 'Editorial',
+    relationship: 'runway-reference',
     description: 'A burgundy padlock bag paired with a cream dress and a dark textured coat. Supplied as a runway styling reference.',
   },
   {
@@ -117,6 +120,7 @@ export const chloeLooks: OutfitLook[] = [
     image: `${assetDirectory}/styling-04.jpg`, width: 5057, height: 7684,
     sourceUrl: 'https://www.whowhatwear.com/fashion/fashion-flashback-chloe-paddington-launch', sourceLabel: 'Who What Wear · runway archive',
     credit: 'Getty Images, via Who What Wear', tags: ['Runway', 'Tailoring', 'Shoulder bag'], kind: 'Editorial',
+    relationship: 'runway-reference',
     description: 'A dark shoulder bag contrasted with a white runway look. Supplied as contextual inspiration; the exact bag model is not verified.',
   },
   // Add the on-screen reference only after its missing source photograph is supplied.

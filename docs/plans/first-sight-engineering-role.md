@@ -4,7 +4,7 @@ Recorded: 2026-11-04. Scope: the existing LoomStory frontend on `new-analysis`.
 
 This agreement adapts the user-supplied “Senior Forward Deployed Engineer — LoomStory Frontend” brief. It guides this work alongside the user's latest decisions. It is a project planning document, not a claim that any feature has been implemented.
 
-Related documents: [P1–P17 roadmap](first-sight-roadmap.md) and [detailed P1–P4 plan](first-sight-p1-p4-plan.md).
+Related documents: [P1–P17 roadmap](first-sight-roadmap.md), [P1–P4 plan and assessment](first-sight-p1-p4-plan.md), [P5–P7 plan and assessment](first-sight-p5-p7-plan.md), and [current P8–P12 plan](first-sight-p8-p12-plan.md).
 
 ## Role and mission
 
@@ -22,7 +22,7 @@ The current assignment is an incremental change to FirstSight and its supporting
 - Preserve five deterministic recognition studies and selection-driven dossier/product updates.
 - Preserve the interactive central product image, connected feature labels, floating explanations, longer design notes, and resale scenario.
 - Keep the burgundy Style Journal visible while browsing. There is no 45-second collapse.
-- Prepare explicit archive and style-match commerce tracks. Later phases put affordable alternatives behind an opt-in Inspire drawer.
+- Keep explicit archive and style-match commerce tracks. The default FirstSight edit is archive-only; modern alternatives appear in the opt-in Inspire drawer integrated in P8–P12.
 - Keep recognition, prices, inventory, and valuations clearly represented as prototype data.
 - Keep uploaded photographs in the browser and user-supplied media outside Git.
 - Retain `SubmitPage.tsx` and `DiscoverPage.tsx` until the user explicitly requests their deletion.
@@ -45,6 +45,8 @@ The current assignment is an incremental change to FirstSight and its supporting
 
 Use the attachment's A–G structure for substantial work:
 
+Use British English in new communication, prose, comments, interface wording, and commit messages, as requested on 4 November 2026. Preserve established API/code identifiers unless their renaming is separately justified and scoped.
+
 | Part | Required content |
 | --- | --- |
 | A. Requirement | The problem, intended user, requested behavior, and business purpose |
@@ -59,7 +61,17 @@ Track activity with the existing phase IDs, P1–P17, and finer IDs such as P3.2
 
 ## Scope and delivery discipline
 
-The user approved the revised P1–P4 slice on 2026-11-04. Its implementation and verification are recorded in the detailed plan's activity ledger and FDE assessment. P5–P17 remain deferred; the full roadmap is retained for subsequent work.
+The user approved the revised P1–P4 slice on 2026-11-04, then P5–P7 conditionally on plan self-assessment. Both slice assessments record their implementation and verification. The user has now authorised P8–P12 end to end after strengthening its plan, including production drawer integration, an activity ledger, verification and the A–G report. P13–P17 remain deferred as broader phases.
+
+P8–P12 implementation and integration verification are complete. The current plan records the exact
+file/symbol map, activity ledger, nineteen browser check groups, remaining whole-page contrast findings
+and the review-only EC-format message. Broader accessibility remediation and durable browser-test
+infrastructure remain recommendations for a separately approved P13–P16 slice.
+
+On 5 November 2026, the user explicitly authorised committing and pushing P5–P12, then merging and
+pushing the work to `new-home-page`. This supersedes the previous review-only restriction for this
+checkpoint. Use the supplied message with accurate prototype wording and British spelling. Further
+implementation and merging to `main` require separate authorisation.
 
 For P1–P4, prioritize data classification, safe contract migration, fixture integrity, and preserving the current demonstration. Drawer behavior, visual changes, content APIs, and provider integration belong to later phases.
 

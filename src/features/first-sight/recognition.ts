@@ -1,24 +1,13 @@
 /**
  * The five selectable FirstSight studies. Edit narrative, feature targets, and related
- * archive/style-match edits here. The temporary resolved export keeps the current UI working
- * until the content provider (P5) and page consumers (P8) migrate to the canonical studies.
+ * archive/style-match edits here. The gateway resolves these authored reference IDs through
+ * its context provider, keeping asynchronous work out of the study definitions.
  * Every confidence score and era match is seeded. No uploaded image is inspected.
  */
-import { chloeAnalysis, chloeIdentity, chloeLooks, chloeSources } from './chloe.ts';
+import { chloeAnalysis, chloeIdentity, chloeSources } from './chloe.ts';
 import { createCommerceEdit } from './commerce.ts';
 import { offersFor } from './fixtures.ts';
-import { outfitLooks } from './looks.ts';
-import type { AnalysisCard, OutfitLook, ProductAnnotation, RecognitionStudy, RecognizedItem } from './types';
-
-/** Temporary local resolution, including supplied Chloé photos; P5 moves this into its provider. */
-function looksFor(ids: readonly string[]): OutfitLook[] {
-  return ids.map(id => {
-    const look = chloeLooks.find(candidate => candidate.id === id)
-      ?? outfitLooks.find(candidate => candidate.id === id);
-    if (!look) throw new Error(`FirstSight styling reference is not registered: ${id}`);
-    return look;
-  });
-}
+import type { AnalysisCard, ProductAnnotation, RecognitionStudy } from './types';
 
 /** Garment-specific content; repeated prototype metadata is added once in garmentStudy. */
 interface GarmentStudyInput {
@@ -110,7 +99,9 @@ const paddingtonStudy: RecognitionStudy = {
     offersFor(['chloe-paddington-archive', 'chloe-paddington-complete', 'chloe-paddington-reissue']),
     offersFor(['soft-satchel-alternative']),
   ),
-  contextReferenceIds: chloeLooks.map(look => look.id),
+  contextReferenceIds: [
+    'paddington-styling-01', 'paddington-styling-02', 'paddington-styling-03', 'paddington-styling-04',
+  ],
 };
 
 const leatherBomberStudy = garmentStudy({
@@ -325,20 +316,3 @@ const workwearJacketStudy = garmentStudy({
 export const recognitionStudies: RecognitionStudy[] = [
   paddingtonStudy, leatherBomberStudy, denimJacketStudy, tailoredBlazerStudy, workwearJacketStudy,
 ];
-
-/**
- * P5 will resolve references through its content provider; P8 will consume commerce directly.
- * Until then, derive the current UI's flat edit once, with archive offers before style matches.
- * Product objects and source records retain their original IDs and metadata.
- */
-function toRecognizedItem(study: RecognitionStudy): RecognizedItem {
-  const { contextReferenceIds, ...item } = study;
-  return {
-    ...item,
-    products: [...study.commerce.archive, ...study.commerce.styleMatches],
-    looks: looksFor(contextReferenceIds),
-  };
-}
-
-/** @deprecated Compatibility export for the current gateway/tests; replace with P5 composition. */
-export const recognitionItems: RecognizedItem[] = recognitionStudies.map(toRecognizedItem);

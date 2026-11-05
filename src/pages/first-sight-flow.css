@@ -76,6 +76,22 @@
 .fs-continuous .fs-discovery { margin-top: 25px; }
 .fs-continuous .fs-discovery .fs-feed-heading h2 { font-size: 33px; }
 .fs-continuous .fs-shop-toolbar { margin-top: 0; }
+.fs-similar-section .fs-chapter-label > span:last-child { color: #625d58; }
+/* The archive is the default edit; The Inspire remains an explicit secondary action. */
+.fs-continuous .fs-shop-toolbar { align-items: center; flex-wrap: wrap; gap: 18px; padding-block: 18px; }
+.fs-archive-toolbar-copy { min-width: 0; }
+.fs-archive-toolbar-copy h3 { font: 26px/1.25 Georgia, serif; color: var(--ink); }
+.fs-archive-toolbar-copy h3 > span { display: inline-block; margin-left: 10px; font: 12px/1.5 Arial, sans-serif; color: var(--fs-muted); }
+.fs-archive-toolbar-copy p { margin-top: 7px; font-size: 12px; line-height: 1.6; color: var(--fs-muted); }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 52px; max-width: 100%; padding: 10px 15px; border: 1px solid #8c5866; border-radius: 5px; background: #fffaf4; color: #672b38; text-align: left; font-size: 13px; line-height: 1.4; }
+.fs-style-match-trigger > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger small { display: block; font-size: 9px; letter-spacing: 1.4px; line-height: 1.5; margin-bottom: 3px; }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger:hover { background: #ead9de; }
+.fs-style-match-trigger:focus-visible { outline: 2px solid #672b38; outline-offset: 4px; }
+.fs-style-match-count { flex-shrink: 0; display: grid; place-items: center; min-width: 26px; min-height: 26px; padding: 3px; border-radius: 50%; background: #ead9de; color: #672b38; font-size: 12px; }
+.fs-archive-empty { padding: 28px 24px; border: 1px solid #d7c8be; background: #f4eee5; }
+.fs-archive-empty h3 { font: 27px/1.2 Georgia, serif; }
+.fs-archive-empty p { margin-top: 12px; color: var(--fs-muted); font-size: 13px; line-height: 1.7; max-width: 46ch; }
 /* Commerce stays primary beside the softer journal, with readable prices and clear purchase-entry buttons. */
 .fs-purchase-section .fs-purchase-meta { font-size: 11px; }
 .fs-purchase-section .fs-purchase-meta > span:last-child { font-size: 16px; }
@@ -123,6 +139,10 @@
   .fs-empty-copy h3 { font-size: 27px; }
   .fs-similar-heading { display: block; }
   .fs-selected-edit { display: block; text-align: left; margin-top: 20px; max-width: none; }
+  .fs-continuous .fs-shop-toolbar { align-items: stretch; flex-direction: column; }
+  .fs-continuous .fs-shop-toolbar .fs-style-match-trigger { width: 100%; }
+  .fs-archive-toolbar-copy h3 > span { margin-left: 6px; }
+  .fs-archive-empty { padding: 24px 18px; }
   .fs-products-empty { padding: 25px; gap: 15px; }
   .fs-products-empty .fs-text-button { margin-left: 0; }
   .fs-products-empty h3 { font-size: 23px; }

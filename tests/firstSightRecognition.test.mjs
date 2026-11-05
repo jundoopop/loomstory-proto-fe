@@ -5,8 +5,19 @@ import { access } from 'node:fs/promises';
 import { items } from '../src/data/catalog.ts';
 import { chloeLooks } from '../src/features/first-sight/chloe.ts';
 import { outfitLooks } from '../src/features/first-sight/looks.ts';
-import { recognitionItems, recognitionStudies } from '../src/features/first-sight/recognition.ts';
+import { recognitionStudies } from '../src/features/first-sight/recognition.ts';
 import { prototypeGateway } from '../src/features/first-sight/services/prototype.ts';
+
+// Exercise the public asynchronous boundary without spending real time on the scan animation.
+async function resolvedItems(context) {
+  context.mock.timers.enable({ apis: ['setTimeout'] });
+  const discovery = prototypeGateway.discover(
+    { kind: 'sample', url: '/sample.jpg', name: 'sample.jpg' },
+    new AbortController().signal,
+  );
+  context.mock.timers.tick(900);
+  return (await discovery).items;
+}
 
 // This is the approved curated edit, independent of the implementation's grouping logic.
 const expectedEdits = {
@@ -32,28 +43,30 @@ const expectedEdits = {
   },
 };
 
-test('every recognition choice has a distinct shopping edit that resolves in the wardrobe', () => {
+test('every recognition choice has a distinct archive edit with valid catalogue identity and stock', async context => {
+  const recognitionItems = await resolvedItems(context);
   const catalogIds = new Set(items.map(item => item.id));
   const edits = new Set();
   assert.equal(recognitionItems.length, 5);
   assert.equal(new Set(recognitionItems.map(item => item.id)).size, recognitionItems.length);
 
   for (const item of recognitionItems) {
+    const products = [...item.commerce.archive, ...item.commerce.styleMatches];
     assert.equal(item.identity.mode, 'prototype');
     assert.ok(item.confidence >= 0 && item.confidence <= 100);
     assert.equal(item.analysis.resale.basis, 'prototype');
     assert.ok(item.analysis.resale.minimum <= item.analysis.resale.maximum);
-    assert.ok(item.products.length >= 3);
-    assert.equal(new Set(item.products.map(product => product.id)).size, item.products.length);
-    edits.add(item.products.map(product => product.id).sort().join('|'));
+    assert.ok(products.length >= 3);
+    assert.equal(new Set(products.map(product => product.id)).size, products.length);
+    edits.add(item.commerce.archive.map(product => product.id).sort().join('|'));
 
-    for (const product of item.products) {
-      assert.ok(catalogIds.has(product.id), `${product.id} cannot be saved to the wardrobe`);
+    for (const product of products) {
+      assert.ok(catalogIds.has(product.id), `${product.id} lost its shared catalogue identity`);
       assert.ok(product.variants.length > 0);
       assert.ok(product.variants.every(variant => Number.isInteger(variant.stock) && variant.stock >= 0));
       assert.equal(new Set(product.variants.map(variant => variant.sku)).size, product.variants.length);
     }
-    assert.ok(item.products.some(product => product.variants.some(variant => variant.stock > 0)));
+    assert.ok(item.commerce.archive.some(product => product.variants.some(variant => variant.stock > 0)));
   }
   assert.equal(edits.size, recognitionItems.length, 'Selecting another study must change its shopping edit');
 });
@@ -75,7 +88,7 @@ test('all five authored studies preserve the approved archive and style-match ed
   }
 });
 
-test('all eighteen offers have valid profiles while retaining shared catalog identity and legacy flags', () => {
+test('all eighteen offers retain shared catalogue identity with explicit profiles and no legacy flag', () => {
   const catalog = new Map(items.map(item => [item.id, item]));
   const offers = new Map(recognitionStudies.flatMap(study => [
     ...study.commerce.archive, ...study.commerce.styleMatches,
@@ -101,7 +114,7 @@ test('all eighteen offers have valid profiles while retaining shared catalog ide
       assert.equal(product.commerce.listingKind, 'partner-preview');
     }
     kindCounts.set(product.commerce.listingKind, (kindCounts.get(product.commerce.listingKind) ?? 0) + 1);
-    assert.equal(product.affordable, product.commerce.track === 'style-match', `${product.id}: stale compatibility flag`);
+    assert.equal(Object.hasOwn(product, 'affordable'), false, `${product.id}: retired compatibility flag remains`);
   }
 
   assert.equal(archiveCount, 13);
@@ -114,7 +127,8 @@ test('all eighteen offers have valid profiles while retaining shared catalog ide
   });
 });
 
-test('the compatibility result derives products and resolves ordered references without losing dossier content', () => {
+test('the gateway preserves separate commerce streams and resolves references without a legacy product list', async context => {
+  const recognitionItems = await resolvedItems(context);
   const referenceRecords = [...chloeLooks, ...outfitLooks];
   const references = new Map(referenceRecords.map(look => [look.id, look]));
   assert.equal(references.size, referenceRecords.length, 'Reference IDs must resolve unambiguously');
@@ -123,11 +137,10 @@ test('the compatibility result derives products and resolves ordered references 
   for (const [index, study] of recognitionStudies.entries()) {
     const item = recognitionItems[index];
     const { contextReferenceIds, ...resolvedFields } = study;
-    const { products, looks, ...actualFields } = item;
+    const { looks, ...actualFields } = item;
+    assert.equal(Object.hasOwn(item, 'contextReferenceIds'), false, 'Input-only reference IDs must not leak into the UI contract');
+    assert.equal(Object.hasOwn(item, 'products'), false, 'The retired mixed product projection must not return');
     assert.deepEqual(actualFields, resolvedFields, `${study.id}: lost canonical study content`);
-    assert.deepEqual(products, [...study.commerce.archive, ...study.commerce.styleMatches], `${study.id}: legacy order or content drifted`);
-    assert.notStrictEqual(products, study.commerce.archive);
-    assert.notStrictEqual(products, study.commerce.styleMatches);
     assert.ok(contextReferenceIds.length > 0, study.id);
     assert.equal(new Set(contextReferenceIds).size, contextReferenceIds.length, study.id);
     assert.deepEqual(looks.map(look => look.id), contextReferenceIds, `${study.id}: reference order changed`);
@@ -138,7 +151,8 @@ test('the compatibility result derives products and resolves ordered references 
   }
 });
 
-test('dossier annotations stay inside their image and reference every explanation card', () => {
+test('dossier annotations stay inside their image and reference every explanation card', async context => {
+  const recognitionItems = await resolvedItems(context);
   for (const item of recognitionItems) {
     const cardIds = new Set(item.analysis.cards.map(card => card.id));
     const annotationCardIds = new Set(item.annotations.map(annotation => annotation.cardId));
@@ -152,7 +166,8 @@ test('dossier annotations stay inside their image and reference every explanatio
   }
 });
 
-test('illustrated studies resolve to four separate bundled assets and retain sourced context', async () => {
+test('illustrated studies resolve to four separate bundled assets and retain sourced context', async context => {
+  const recognitionItems = await resolvedItems(context);
   const illustrations = recognitionItems.filter(item => item.analysis.image.endsWith('.svg'));
   assert.equal(new Set(illustrations.map(item => item.analysis.image)).size, 4);
   for (const item of illustrations) {
@@ -186,7 +201,7 @@ test('aborting an older scan cannot stop or replace the next photo’s result', 
   context.mock.timers.tick(1);
   const result = await current;
   assert.equal(result.items.length, 5);
-  assert.deepEqual(result.items, recognitionItems, 'The existing gateway must return the resolved compatibility contract');
+  assert.deepEqual(result.items.map(item => item.id), recognitionStudies.map(study => study.id));
   assert.equal(resolved, true);
 });
 
