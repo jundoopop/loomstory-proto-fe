@@ -1,5 +1,37 @@
 # FirstSight image sources
 
+## Cultural relationship metadata
+
+All forty-four active references carry an authored `OutfitLook.relationship`. The forty Commons
+references and the first two Chloé styling references use `styling-inspiration`; the two Chloé runway
+references use `runway-reference`. The initial library therefore has forty-two styling connections
+and two runway connections. `same-design` remains supported without being assigned by guesswork.
+
+| Relationship | Meaning in this prototype |
+| --- | --- |
+| `styling-inspiration` | A visual, silhouette or styling connection; no exact designer/product identification is implied |
+| `runway-reference` | Authored runway context; the photographed item is not automatically the same model or edition as the selected study |
+| `same-design` | A manually established design-family connection, not the same physical object, production edition or authentication result |
+
+The Style Journal, its detail dialogs and archive PDP notes use these relationship labels. The
+Tendances board retains geographic labels and filters. Credits and relationships answer different
+questions: attribution identifies a photograph's source; the relationship states its authored use
+within the study. Neither establishes ownership, endorsement or the authenticity of an upload.
+
+`recognitionStudies` supplies ordered `contextReferenceIds`. The local content provider resolves
+those IDs and preserves the original source URL/label, credit, licence/link, dimensions, description
+and relationship. It returns fresh arrays while treating reference records as immutable. The
+gateway composes resolved `looks`; it does not infer stronger identity claims from visual similarity.
+See the [content-adapter guide](../src/features/first-sight/services/content/providers/README.md) for
+future source normalisation, server credential ownership and provider-specific rendering boundaries.
+No Instagram, YouTube or other live content API is connected.
+
+The repository browser tests substitute only ignored `/local-media/chloe/*` URLs with original test
+artwork so a fresh checkout needs no supplied photographs or download access. That substitution is
+test-only evidence for controls/layout, not verification of the exact Chloé photograph or its rights.
+Real-photo framing remains a separate local-media-present check. The tests do not change any source
+record, attribution table or tracked Commons asset below.
+
 ## Chloé analysis example
 
 The Chloé example uses the supplied product photograph and four available styling references. The exact floral-dress and dog-walking originals are in ignored `src/images/`; reviewed public copies supply the two runway references. Those copies can differ in framing or resolution from the attachments. The optional TV still remains unavailable and is excluded from the active flow.

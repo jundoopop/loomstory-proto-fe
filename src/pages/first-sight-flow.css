@@ -32,6 +32,8 @@
 .fs-similar-section { margin: 0 0 34px; padding: 0 22px 24px; border: 1px solid #d8cbbd; border-radius: 12px; background: #fffcf8; box-shadow: 0 4px 16px #4e382b06; }
 .fs-chapter-label { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 55px; margin: 0 -22px 24px; padding: 16px 22px; border-bottom: 1px solid #ded2c5; border-radius: 11px 11px 0 0; background: #eee6dc; font-size: 9px; line-height: 1.6; letter-spacing: 1.5px; color: var(--fs-muted); }
 .fs-chapter-label > span:first-child { font-weight: 600; color: #785235; }
+/* Small chapter metadata must remain readable on all three tinted header strips. */
+.fs-chapter-label > span:last-child { color: #625d58; }
 .fs-continuous .fs-trends > .fs-chapter-label { background: #e9e2d6; }
 .fs-similar-section > .fs-chapter-label { background: #e9ebe1; }
 .fs-recognition-layout { display: grid; grid-template-columns: minmax(0, 35fr) minmax(0, 65fr); gap: 28px; align-items: start; }
@@ -76,7 +78,6 @@
 .fs-continuous .fs-discovery { margin-top: 25px; }
 .fs-continuous .fs-discovery .fs-feed-heading h2 { font-size: 33px; }
 .fs-continuous .fs-shop-toolbar { margin-top: 0; }
-.fs-similar-section .fs-chapter-label > span:last-child { color: #625d58; }
 /* The archive is the default edit; The Inspire remains an explicit secondary action. */
 .fs-continuous .fs-shop-toolbar { align-items: center; flex-wrap: wrap; gap: 18px; padding-block: 18px; }
 .fs-archive-toolbar-copy { min-width: 0; }

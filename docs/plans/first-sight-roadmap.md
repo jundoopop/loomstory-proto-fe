@@ -4,23 +4,28 @@ Recorded: 2026-11-04. Branch inspected: `new-analysis`. Starting commit: `c45cf4
 
 This file preserves all seventeen phases from the agreed planning conversation. It is the repository reference for resuming work across chat sessions. The [engineering role](first-sight-engineering-role.md) defines how to work; the [P1–P4 plan and assessment](first-sight-p1-p4-plan.md) records the completed first slice.
 
-The current slice is documented in the [detailed P8–P12 plan](first-sight-p8-p12-plan.md), including its dependency boundaries, exact files/functions, acceptance criteria, self-assessment and verification workflow. The [P5–P7 assessment](first-sight-p5-p7-plan.md) remains the prior slice's historical record. Use British English for new communication and prose.
+The delivered P8–P12 slice is documented in the [detailed P8–P12 plan](first-sight-p8-p12-plan.md), including its dependency boundaries, exact files/functions, acceptance criteria, self-assessment and verification workflow. The [P5–P7 assessment](first-sight-p5-p7-plan.md) remains an earlier historical record. Use British English for new communication and prose.
 
-## Current status and authorization
+The approved completion slice is documented in the [P13–P16 workflow](first-sight-p13-p16-plan.md).
+The user authorised implementation on 5 November 2026. Execution preserves P13 → P14 → P15 → P16;
+P17 staging, committing, pushing and merging still require a fresh explicit instruction.
+
+## Current status and authorisation
 
 - Planning documents: saved before implementation and retained here.
 - User approval: P1–P4, received 2026-11-04.
-- Application implementation: P1–P12 complete within their slice boundaries and verified on `new-analysis`; the P7 drawer is integrated through P8.
-- Remote checkpoint: `df562e293f445f0d7cc19e73f5e622ac36b623dd` was pushed to `origin/new-analysis` at the user's request on 4 November 2026. The local branch now tracks that remote branch.
-- Current slice: the user authorised P8–P12 end to end, with plan assessment, autonomous implementation, an activity ledger and A–G/EC-format reporting. Implementation and verification are complete; the strengthened plan records the final assessment and review-only message.
+- Application implementation: P1–P12 delivered at `0b43280` on `new-analysis` and `new-home-page`. P13–P16 are complete and verified locally on `new-analysis`; P17 Git delivery awaits explicit authorisation.
+- Remote checkpoint: `df562e293f445f0d7cc19e73f5e622ac36b623dd` was pushed to `origin/new-analysis` at the user's request on 4 November 2026. It was superseded by the authorised P5–P12 checkpoint `0b43280` on both remote branches. The local branch still tracks `origin/new-analysis`.
+- Current slice: the user authorised P13–P16 in phase order, with repeatable verification, updated documentation, an activity ledger and A–G reporting. Implementation and verification are complete; the completion plan records the final assessment and review-only message.
 - Delivery authorisation, 5 November 2026: the user explicitly authorised the combined P5–P12 commit, a push of `new-analysis`, and merging/pushing that work to `new-home-page`. This supersedes the earlier review-only restriction for this checkpoint. `main` remains outside the authorised merge.
-- Checkpoint authorization: the user requested a detailed P1–P4 Git commit after the assessment, following EU System v1.15.0 conventions. Include the implementation, tests, role, roadmap, and assessment in that checkpoint.
+- Historical checkpoint authorisation: the user requested the detailed P1–P4 Git commit after the assessment, following EU System v1.15.0 conventions. That checkpoint included the implementation, tests, role, roadmap and assessment.
 - P1–P4 verification: typecheck, 18 tests, production build, diff check, baseline-data comparison, independent code review, and Chrome desktop/mobile regression passed.
 - P5–P7 verification: typecheck, 31 tests, production build, preservation comparison, provider error/retry/cancel in the real page, existing page regression and four-width drawer checks passed. Axe reported zero violations in the checked drawer views. Details and limitations are in the P5–P7 assessment.
 - P8–P12 verification: typecheck, 35 tests, production build, diff check, baseline comparison and independent source review passed. Fifteen primary and four supplemental Chrome check groups passed, including five widths, both entry points, state isolation, empty/failure cases, local upload, touch and native-dialog transitions. Scoped marketplace/drawer axe checks passed; 45 existing whole-page contrast findings remain documented in the assessment.
-- P13–P17 remain deferred as broader phases. The combined P5–P12 checkpoint and its delivery to `new-home-page` are separately authorised; the final P17 feature delivery is still deferred.
+- P13–P16 implementation is approved. P17 Git delivery remains deferred pending the user's review; the earlier P5–P12 delivery instruction does not authorise this slice's Git actions.
+- P13–P16 final verification, 5 November 2026: clean install, both TypeScript checks, 35 Node tests, 74 development browser executions, 55 accessibility state scans with zero reported violations, three production-preview checks, data preservation and diff checks pass. The earlier 45 contrast findings are corrected. See the current verification record for incomplete image checks, manual-testing gaps and the existing Vite advisory.
 - Verification necessary for P1–P4 is part of that slice even though the broader testing phase is P13.
-- Further implementation, route changes, the global Vault migration and merging to `main` remain deferred. The separately authorised P1–P4 and P5–P12 checkpoints do not complete the broader P13–P17 phases.
+- Implementation beyond the approved P13–P16 slice, route changes, the global Vault migration and merging to `main` remain deferred. Earlier checkpoints do not complete the broader final phases.
 
 The previous full plan assumed a single migration across all phases. Splitting it required temporary compatibility fields. P5 removed `recognitionItems`, `toRecognizedItem()` and `looksFor()`; the gateway resolves references through its provider. P6 populated required `OutfitLook.relationship`. P8–P10 removed `RecognizedItem.products` and `PurchaseOption.affordable` after migrating their consumers. Canonical commerce data is `commerce` throughout the current interface. Phase descriptions below preserve the original planned sequence; use the ledger and compatibility checklist for final status.
 
@@ -40,11 +45,11 @@ The previous full plan assumed a single migration across all phases. Splitting i
 | P10 | Cultural PDP sidebar with an opt-in Inspire entry | Complete; integration verified 2026-11-04; included in checkpoint |
 | P11 | Relationship labels in journal cards and dialogs | Complete; integration verified 2026-11-04; included in checkpoint |
 | P12 | Toolbar, responsive controls, and Section 3 styling | Complete; five-width checks passed; included in checkpoint |
-| P13 | Complete contract and interaction verification | Deferred; data checks start in P1–P4 |
-| P14 | Update existing architecture, source, and code guides | Deferred |
-| P15 | Browser simulation and accessibility checks | Deferred; basic regression check in current slice |
-| P16 | Final type, test, diff, and production-build gates | Deferred; relevant gates also apply per slice |
-| P17 | Reviewed EC-style feature commit | Deferred |
+| P13 | Complete contract and interaction verification | Complete; 35 Node tests retained; durable browser suite delivered |
+| P14 | Update existing architecture, source, and code guides | Complete; final implementation/results reconciled |
+| P15 | Browser simulation and accessibility checks | Complete; 55 axe state scans pass; manual limitations documented |
+| P16 | Final type, test, diff, and production-build gates | Complete; 74 development + 3 production browser executions pass |
+| P17 | Reviewed EC-style feature commit | Message/handoff prepared; Git actions await explicit approval |
 
 ## P1 — Explicit domain contracts
 
@@ -220,3 +225,16 @@ Use the requested EC type/scope/subject/body conventions; review current changes
 ## Separate future sitewide decision
 
 Global `/vault`, homepage routing, the shared catalog, legacy item detail, and wardrobe integration require a separately approved scope. Likely owners are `src/types.ts`, `src/data/catalog.ts`, `pages/CatalogPage.tsx`, `components/ItemCard.tsx`, `pages/ItemPage.tsx`, and `App.tsx`. Completing the FirstSight roadmap does not by itself complete that migration.
+
+## P18 — Discover renewal (deferred; planning not started)
+
+Recorded at the user's request on 5 November 2026. This is a future phase, separate from the
+completed FirstSight implementation and its P17 delivery.
+
+- Intended direction: move `TrendHero` out of FirstSight into Discover and renew Discover as a
+  magazine-style inspiration finder.
+- Sequence: consider this phase after P17's authorised commit and push.
+- Activation: wait until the user mentions Discover renewal again after the current task; then
+  inspect the current implementation and prepare a new detailed plan for review.
+- No component move, Discover redesign, detailed task breakdown or implementation is authorised
+  by this reminder. Keep the current FirstSight work and its verification unchanged.

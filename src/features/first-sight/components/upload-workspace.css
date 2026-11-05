@@ -16,11 +16,12 @@
 
 /* Filename and photo controls stay separate from the image, including during analysis. */
 .fs-workspace-file-tools { display: flex; align-items: center; gap: 12px; min-height: 34px; margin-top: 1px; }
-.fs-workspace-filename { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #76695d; font-size: 9px; }
+/* Use one opaque muted tone for small text on the tinted workspace surface. */
+.fs-workspace-filename { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #685b50; font-size: 9px; }
 .first-sight .fs-workspace-replace { display: flex; align-items: center; min-height: 34px; margin: 0; font-size: 9px; color: #802f35; text-decoration: underline; text-underline-offset: 3px; }
 .fs-workspace-replace.is-disabled { opacity: .45; cursor: not-allowed; }
-.fs-workspace-file-tools > button { min-height: 34px; padding: 0; font-size: 9px; color: #76695d; text-decoration: underline; text-underline-offset: 3px; }
-.first-sight .fs-photo-workspace > .fs-workspace-status { min-height: 15px; margin: 8px 0 10px; max-width: none; color: #746657; font-size: 9px; line-height: 1.5; }
+.fs-workspace-file-tools > button { min-height: 34px; padding: 0; font-size: 9px; color: #685b50; text-decoration: underline; text-underline-offset: 3px; }
+.first-sight .fs-photo-workspace > .fs-workspace-status { min-height: 15px; margin: 8px 0 10px; max-width: none; color: #685b50; font-size: 9px; line-height: 1.5; }
 .first-sight .fs-photo-workspace > .fs-workspace-error { font-size: 10px; line-height: 1.5; margin: 0 0 10px; }
 .fs-workspace-analysis-controls { display: flex; align-items: center; gap: 12px; }
 .first-sight .fs-analyze-button { width: 100%; justify-content: space-between; padding: 12px 15px; min-height: 43px; font-size: 11px; }

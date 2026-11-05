@@ -2,7 +2,8 @@
 .fs-dossier {
   --fs-dossier-paper: #f7f3ef;
   --fs-dossier-card: #fffcf9;
-  --fs-dossier-brown: #98643f;
+  /* Shared by small brown copy and the light-on-brown title; both pairings need contrast. */
+  --fs-dossier-brown: #8b5734;
   --fs-dossier-copper: #b47750;
   --fs-dossier-ink: #24201e;
   --fs-dossier-muted: #766e67;
@@ -28,7 +29,7 @@
 .fs-dossier-callout-craftsmanship { grid-column: 1; grid-row: 2; }
 .fs-dossier-callout-common-materials { grid-column: 3; grid-row: 2; }
 .fs-dossier-feature-label { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 48px; padding: 11px 9px; border: 1px solid #bfa58c; border-radius: 50%; background: var(--fs-dossier-paper); color: #694a34; font: italic 15px/1.25 Georgia, 'Times New Roman', serif; cursor: pointer; transition: background 160ms ease, border-color 160ms ease; }
-.fs-dossier-feature-label > span { color: #9b806a; font: 8px/1 Arial, sans-serif; }
+.fs-dossier-feature-label > span { color: #71533e; font: 8px/1 Arial, sans-serif; }
 .fs-dossier-callout.is-active .fs-dossier-feature-label { background: #eadccf; border-color: var(--fs-dossier-brown); }
 
 /* A padded bridge keeps hover continuous between the label and its floating explanation. */
@@ -53,7 +54,9 @@
 .fs-dossier-image-plane img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .fs-dossier-point { display: grid; place-items: center; position: absolute; z-index: 2; width: 44px; height: 44px; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 50%; background: transparent; cursor: pointer; }
 .fs-dossier-point > span { display: block; width: 8px; height: 8px; border: 1px solid #875c3a; border-radius: 50%; background: #fffaf3; box-shadow: 0 0 0 4px #fffaf34d; transition: background 160ms ease, box-shadow 160ms ease; }
+.fs-dossier-point-marker { display: none; position: absolute; width: 8px; height: 8px; transform: translate(-50%, -50%); border: 1px solid #875c3a; border-radius: 50%; background: #fffaf3; box-shadow: 0 0 0 4px #fffaf34d; pointer-events: none; }
 .fs-dossier-point.is-active > span { background: var(--fs-dossier-brown); box-shadow: 0 0 0 6px #fffaf38c; }
+.fs-dossier-point-marker.is-active { background: var(--fs-dossier-brown); box-shadow: 0 0 0 6px #fffaf38c; }
 .fs-dossier-point:focus-visible, .fs-dossier-feature-label:focus-visible, .fs-dossier-footer button:focus-visible, .fs-dossier-culture summary:focus-visible, .fs-dossier-notes summary:focus-visible { outline: 2px solid #6e472c; outline-offset: 4px; }
 .fs-dossier-caption { margin: 10px 0 25px; text-align: center; }
 .fs-dossier-caption > span { color: var(--fs-dossier-brown); font: italic 12px/1.5 Georgia, 'Times New Roman', serif; }
@@ -83,7 +86,7 @@
 .fs-dossier-resale > p { margin: 14px 0 22px; color: #5e554e; font: 14px/1.7 Arial, sans-serif; }
 .fs-dossier-valuation { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin: 0 -25px; padding: 20px 25px; border-top: 1px solid #e8d9ca; background: #f0e6dc; }
 .fs-dossier-valuation > div > span { display: block; color: #6f4b30; font: 11px/1.5 Arial, sans-serif; letter-spacing: .5px; }
-.fs-dossier-valuation small { display: block; margin-top: 4px; color: #877564; font: 10px/1.5 Arial, sans-serif; }
+.fs-dossier-valuation small { display: block; margin-top: 4px; color: #6b5c4f; font: 10px/1.5 Arial, sans-serif; }
 .fs-dossier-valuation > strong { white-space: nowrap; color: #815432; font: 30px/1.2 Georgia, 'Times New Roman', serif; letter-spacing: -1px; }
 .fs-dossier-valuation > strong > span { padding: 0 5px; font-size: 22px; }
 .fs-dossier-culture { border-top: 1px solid #ddd0c1; border-bottom: 1px solid #ddd0c1; }
@@ -132,6 +135,9 @@
 }
 
 @container fashion-dossier (max-width: 329px) {
+  /* Image hit areas overlap at this size. The four large oval buttons retain every action. */
+  .fs-dossier-point { display: none; }
+  .fs-dossier-point-marker { display: block; }
   .fs-dossier-overline > :last-child { display: none; }
   .fs-dossier-header h3 { font-size: 24px; }
   .fs-dossier-canvas { column-gap: 14px; }

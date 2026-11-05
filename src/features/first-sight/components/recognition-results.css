@@ -1,7 +1,8 @@
 /* Selection cards remain compact inside the 65% story column; smaller columns scroll naturally. */
 .fs-recognition-results { container: recognition-results / inline-size; margin: 25px 0 29px; }
-.fs-recognition-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: #8e715a; font: 9px/1.5 Arial, sans-serif; letter-spacing: 1.25px; }
-.fs-recognition-topline > :last-child { color: #8b8177; font-size: 10px; letter-spacing: 0; }
+.fs-recognition-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: #765a44; font: 9px/1.5 Arial, sans-serif; letter-spacing: 1.25px; }
+/* Metadata keeps its warm hierarchy while passing on normal, hover and selected papers. */
+.fs-recognition-topline > :last-child { color: #6b6259; font-size: 10px; letter-spacing: 0; }
 .fs-recognition-strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; margin: 0; padding: 2px 1px 8px; list-style: none; }
 .fs-recognition-strip > li { display: flex; min-width: 0; }
 .fs-recognition-card { display: flex; flex-direction: column; width: 100%; min-width: 0; padding: 0; border: 1px solid #ded5ca; border-radius: 5px; background: #faf7f1; color: #302b26; text-align: left; cursor: pointer; overflow: hidden; transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease; }
@@ -11,18 +12,18 @@
 .fs-recognition-image { position: relative; display: block; width: 100%; height: 116px; background: #f1ece5; overflow: hidden; }
 .fs-recognition-image img { display: block; width: 100%; height: 100%; padding: 10px; box-sizing: border-box; object-fit: contain; mix-blend-mode: multiply; }
 .fs-recognition-image img.is-trimmed { position: absolute; bottom: 0; left: 13%; width: 74%; height: auto; padding: 0; object-fit: contain; }
-.fs-recognition-index { position: absolute; left: 9px; top: 8px; color: #927d6c; font: 9px/1.4 Arial, sans-serif; }
+.fs-recognition-index { position: absolute; left: 9px; top: 8px; color: #765a44; font: 9px/1.4 Arial, sans-serif; }
 .fs-recognition-selected { position: absolute; right: 7px; top: 7px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: #98643f; color: #fff; font: 10px/1 Arial, sans-serif; }
 .fs-recognition-copy { display: flex; flex-direction: column; flex: 1; padding: 12px 10px 10px; }
-.fs-recognition-category { margin-bottom: 6px; color: #977a62; font: 8px/1.35 Arial, sans-serif; letter-spacing: .9px; text-transform: uppercase; }
+.fs-recognition-category { margin-bottom: 6px; color: #765a44; font: 8px/1.35 Arial, sans-serif; letter-spacing: .9px; text-transform: uppercase; }
 .fs-recognition-copy > strong { display: block; min-height: 36px; margin-bottom: 7px; font: 17px/1.08 Georgia, 'Times New Roman', serif; letter-spacing: -.35px; }
-.fs-recognition-era { display: block; min-height: 28px; color: #7e7064; font: 10px/1.4 Arial, sans-serif; }
-.fs-recognition-description { display: -webkit-box; flex: 1; min-height: 51px; margin: 8px 0 12px; color: #7c736b; font: 11px/1.55 Arial, sans-serif; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-.fs-recognition-score { display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-top: auto; color: #967d68; font: 8px/1.4 Arial, sans-serif; }
+.fs-recognition-era { display: block; min-height: 28px; color: #6b6259; font: 10px/1.4 Arial, sans-serif; }
+.fs-recognition-description { display: -webkit-box; flex: 1; min-height: 51px; margin: 8px 0 12px; color: #6b6259; font: 11px/1.55 Arial, sans-serif; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.fs-recognition-score { display: flex; justify-content: space-between; align-items: center; gap: 5px; margin-top: auto; color: #765a44; font: 8px/1.4 Arial, sans-serif; }
 .fs-recognition-score > :last-child { font-size: 10px; }
 .fs-recognition-action { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin-top: 8px; padding-top: 9px; border-top: 1px solid #e6d9cc; color: #7e5739; font: 9px/1.5 Arial, sans-serif; }
 .fs-recognition-action > span { font-size: 14px; }
-.fs-recognition-note { margin: 7px 0 0; color: #8f8479; font: 10px/1.5 Arial, sans-serif; }
+.fs-recognition-note { margin: 7px 0 0; color: #6b6259; font: 10px/1.5 Arial, sans-serif; }
 
 @container recognition-results (max-width: 699px) {
   .fs-recognition-strip { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 166px; gap: 11px; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #bba38f transparent; padding: 4px 3px 12px; }

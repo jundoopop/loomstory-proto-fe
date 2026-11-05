@@ -999,6 +999,8 @@
 
 .fs-purchase-card h3>button {
   padding: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   text-align: left;
   font: inherit;
 }
@@ -1016,7 +1018,8 @@
 }
 
 .fs-purchase-sizes>.is-unavailable {
-  color: #9e9488;
+  /* Availability is useful information even when the size cannot be selected. */
+  color: #6b6259;
   text-decoration: line-through;
 }
 

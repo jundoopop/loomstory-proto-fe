@@ -2,28 +2,36 @@
 .fs-trends { margin: 0 0 68px; }
 .fs-trend-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: #ebe5d9; border: 1px solid #d8cfc1; }
 .fs-trend-hero > * { min-width: 0; }
-.fs-trend-visual { position: relative; margin: 0; min-height: 650px; overflow: hidden; background: #b7a28d; isolation: isolate; }
+/* In-flow captions can grow the cover at enlarged text sizes instead of being clipped. */
+.fs-trend-visual { display: grid; grid-template-rows: auto 1fr; position: relative; margin: 0; min-height: 650px; overflow: hidden; background: #b7a28d; isolation: isolate; }
 .fs-trend-visual > img { display: block; width: 100%; height: 100%; position: absolute; inset: 0; object-fit: cover; }
 .fs-trend-visual::after { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(180deg, #130f0d40 0%, transparent 28%, transparent 45%, #17120fdf 100%); pointer-events: none; }
-.fs-trend-image-top { position: absolute; top: 24px; left: 27px; right: 27px; z-index: 1; display: flex; justify-content: space-between; gap: 12px; color: #fff9ed; font-size: 8px; letter-spacing: 1.5px; }
-.fs-trend-visual figcaption { position: absolute; z-index: 1; bottom: 27px; left: 30px; right: 30px; display: grid; color: #fff9ef; }
+.fs-trend-image-top { position: relative; z-index: 1; display: flex; justify-content: space-between; align-self: start; gap: 12px; margin: 24px 27px 0; color: #fff9ed; font-size: 8px; letter-spacing: 1.5px; }
+/* A fixed backing keeps tiny cover metadata readable even over a white photograph. */
+.fs-trend-image-top > span { min-width: 0; padding: 4px 6px; border-radius: 2px; background: #3d252d; overflow-wrap: anywhere; }
+.fs-trend-visual figcaption { position: relative; z-index: 1; align-self: end; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; margin: 27px 30px; color: #fff9ef; }
+/* A known surface protects enlarged white headlines even over the lightest photograph. */
+.fs-trend-visual figcaption { background: #3d252d; box-shadow: 0 0 0 8px #3d252d; border-radius: 2px; }
+.fs-trend-visual figcaption > * { min-width: 0; }
 .fs-trend-chapter { font-size: 8px; letter-spacing: 1.4px; margin-bottom: 12px; }
-.fs-trend-visual figcaption > strong { font: 400 clamp(30px, 3.5vw, 51px)/1.08 Georgia, serif; letter-spacing: -1.4px; white-space: pre-line; }
-.fs-trend-credit { margin-top: 24px; max-width: 420px; color: #fff9eec9; font-size: 8px; line-height: 1.7; }
+.fs-trend-visual figcaption > strong { font: 400 clamp(30px, 3.5vw, 51px)/1.08 Georgia, serif; letter-spacing: -1.4px; white-space: pre-line; overflow-wrap: anywhere; }
+.fs-trend-credit { margin-top: 24px; max-width: 420px; padding: 4px 6px; border-radius: 2px; background: #3d252d; color: #fff9ee; font-size: 8px; line-height: 1.7; }
 .fs-trend-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .fs-trend-copy { padding: 34px clamp(25px, 4vw, 60px) 37px; display: flex; flex-direction: column; }
 .fs-trend-eyebrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #675849; font-size: 8px; line-height: 1.7; letter-spacing: 1.6px; }
 .fs-trend-eyebrow > span:last-child { font-size: 27px; }
-.fs-trend-copy h2 { margin: 34px 0 4px; font: 400 clamp(52px, 5.9vw, 82px)/1.04 Georgia, serif; letter-spacing: -4px; }
+/* Enlarged display type may break a long word instead of widening the document. */
+.fs-trend-copy h2 { margin: 34px 0 4px; font: 400 clamp(52px, 5.9vw, 82px)/1.04 Georgia, serif; letter-spacing: -4px; overflow-wrap: anywhere; }
 .fs-trend-copy h2 > span { color: #8a583c; }
 .fs-trend-subtitle { margin: 8px 0 0; font: italic 21px/1.4 Georgia, serif; color: #8a583c; }
 .fs-trend-introduction { color: #6b6259; font-size: 11px; line-height: 1.8; margin: 18px 0 27px; }
 
 /* Numbered collection rows act as visible, keyboard-accessible editorial filters. */
 .fs-trend-collections { border-top: 1px solid #cbbfb0; }
-.fs-trend-collections > button { display: grid; grid-template-columns: 25px 1fr 20px; align-items: center; width: 100%; gap: 10px; min-height: 56px; padding: 10px 3px; border-bottom: 1px solid #cbbfb0; color: #63584e; text-align: left; transition: color .18s, padding .18s, background .18s; }
-.fs-trend-collections > button > span:nth-child(2) { font: 400 clamp(15px, 1.7vw, 22px)/1.3 Georgia, serif; }
-.fs-trend-number { font-size: 9px; letter-spacing: .4px; opacity: .65; }
+.fs-trend-collections > button { display: grid; grid-template-columns: 25px minmax(0, 1fr) 20px; align-items: center; width: 100%; gap: 10px; min-height: 56px; padding: 10px 3px; border-bottom: 1px solid #cbbfb0; color: #63584e; text-align: left; transition: color .18s, padding .18s, background .18s; }
+.fs-trend-collections > button > span:nth-child(2) { min-width: 0; overflow-wrap: anywhere; font: 400 clamp(15px, 1.7vw, 22px)/1.3 Georgia, serif; }
+/* Inherit each row's measured text colour at full opacity, including hover/selection. */
+.fs-trend-number { font-size: 9px; letter-spacing: .4px; color: inherit; opacity: 1; }
 .fs-trend-collections > button > span:last-child { text-align: right; font-size: 18px; }
 .fs-trend-collections > button[aria-pressed='true'] { color: #802f35; padding-left: 10px; padding-right: 10px; background: #802f3509; box-shadow: inset 2px 0 #802f35; }
 .fs-trend-collections > button:hover { color: #802f35; background: #fff8ec66; }
@@ -54,7 +62,7 @@
   .fs-trend-hero { grid-template-columns: minmax(0, 1fr); }
   .fs-trend-visual { min-height: 450px; }
   .fs-trend-visual > img { object-position: 50% 25% !important; }
-  .fs-trend-visual figcaption { bottom: 24px; left: 24px; right: 24px; }
+  .fs-trend-visual figcaption { margin: 24px; }
   .fs-trend-visual figcaption > strong { font-size: 38px; }
   .fs-trend-credit { margin-top: 14px; }
   .fs-trend-copy { padding: 26px 23px; }

@@ -259,7 +259,10 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
         <div className="fs-shop-toolbar">
           <div className="fs-archive-toolbar-copy"><h3>The archive edit <span>{archiveProducts.length} {archiveProducts.length === 1 ? 'piece' : 'pieces'}</span></h3><p>Sample listings · Illustrative prices and availability</p></div>
           {styleMatchProducts.length > 0 && <button type="button" className="fs-style-match-trigger"
-            aria-haspopup="dialog" aria-expanded={inspireOpen} onClick={openStyleMatches}>
+            aria-haspopup="dialog" aria-expanded={inspireOpen} onClick={event => {
+              // WebKit does not focus a button on pointer activation; retain the actual opener.
+              event.currentTarget.focus({ preventScroll: true }); openStyleMatches();
+            }}>
             <span><small>THE INSPIRE</small>Explore similar styles</span>
             <span className="fs-style-match-count" aria-label={`${styleMatchProducts.length} similar ${styleMatchProducts.length === 1 ? 'style' : 'styles'}`}>{styleMatchProducts.length}</span>
             <span aria-hidden="true">↗</span>
