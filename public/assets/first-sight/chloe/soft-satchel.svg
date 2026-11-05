@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" fill="none">
+  <title>Unbranded soft satchel — illustrative silhouette study</title>
+  <rect width="800" height="1000" fill="#f0e9dd"/>
+  <ellipse cx="400" cy="738" rx="248" ry="20" fill="#dbd0c1"/>
+  <path d="M284 480C273 233 343 220 350 478M453 478C447 249 515 230 527 484" stroke="#936943" stroke-width="28"/>
+  <path d="M284 480C273 233 343 220 350 478M453 478C447 249 515 230 527 484" stroke="#d4b28b" stroke-width="2"/>
+  <path d="M188 450Q400 496 612 450L658 666Q670 744 575 747H231Q130 744 144 667Z" fill="#a77d56" stroke="#76573a" stroke-width="3"/>
+  <path d="M188 450Q400 500 612 450" stroke="#d6b786" stroke-width="8"/>
+  <path d="M200 477Q171 600 193 705M600 478Q626 601 605 708M246 714Q400 740 553 714" stroke="#76573a" stroke-width="3" opacity=".7"/>
+  <path d="M262 448L276 570Q294 594 312 568L318 460M489 463L498 571Q515 592 534 568L545 447" fill="#936943" stroke="#76573a" stroke-width="3"/>
+  <circle cx="294" cy="548" r="5" fill="#d8bc80"/><circle cx="516" cy="547" r="5" fill="#d8bc80"/>
+  <path d="M369 476L367 541Q400 565 431 540L429 477" fill="#936943" stroke="#76573a" stroke-width="2"/>
+  <rect x="379" y="511" width="40" height="23" rx="5" stroke="#d8bc80" stroke-width="5"/>
+  <text x="400" y="875" text-anchor="middle" fill="#78654f" font-family="Georgia,serif" font-size="23">A study in shape.</text>
+  <text x="400" y="908" text-anchor="middle" fill="#78654f" font-family="Arial,sans-serif" font-size="12" letter-spacing="3">ILLUSTRATIVE SILHOUETTE · SAMPLE ONLY</text>
+</svg>

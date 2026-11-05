@@ -1,0 +1,164 @@
+/*
+ * Continuous FirstSight layout. Each chapter is its own framed workspace;
+ * Section 2 owns the upload sticky boundary and Section 3 keeps outfits alongside shopping.
+ * Component-local styling lives beside the trends, upload, and dossier components.
+ */
+.fs-continuous {
+  --fs-ivory: #f7f3ef;
+  --fs-antique: #fffcf9;
+  --fs-brown: #98643f;
+  --fs-copper: #b47750;
+  --fs-charcoal: #24201e;
+  --fs-muted: #766e67;
+}
+.fs-continuous .fs-page-top { padding: 30px 0 25px; }
+.fs-continuous .fs-page-top h1 { font-size: clamp(56px, 6.4vw, 89px); }
+.fs-continuous .fs-journey-bar { min-height: 72px; margin-bottom: 28px; padding: 10px 14px; border: 1px solid #dacfc2; border-radius: 10px; background: #ede7de; }
+.fs-continuous .fs-journey-bar nav { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.fs-continuous .fs-journey-bar nav a { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 11px 15px; border: 1px solid #dfd5c9; border-radius: 6px; background: var(--fs-antique); font-size: 10px; color: var(--fs-brown); transition: background 160ms ease, border-color 160ms ease; }
+.fs-continuous .fs-journey-bar nav a span { color: var(--ink); }
+.fs-continuous .fs-journey-bar nav a:hover { border-color: #b99172; background: #f7eee3; }
+.fs-continuous .fs-journey-bar nav a:focus-visible { outline: 2px solid var(--fs-brown); outline-offset: 3px; }
+
+/* Real section anchors keep the full journey in the same document. */
+.fs-continuous #fs-trends,
+.fs-recognition-section,
+.fs-similar-section,
+.fs-inline-product { scroll-margin-top: 28px; }
+/* Shared frames and header strips make the three workspaces easy to scan as a dashboard.
+   Overflow stays visible here so the photo workspace can remain sticky inside its own chapter. */
+.fs-continuous .fs-trends,
+.fs-recognition-section,
+.fs-similar-section { margin: 0 0 34px; padding: 0 22px 24px; border: 1px solid #d8cbbd; border-radius: 12px; background: #fffcf8; box-shadow: 0 4px 16px #4e382b06; }
+.fs-chapter-label { display: flex; justify-content: space-between; align-items: center; gap: 20px; min-height: 55px; margin: 0 -22px 24px; padding: 16px 22px; border-bottom: 1px solid #ded2c5; border-radius: 11px 11px 0 0; background: #eee6dc; font-size: 9px; line-height: 1.6; letter-spacing: 1.5px; color: var(--fs-muted); }
+.fs-chapter-label > span:first-child { font-weight: 600; color: #785235; }
+.fs-continuous .fs-trends > .fs-chapter-label { background: #e9e2d6; }
+.fs-similar-section > .fs-chapter-label { background: #e9ebe1; }
+.fs-recognition-layout { display: grid; grid-template-columns: minmax(0, 35fr) minmax(0, 65fr); gap: 28px; align-items: start; }
+.fs-recognition-layout > .fs-upload-panel { position: sticky; top: 24px; min-width: 0; }
+.fs-recognition-content { min-width: 0; }
+.fs-recognition-heading { margin: 8px 0 28px; }
+.fs-recognition-heading h2,
+.fs-similar-heading h2 { font: 44px/1.08 Georgia, 'Times New Roman', serif; letter-spacing: -1.5px; margin: 12px 0 16px; }
+.fs-recognition-heading h2 > span,
+.fs-similar-heading h2 > span { color: var(--fs-brown); }
+.fs-recognition-heading p,
+.fs-similar-heading p { font-size: 13px; line-height: 1.8; color: var(--fs-muted); max-width: 610px; }
+
+/* The empty state previews an authored study without pretending a photo was already analyzed. */
+.fs-recognition-empty { display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: #ede6db; padding: 32px 26px; gap: 20px; min-height: 490px; border: 1px solid #e0d5c8; }
+.fs-empty-copy h3 { font: 34px/1.1 Georgia, serif; letter-spacing: -.8px; margin: 19px 0; }
+.fs-empty-copy h3 em { color: var(--fs-brown); font-weight: 400; }
+.fs-empty-copy p { font-size: 12px; line-height: 1.8; color: var(--fs-muted); }
+.fs-empty-copy .fs-text-button { color: var(--fs-brown); margin-top: 16px; text-align: left; }
+.fs-recognition-empty figure { margin: 0; min-width: 0; }
+.fs-recognition-empty img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; object-position: center bottom; mix-blend-mode: multiply; }
+.fs-recognition-empty figcaption { text-align: center; font-size: 8px; letter-spacing: 1.1px; margin: 15px 0; line-height: 1.7; }
+
+/* Loading is contained in the results column; the original photograph stays in its workspace. */
+.fs-recognition-loading { background: var(--fs-ivory); padding: 35px 25px; min-height: 600px; }
+.fs-recognition-loading h3 { font: 34px/1.15 Georgia, serif; margin: 16px 0; }
+.fs-recognition-loading p { font-size: 13px; line-height: 1.7; color: var(--fs-muted); max-width: 490px; }
+.fs-result-skeletons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 30px 0; }
+.fs-result-skeletons span { height: 120px; background: #e9dfd2; border-radius: 3px; animation: fs-loading-pulse 1.3s ease-in-out infinite alternate; }
+.fs-dossier-skeleton { height: 290px; border-radius: 18px; background: #eee7df; animation: fs-loading-pulse 1.3s ease-in-out infinite alternate; }
+@keyframes fs-loading-pulse { to { opacity: .4; } }
+
+/* The shopping section follows the dossier and does not replace either preceding section. */
+.fs-similar-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; padding: 15px 0 27px; }
+.fs-selected-edit { font-size: 8px; letter-spacing: 1.3px; line-height: 1.6; color: var(--fs-muted); max-width: 230px; text-align: right; }
+.fs-selected-edit strong { display: block; font: 21px/1.3 Georgia, serif; letter-spacing: -.3px; color: var(--ink); margin-top: 8px; }
+.fs-products-empty { display: flex; align-items: center; flex-wrap: wrap; gap: 25px; background: #ece6da; padding: 30px; }
+.fs-products-empty > span { font: 40px Georgia, serif; color: var(--fs-brown); }
+.fs-products-empty h3 { font: 26px/1.2 Georgia, serif; }
+.fs-products-empty p { color: var(--fs-muted); font-size: 12px; line-height: 1.7; margin-top: 8px; }
+.fs-products-empty .fs-text-button { margin-left: auto; }
+.fs-continuous .fs-discovery { margin-top: 25px; }
+.fs-continuous .fs-discovery .fs-feed-heading h2 { font-size: 33px; }
+.fs-continuous .fs-shop-toolbar { margin-top: 0; }
+.fs-similar-section .fs-chapter-label > span:last-child { color: #625d58; }
+/* The archive is the default edit; The Inspire remains an explicit secondary action. */
+.fs-continuous .fs-shop-toolbar { align-items: center; flex-wrap: wrap; gap: 18px; padding-block: 18px; }
+.fs-archive-toolbar-copy { min-width: 0; }
+.fs-archive-toolbar-copy h3 { font: 26px/1.25 Georgia, serif; color: var(--ink); }
+.fs-archive-toolbar-copy h3 > span { display: inline-block; margin-left: 10px; font: 12px/1.5 Arial, sans-serif; color: var(--fs-muted); }
+.fs-archive-toolbar-copy p { margin-top: 7px; font-size: 12px; line-height: 1.6; color: var(--fs-muted); }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 52px; max-width: 100%; padding: 10px 15px; border: 1px solid #8c5866; border-radius: 5px; background: #fffaf4; color: #672b38; text-align: left; font-size: 13px; line-height: 1.4; }
+.fs-style-match-trigger > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger small { display: block; font-size: 9px; letter-spacing: 1.4px; line-height: 1.5; margin-bottom: 3px; }
+.fs-continuous .fs-shop-toolbar .fs-style-match-trigger:hover { background: #ead9de; }
+.fs-style-match-trigger:focus-visible { outline: 2px solid #672b38; outline-offset: 4px; }
+.fs-style-match-count { flex-shrink: 0; display: grid; place-items: center; min-width: 26px; min-height: 26px; padding: 3px; border-radius: 50%; background: #ead9de; color: #672b38; font-size: 12px; }
+.fs-archive-empty { padding: 28px 24px; border: 1px solid #d7c8be; background: #f4eee5; }
+.fs-archive-empty h3 { font: 27px/1.2 Georgia, serif; }
+.fs-archive-empty p { margin-top: 12px; color: var(--fs-muted); font-size: 13px; line-height: 1.7; max-width: 46ch; }
+/* Commerce stays primary beside the softer journal, with readable prices and clear purchase-entry buttons. */
+.fs-purchase-section .fs-purchase-meta { font-size: 11px; }
+.fs-purchase-section .fs-purchase-meta > span:last-child { font-size: 16px; }
+.fs-purchase-section .fs-look-save { width: 44px; height: 44px; }
+.fs-purchase-section .fs-purchase-bottom { flex-wrap: wrap; gap: 10px; }
+.fs-purchase-section .fs-purchase-bottom > span { font-size: 11px; }
+.fs-purchase-section .fs-purchase-bottom > button { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 44px; padding: 10px 14px; border-radius: 5px; background: #672b38; color: #fffaf4; font-size: 13px; }
+.fs-purchase-section .fs-purchase-bottom > button:hover { background: #4d202a; }
+.fs-purchase-section .fs-purchase-bottom > button:focus-visible { outline: 2px solid #672b38; outline-offset: 3px; }
+.fs-shopping-explainer { margin-top: 25px; padding: 15px 0; border-block: 1px solid var(--line); font-size: 11px; color: var(--fs-muted); }
+.fs-shopping-explainer summary { cursor: pointer; width: fit-content; }
+.fs-shopping-explainer p { max-width: 780px; margin-top: 14px; line-height: 1.8; }
+.fs-inline-product { border-top: 1px solid var(--ink); padding-top: 30px; margin-top: 55px; }
+.fs-product-context { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 10px; color: var(--fs-muted); margin: 10px 0; line-height: 1.65; }
+.fs-product-context > span:last-child { flex-basis: 100%; }
+
+/* Tablet: respect the actual dossier width, and keep upload controls within the viewport. */
+@media (max-width: 1100px) {
+  .fs-recognition-layout { gap: 23px; }
+  .fs-recognition-heading h2, .fs-similar-heading h2 { font-size: 38px; }
+  .fs-recognition-empty { grid-template-columns: 1fr; padding: 28px; min-height: 600px; }
+  .fs-recognition-empty figure { max-width: 300px; justify-self: center; }
+  .fs-recognition-empty img { max-height: 240px; object-fit: contain; }
+  .fs-empty-copy h3 { font-size: 32px; }
+}
+
+/* A short or narrow viewport uses natural document flow instead of hiding sticky controls. */
+@media (min-width: 761px) and (max-height: 760px) {
+  .fs-recognition-layout > .fs-upload-panel { position: static; }
+}
+@media (max-width: 760px) {
+  .fs-continuous .fs-page-top { padding-top: 25px; }
+  .fs-continuous .fs-journey-bar { align-items: start; flex-wrap: wrap; gap: 8px; padding: 10px; margin-bottom: 22px; }
+  .fs-continuous .fs-journey-bar nav { width: 100%; gap: 6px; }
+  .fs-continuous .fs-journey-bar nav a { flex: 1 1 130px; gap: 7px; font-size: 9px; padding: 10px; }
+  .fs-continuous .fs-bag-button { margin-left: auto; padding: 8px 2px; }
+  .fs-continuous .fs-bag-button { font-size: 10px; }
+  .fs-continuous .fs-trends, .fs-recognition-section, .fs-similar-section { margin-bottom: 24px; padding: 0 12px 18px; border-radius: 9px; }
+  .fs-chapter-label { margin: 0 -12px 18px; padding: 14px 16px; min-height: 48px; border-radius: 8px 8px 0 0; font-size: 8px; letter-spacing: 1px; }
+  .fs-chapter-label > span:last-child { display: none; }
+  .fs-recognition-layout { grid-template-columns: 1fr; gap: 35px; }
+  .fs-recognition-layout > .fs-upload-panel { position: static; }
+  .fs-recognition-heading h2, .fs-similar-heading h2 { font-size: 36px; }
+  .fs-recognition-empty { grid-template-columns: 1fr 1fr; min-height: 360px; padding: 22px; }
+  .fs-empty-copy h3 { font-size: 27px; }
+  .fs-similar-heading { display: block; }
+  .fs-selected-edit { display: block; text-align: left; margin-top: 20px; max-width: none; }
+  .fs-continuous .fs-shop-toolbar { align-items: stretch; flex-direction: column; }
+  .fs-continuous .fs-shop-toolbar .fs-style-match-trigger { width: 100%; }
+  .fs-archive-toolbar-copy h3 > span { margin-left: 6px; }
+  .fs-archive-empty { padding: 24px 18px; }
+  .fs-products-empty { padding: 25px; gap: 15px; }
+  .fs-products-empty .fs-text-button { margin-left: 0; }
+  .fs-products-empty h3 { font-size: 23px; }
+  .fs-inline-product { margin-top: 35px; }
+}
+@media (max-width: 430px) {
+  .fs-continuous .fs-journey-bar nav a { flex-basis: 100%; }
+  .fs-continuous .fs-trends, .fs-recognition-section, .fs-similar-section { padding-inline: 10px; }
+  .fs-chapter-label { margin-inline: -10px; }
+  .fs-recognition-empty { grid-template-columns: 1fr; }
+  .fs-recognition-empty figure { max-width: 235px; }
+  .fs-recognition-heading h2, .fs-similar-heading h2 { font-size: 32px; }
+  .fs-result-skeletons { gap: 7px; }
+  .fs-result-skeletons span { height: 85px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fs-result-skeletons span, .fs-dossier-skeleton { animation: none; }
+  .fs-continuous .fs-journey-bar nav a { transition: none; }
+}

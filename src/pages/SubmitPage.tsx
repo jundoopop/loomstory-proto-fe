@@ -1,15 +1,21 @@
+/** Original /submit walkthrough: local photo → user-entered details → preview → completion.
+ * Keep this comparison flow separate from FirstSight; scoped presentation lives in submit.css.
+ */
 import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import './submit.css';
 
+// `upload` URLs need revocation; `sample` URLs point to permanent bundled assets.
 type Photo = { kind: 'sample' | 'upload'; url: string; name: string };
 type Draft = { title: string; category: string; era: string; size: string; notes: string };
 
 const emptyDraft: Draft = { title: '', category: 'Unknown', era: 'Unknown', size: '', notes: '' };
+// Upload constraints and visible step names are configured here for this legacy flow.
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const photoTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const stepLabels = ['Photographs', 'Details', 'Preview'];
 
+/** Verify image contents, since an accepted extension/MIME type alone does not ensure readability. */
 function canDecodeImage(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -20,6 +26,7 @@ function canDecodeImage(url: string): Promise<void> {
   });
 }
 
+/** Own this route's temporary draft and photo; leaving the route discards the walkthrough. */
 export default function SubmitPage() {
   const [step, setStep] = useState(0);
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -30,26 +37,31 @@ export default function SubmitPage() {
   const [finished, setFinished] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Tokens invalidate older asynchronous decodes when the user replaces or cancels a photo.
   const photoRequest = useRef(0);
   const pendingUrl = useRef<string | null>(null);
   const hasMounted = useRef(false);
 
+  // Release an accepted local preview when it is replaced or this page unmounts.
   useEffect(() => {
     return () => {
       if (photo?.kind === 'upload') URL.revokeObjectURL(photo.url);
     };
   }, [photo]);
 
+  // A pending decode has not reached photo state yet, so it needs its own unmount cleanup.
   useEffect(() => () => {
     photoRequest.current += 1;
     if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
   }, []);
 
+  // Announce a new step/completion by moving focus, without stealing focus on initial mount.
   useEffect(() => {
     if (hasMounted.current) headingRef.current?.focus({ preventScroll: true });
     hasMounted.current = true;
   }, [step, finished]);
 
+  /** Invalidate in-flight decoding and release the preview that has not been accepted yet. */
   function cancelPendingPhoto() {
     photoRequest.current += 1;
     if (pendingUrl.current) URL.revokeObjectURL(pendingUrl.current);
@@ -57,6 +69,7 @@ export default function SubmitPage() {
     setReadingPhoto(false);
   }
 
+  /** Validate and decode a selected local file, accepting only the most recent request. */
   async function choosePhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.currentTarget.files?.[0];
     if (!file) return;
@@ -77,6 +90,7 @@ export default function SubmitPage() {
         URL.revokeObjectURL(url);
         return;
       }
+      // Ownership passes from pendingUrl to photo; the photo effect handles later cleanup.
       pendingUrl.current = null;
       setPhoto({ kind: 'upload', url, name: file.name });
       setShowSampleResult(false);
@@ -91,6 +105,7 @@ export default function SubmitPage() {
     }
   }
 
+  /** Replace any pending upload with a bundled sample and preserve an existing draft title. */
   function useSample() {
     cancelPendingPhoto();
     if (inputRef.current) inputRef.current.value = '';
@@ -100,6 +115,7 @@ export default function SubmitPage() {
     setDraft(current => ({ ...current, title: current.title || 'A jacket with a past' }));
   }
 
+  /** Require a usable starting photo before allowing details; focus the input when it is missing. */
   function continueToDetails() {
     if (!photo) {
       setError('Choose a photograph or use the sample jacket to continue.');
@@ -110,6 +126,7 @@ export default function SubmitPage() {
     setStep(1);
   }
 
+  /** Normalize the user's observations and open the local preview after required-title validation. */
   function previewPiece(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!draft.title.trim()) {
@@ -121,6 +138,7 @@ export default function SubmitPage() {
     setStep(2);
   }
 
+  /** Clear all route-local progress so completion can restart at the photo step. */
   function resetDemo() {
     cancelPendingPhoto();
     setPhoto(null);
@@ -131,10 +149,12 @@ export default function SubmitPage() {
     setStep(0);
   }
 
+  // Authored preview copy varies by photo origin; no image analysis runs in this component.
   const sampleDescription = photo?.kind === 'sample'
     ? 'A clean-lined jacket with an understated silhouette. Imagine it as the starting point for a story about everyday style, personal memories, and clothes that stay with us.'
     : 'Your photograph could be the beginning of a new style story. A connected service would propose clothing characteristics here. For now, add what you know in your own words.';
 
+  // Completion is a separate view so the draft can remain available until the user resets it.
   if (finished) {
     return <section className="form-panel submission-panel">
       <div className="eyebrow">The next chapter / Frontend demo</div>
@@ -161,6 +181,7 @@ export default function SubmitPage() {
 
     {error && <p className="submission-error" role="alert">{error}</p>}
 
+    {/* Step 0: choose a local image or a bundled sample. */}
     {step === 0 && <>
       <div className="upload submission-upload">
         <div className="eyebrow">01 / A closer look</div>
@@ -176,6 +197,7 @@ export default function SubmitPage() {
       <button type="button" className="btn red" onClick={continueToDetails} disabled={readingPhoto}>Continue to details <span aria-hidden="true">→</span></button>
     </>}
 
+    {/* Step 1: collect the user's observations, with unknown values allowed. */}
     {step === 1 && <>
       <div className="submission-section-intro"><h2>The details make it yours.</h2><p>No need to know everything. Leave the era or category as unknown when you are unsure.</p></div>
       <form onSubmit={previewPiece}>
@@ -203,6 +225,7 @@ export default function SubmitPage() {
       </form>
     </>}
 
+    {/* Step 2: preview the draft and optionally reveal the prepared description. */}
     {step === 2 && <>
       <div className="submission-preview">
         {photo && <img src={photo.url} alt={`${draft.title}, local preview`} />}

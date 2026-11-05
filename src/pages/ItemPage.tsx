@@ -1,20 +1,26 @@
+/** Standalone /items/:id detail route for the original catalog experience.
+ * FirstSight's inline shopping view is implemented separately in ProductDetailPanel.tsx.
+ */
 import { Link, useParams } from 'react-router-dom';
 import { ItemCard } from '../components/ItemCard';
 import { stories } from '../data/catalog';
 import type { CollectionProps } from '../types';
 
+/** Resolve a catalog item, its editorial story, and up to four same-category alternatives. */
 export default function ItemPage({ items, savedIds, onToggleSave }: CollectionProps) {
   const { id } = useParams();
   const item = items.find((candidate) => candidate.id === id);
+  // Direct links may contain an unknown ID; render a recovery route before reading item fields.
   if (!item) return <div className="form-panel"><div className="page-heading"><div className="eyebrow">Page unavailable</div><h1>This piece is missing.</h1><p>The listing could not be found in this sample collection.</p></div><Link className="btn" to="/vault">Explore the collection ↗</Link></div>;
   const saved = savedIds.includes(item.id);
+  // These associations are authored catalog relationships, rather than live recommendations.
   const story = stories.find((candidate) => candidate.id === item.storyId);
   const related = items.filter((candidate) => candidate.id !== item.id && candidate.category === item.category).slice(0, 4);
 
   return (
     <>
       <section className="details" aria-labelledby="item-title">
-        <img src={item.image} alt={`${item.title} — illustrative photograph`} />
+        <img src={item.image} alt={`${item.title} — ${item.image.endsWith('.svg') ? 'silhouette illustration' : 'illustrative photograph'}`} />
         <div>
           <Link className="eyebrow" to="/vault">← The Vault / {item.era}</Link>
           <h1 id="item-title">{item.title}</h1><div className="price">€{item.price} <small style={{ fontSize: 12 }}>sample price</small></div>

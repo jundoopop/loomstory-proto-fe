@@ -1,0 +1,73 @@
+/* Scope these compact overrides to the persistent recognition workspace. */
+.first-sight .fs-photo-workspace { padding: 23px; overflow: visible; }
+.first-sight .fs-photo-workspace .fs-section-kicker { font-size: 8px; letter-spacing: 1.2px; }
+.first-sight .fs-photo-workspace .fs-section-kicker > span:last-child { font-size: 20px; }
+.first-sight .fs-photo-workspace h2 { margin: 17px 0 9px; font-size: clamp(26px, 2.6vw, 36px); letter-spacing: -1.3px; line-height: 1.1; }
+.first-sight .fs-photo-workspace > .fs-workspace-intro { font-size: 10px; line-height: 1.65; margin: 0 0 16px; max-width: 290px; }
+.first-sight .fs-workspace-photo { height: 190px; min-height: 190px; margin: 0; padding: 17px 12px; gap: 7px; justify-content: center; background: #f8f5ef; }
+.first-sight .fs-workspace-photo > svg { margin: 0 0 3px; }
+.first-sight .fs-workspace-photo > strong { font-size: 12px; }
+.first-sight .fs-workspace-photo > span:not(.fs-scan-line) { font-size: 10px; }
+.first-sight .fs-workspace-photo.has-photo { padding: 0; border-style: solid; border-color: #d8cbbb; }
+.first-sight .fs-workspace-preview { display: block; width: 100%; height: 100%; object-fit: contain; }
+.first-sight .fs-workspace-photo > .fs-workspace-photo-label { position: absolute; top: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 7px; background: #f7f3eae8; color: #6b5543; font-size: 7px !important; letter-spacing: 1px; }
+.first-sight .fs-workspace-file { font-size: 10px; min-height: 37px; padding: 9px 13px; margin-top: 5px; gap: 19px; color: #802f35; border-color: #a28271; background: #eee5d8; }
+.first-sight .fs-workspace-file:hover { background: #e6d8c7; }
+
+/* Filename and photo controls stay separate from the image, including during analysis. */
+.fs-workspace-file-tools { display: flex; align-items: center; gap: 12px; min-height: 34px; margin-top: 1px; }
+.fs-workspace-filename { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #76695d; font-size: 9px; }
+.first-sight .fs-workspace-replace { display: flex; align-items: center; min-height: 34px; margin: 0; font-size: 9px; color: #802f35; text-decoration: underline; text-underline-offset: 3px; }
+.fs-workspace-replace.is-disabled { opacity: .45; cursor: not-allowed; }
+.fs-workspace-file-tools > button { min-height: 34px; padding: 0; font-size: 9px; color: #76695d; text-decoration: underline; text-underline-offset: 3px; }
+.first-sight .fs-photo-workspace > .fs-workspace-status { min-height: 15px; margin: 8px 0 10px; max-width: none; color: #746657; font-size: 9px; line-height: 1.5; }
+.first-sight .fs-photo-workspace > .fs-workspace-error { font-size: 10px; line-height: 1.5; margin: 0 0 10px; }
+.fs-workspace-analysis-controls { display: flex; align-items: center; gap: 12px; }
+.first-sight .fs-analyze-button { width: 100%; justify-content: space-between; padding: 12px 15px; min-height: 43px; font-size: 11px; }
+.fs-workspace-cancel { min-height: 43px; padding: 0 2px; color: #802f35; font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
+
+/* The explanation remains an overlaid card; hovering never shifts the page layout. */
+.first-sight .fs-photo-workspace .fs-matching-explainer { padding: 9px 0 12px; z-index: 3; }
+.first-sight .fs-photo-workspace .fs-matching-trigger { min-height: 36px; padding: 8px 11px; border-color: #c7b3a1; border-radius: 3px; color: #6e4d38; background: #e4d7c6; font-size: 9px; }
+.first-sight .fs-photo-workspace .fs-matching-trigger:hover,
+.first-sight .fs-photo-workspace .fs-matching-trigger[aria-expanded='true'] { background: #dbc8b3; }
+.first-sight .fs-photo-workspace .fs-matching-trigger > span:last-child { width: 17px; height: 17px; border-color: #9c7e66; font-size: 11px; }
+.first-sight .fs-photo-workspace .fs-matching-explainer[data-side='above'] .fs-matching-popover { bottom: calc(100% - 9px); }
+.first-sight .fs-photo-workspace .fs-matching-explainer[data-side='below'] .fs-matching-popover { top: calc(100% - 12px); }
+.first-sight .fs-photo-workspace .fs-matching-content { padding: 17px; }
+.first-sight .fs-photo-workspace .fs-matching-content > p:first-child { margin-top: 0; }
+.first-sight .fs-photo-workspace .fs-matching-content ol { margin: 12px 0; }
+.first-sight .fs-photo-workspace .fs-matching-content li { margin-bottom: 9px; }
+.first-sight .fs-photo-workspace .fs-matching-content li p { margin: 2px 0 0; font-size: 10px; }
+.first-sight .fs-photo-workspace .fs-matching-note { margin-bottom: 0; }
+
+/* One compact sample shortcut keeps the panel within a typical laptop viewport. */
+.first-sight .fs-workspace-sample { padding: 10px 0; gap: 10px; }
+.first-sight .fs-workspace-sample > img { width: 37px; height: 42px; border-width: 2px; object-fit: contain; background: #faf8f3; }
+.first-sight .fs-workspace-sample > span { gap: 4px; }
+.first-sight .fs-workspace-sample small { font-size: 6px; letter-spacing: .9px; }
+.first-sight .fs-workspace-sample strong { font-size: 16px; }
+.first-sight .fs-workspace-sample > b { font-size: 18px; }
+.first-sight .fs-photo-workspace > .fs-local-note { margin: 10px 0 0; font-size: 8px; line-height: 1.5; align-items: center; }
+.first-sight .fs-photo-workspace > .fs-local-note > span { font-size: 12px; }
+
+@media (max-width: 1100px) and (min-width: 761px) {
+  .first-sight .fs-photo-workspace { padding: 18px; }
+  .first-sight .fs-photo-workspace h2 { font-size: 27px; }
+  .first-sight .fs-workspace-photo { height: 175px; min-height: 175px; }
+  .fs-workspace-file-tools { gap: 8px; }
+}
+@media (max-width: 760px) {
+  .first-sight .fs-photo-workspace { padding: 23px; }
+  .first-sight .fs-photo-workspace h2 { font-size: 35px; }
+  .first-sight .fs-workspace-photo { height: 230px; min-height: 230px; }
+  .first-sight .fs-photo-workspace > .fs-workspace-intro { max-width: 340px; font-size: 11px; }
+  .first-sight .fs-photo-workspace .fs-matching-trigger { min-height: 42px; font-size: 10px; }
+  .first-sight .fs-workspace-file { min-height: 42px; }
+  .first-sight .fs-workspace-file-tools > button,
+  .first-sight .fs-workspace-replace { min-height: 42px; font-size: 10px; }
+}
+@media (max-width: 380px) {
+  .first-sight .fs-photo-workspace { padding: 18px; }
+  .first-sight .fs-photo-workspace h2 { font-size: 30px; }
+}

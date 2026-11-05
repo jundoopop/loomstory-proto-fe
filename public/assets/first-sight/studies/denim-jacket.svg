@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" fill="none">
+  <title>Classic denim jacket — original silhouette illustration</title>
+  <desc>An indigo trucker-jacket study with pointed collar, chest flap pockets, panel seams and copper-tone buttons.</desc>
+  <defs>
+    <linearGradient id="denim" x1="156" y1="123" x2="425" y2="475" gradientUnits="userSpaceOnUse"><stop stop-color="#7f9cb1"/><stop offset=".5" stop-color="#587b97"/><stop offset="1" stop-color="#35566f"/></linearGradient>
+    <linearGradient id="sleeve" x1="94" y1="157" x2="189" y2="442" gradientUnits="userSpaceOnUse"><stop stop-color="#698aa2"/><stop offset="1" stop-color="#3d6079"/></linearGradient>
+    <pattern id="twill" width="6" height="6" patternUnits="userSpaceOnUse"><path d="m-2 2 4-4m-2 8 6-6m-2 8 4-4" stroke="#d5e3e8" stroke-opacity=".09"/></pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+  <ellipse cx="300" cy="507" rx="162" ry="12" fill="#31485a" opacity=".12" filter="url(#shadow)"/>
+  <g stroke="#304f64" stroke-width="2.5">
+    <path d="m194 124-48 20q-25 13-37 50L66 428l67 16 51-180 26-48Z" fill="url(#sleeve)"/>
+    <path d="m406 124 48 20q25 13 37 50l43 234-67 16-51-180-26-48Z" fill="url(#sleeve)"/>
+    <path d="m67 419 70 15-8 45-71-15Z" fill="#496b83"/>
+    <path d="m533 419-70 15 8 45 71-15Z" fill="#496b83"/>
+    <path d="m244 104-60 25q-13 50-10 133l12 217q111 13 228 0l12-217q3-83-10-133l-60-25Z" fill="url(#denim)"/>
+  </g>
+  <path d="m244 104-60 25q-13 50-10 133l12 217q111 13 228 0l12-217q3-83-10-133l-60-25Z" fill="url(#twill)"/>
+  <path d="m244 103 56 39 56-39q-54-35-112 0" fill="#29495e"/>
+  <path d="m246 98-22 32 44 62 32-50-34-49Zm108 0 22 32-44 62-32-50 34-49Z" fill="#8aa5b7" stroke="#3a5a70" stroke-width="2"/>
+  <!-- The pocket flaps and twin seams distinguish this jacket from the jean catalog image. -->
+  <path d="M190 216h75v101l-37 17-38-17Zm145 0h75v101l-38 17-37-17Z" fill="#5c7d95" stroke="#314f65" stroke-width="2"/>
+  <path d="M187 209h81v29l-40 17-41-17Zm145 0h81v29l-41 17-40-17Z" fill="#7795aa" stroke="#314f65" stroke-width="2"/>
+  <g stroke="#ceb58a" stroke-width="1.2" opacity=".9"><path d="M191 215h73v20l-36 15-37-15Zm145 0h73v20l-37 15-36-15Z"/><path d="m194 251 1 63 33 15 33-15v-63m78 0v63l33 15 33-15 1-63M278 181l-11 272m55-272 11 272M182 455h235m-233 9h232M239 109l29 68m93-68-29 68"/></g>
+  <path d="M288 144h24v337h-24Z" fill="#7190a5" stroke="#3a5a70" stroke-width="2"/>
+  <path d="M293 149v327m14-327v327" stroke="#d0b58b" stroke-width="1.2"/>
+  <g fill="#b49b70" stroke="#5a5143" stroke-width="1.5"><circle cx="300" cy="192" r="5"/><circle cx="300" cy="253" r="5"/><circle cx="300" cy="314" r="5"/><circle cx="300" cy="375" r="5"/><circle cx="300" cy="436" r="5"/><circle cx="300" cy="469" r="5"/><circle cx="228" cy="237" r="4"/><circle cx="372" cy="237" r="4"/><circle cx="114" cy="454" r="4"/><circle cx="486" cy="454" r="4"/></g>
+  <path d="m213 354-14 57m188-57 14 57" stroke="#2e4c61" stroke-width="8"/><path d="m208 352-14 57m198-57 14 57M151 174q-24 75-42 198m340-198q24 75 42 198" stroke="#abc1cf" stroke-opacity=".42" stroke-width="2"/>
+  <text x="300" y="553" fill="#8d7968" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" text-anchor="middle">SILHOUETTE STUDY · 02</text>
+</svg>

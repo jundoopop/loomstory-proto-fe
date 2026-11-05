@@ -1,0 +1,91 @@
+/* The Inspire owns its surfaces and controls; it also works outside .first-sight. */
+.fs-style-drawer {
+  --inspire-wine: #672b38;
+  --inspire-ink: #49323a;
+  --inspire-muted: #6d5159;
+  --inspire-paper: #fffaf4;
+  --inspire-rose: #ead9de;
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: min(42rem, calc(100vw - 1rem));
+  max-width: none;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--inspire-rose);
+  color: var(--inspire-ink);
+  box-shadow: -16px 0 60px #27191f33;
+}
+
+.fs-style-drawer::backdrop { background: #22171bc2; }
+.fs-style-drawer[open] { animation: fs-inspire-enter 180ms ease-out; }
+.fs-style-drawer, .fs-style-drawer * { box-sizing: border-box; }
+.fs-style-drawer-shell { min-height: 100%; padding: clamp(16px, 4vw, 32px); }
+.fs-style-drawer :is(h2, h3, p, dl, dd) { margin: 0; }
+.fs-style-drawer :is(h2, h3) { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; }
+.fs-style-drawer p { line-height: 1.6; }
+.fs-style-drawer button { font: inherit; cursor: pointer; }
+.fs-style-drawer button:disabled { cursor: not-allowed; }
+/* FirstSight dims generic disabled buttons; these cards already own explicit disabled colours. */
+.first-sight .fs-style-drawer button:disabled { opacity: 1; }
+.fs-style-drawer button:focus-visible { outline: 3px solid var(--inspire-wine); outline-offset: 3px; }
+.fs-style-drawer :is(h2, h3, p, dd, button) { overflow-wrap: anywhere; }
+
+/* A spacious masthead keeps the contextual edit distinct from the archive marketplace. */
+/* Reset the shared site's bare header selector, including its fixed mobile height. */
+.fs-style-drawer-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; height: auto; max-width: none; margin: 0; border: 0; gap: 14px; padding-bottom: 20px; }
+.fs-style-drawer-header > p { grid-column: 1 / -1; }
+.fs-style-drawer-kicker { color: var(--inspire-wine); font-size: .75rem; letter-spacing: .18em; font-weight: 700; }
+.fs-style-drawer-header h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.12; margin-top: 10px; }
+.fs-style-drawer-context { color: var(--inspire-wine); font-size: .875rem; }
+.fs-style-drawer-close { align-self: start; width: 44px; min-height: 44px; border: 1px solid #a9808c; border-radius: 50%; background: var(--inspire-paper); color: var(--inspire-wine); font-size: 1.75rem !important; line-height: 1; }
+.fs-style-drawer .fs-style-drawer-status:empty { margin: 0; padding: 0; }
+/* Keep preview feedback visible when its action is below the fold in a long edit. */
+.fs-style-drawer .fs-style-drawer-status:not(:empty) { position: sticky; top: 0; z-index: 1; padding: 14px 16px; margin-bottom: 20px; border-left: 3px solid var(--inspire-wine); background: var(--inspire-paper); }
+.fs-style-drawer-grid { display: grid; gap: 24px; }
+
+/* Cards retain one readable column; images and copy sit side by side on wider panels. */
+.fs-style-match-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); overflow: hidden; background: var(--inspire-paper); border: 1px solid #cdb5bc; border-radius: 8px; }
+.fs-style-match-image { min-width: 0; min-height: 200px; background: #f2ede6; display: grid; place-items: center; padding: 16px; }
+.fs-style-match-image img { display: block; width: 100%; height: auto; max-height: 380px; object-fit: contain; }
+.fs-style-match-image > span { padding: 24px 8px; text-align: center; color: var(--inspire-muted); font-size: .875rem; }
+.fs-style-match-details { min-width: 0; padding: 24px 20px; display: grid; gap: 16px; align-content: start; }
+.fs-style-match-label { font-size: .6875rem; text-transform: uppercase; letter-spacing: .09em; color: var(--inspire-wine); font-weight: 700; }
+.fs-style-match-details h3 { font-size: 1.5rem; line-height: 1.2; }
+.fs-style-match-price { font-size: 1.25rem; font-weight: 700; }
+.fs-style-match-price span { font-size: .75rem; font-weight: 400; color: var(--inspire-muted); }
+.fs-style-match-details > p:not([class]) { font-size: .875rem; }
+.fs-style-match-details dl { display: grid; gap: 10px; font-size: .8125rem; line-height: 1.5; }
+.fs-style-match-details dt { color: var(--inspire-muted); }
+.fs-style-match-details dd { margin-top: 2px; }
+
+/* Stock and selected state remain legible without relying on colour alone. */
+.fs-style-match-sizes { border: 0; padding: 0; margin: 0; min-width: 0; }
+.fs-style-match-sizes legend { padding: 0; margin-bottom: 10px; font-size: .875rem; font-weight: 700; }
+.fs-style-match-sizes > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.fs-style-match-sizes button { min-width: 44px; min-height: 44px; padding: 8px 12px; border: 1px solid #a9808c; border-radius: 3px; background: transparent; color: var(--inspire-ink); }
+.fs-style-match-sizes button[aria-pressed='true'] { background: var(--inspire-wine); border-color: var(--inspire-wine); color: var(--inspire-paper); box-shadow: inset 0 0 0 2px var(--inspire-paper); }
+.fs-style-match-sizes button:disabled { background: #eee7e4; color: var(--inspire-muted); border-style: dashed; text-decoration: line-through; }
+.fs-style-match-sizes p { margin-top: 10px; font-size: .75rem; color: var(--inspire-muted); }
+.fs-style-match-actions { display: grid; gap: 10px; }
+.fs-style-match-actions button, .fs-style-drawer-empty button { min-height: 44px; padding: 12px; border: 1px solid var(--inspire-wine); border-radius: 3px; background: transparent; color: var(--inspire-wine); font-size: .8125rem; }
+.fs-style-match-actions button[aria-pressed='true'] { background: var(--inspire-rose); }
+.fs-style-match-actions .fs-style-match-preview { background: var(--inspire-wine); color: var(--inspire-paper); }
+.fs-style-match-actions .fs-style-match-preview:disabled { background: #e3d6d8; border-color: #b1979e; color: #694e56; }
+.fs-style-drawer .fs-style-match-disclosure { font-size: .75rem; color: var(--inspire-muted); }
+.fs-style-drawer-empty { padding: 28px 22px; background: var(--inspire-paper); border-radius: 8px; display: grid; gap: 18px; }
+.fs-style-drawer-empty h3 { font-size: 1.75rem; }
+
+@media (max-width: 540px) {
+  .fs-style-match-card { grid-template-columns: minmax(0, 1fr); }
+  .fs-style-match-image { min-height: 160px; }
+  .fs-style-match-image img { max-height: 220px; }
+  .fs-style-match-details { padding: 20px 16px; }
+}
+
+@keyframes fs-inspire-enter { from { opacity: .6; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .fs-style-drawer[open] { animation: none; } }

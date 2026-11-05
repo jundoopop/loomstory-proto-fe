@@ -1,3 +1,10 @@
+/*
+ * Global design system and original-page layouts, loaded once by main.tsx.
+ * Sections: theme/base → app shell → Discover → cards → detail/editorial/forms
+ * → utilities → responsive overrides. FirstSight-specific rules live in pages/first-sight.css.
+ */
+
+/* Theme tokens: change these to recolor the whole site, including FirstSight. */
 :root {
     --paper: #f5f1e8;
     --ink: #181818;
@@ -6,6 +13,7 @@
     --line: #cec5bb
 }
 
+/* Navigation/focus refinements and safeguards shared by every route. */
 html { scroll-padding-bottom: 110px; }
 main:focus { outline: none; }
 main, .grid > *, .hero > *, .details > * { min-width: 0; }
@@ -14,6 +22,7 @@ header nav a[aria-current="page"] { color: var(--accent); text-decoration: under
 .wardrobe-section { padding-top: 0; }
 footer a:hover, .card-meta:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+/* Base resets, typography, and native control defaults. */
 * {
     box-sizing: border-box
 }
@@ -86,6 +95,7 @@ img {
     object-fit: cover
 }
 
+/* App shell: edition strip, logo, desktop navigation, utilities, and page width. */
 .edition {
     padding: 10px 4%;
     background: var(--accent);
@@ -160,6 +170,7 @@ main {
     font-weight: bold
 }
 
+/* Discover hero: editorial copy, lead image, and the narrow contents rail. */
 .hero {
     display: grid;
     grid-template-columns: 1fr 1.05fr .44fr;
@@ -192,6 +203,7 @@ main {
     color: var(--muted)
 }
 
+/* Shared button variants used by the original pages; FirstSight uses .fs-button. */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -288,6 +300,7 @@ main {
     letter-spacing: 1px
 }
 
+/* Discover search strip and shared input appearance. */
 .discover-bar {
     border-top: 1px solid var(--ink);
     border-bottom: 1px solid var(--ink);
@@ -336,6 +349,7 @@ textarea {
     font-size: 24px
 }
 
+/* Reusable collection sections and card-grid geometry. */
 .section {
     padding: 45px 0
 }
@@ -369,6 +383,7 @@ textarea {
     gap: 22px
 }
 
+/* ItemCard presentation: photo frame, placeholder, saved heart, badge, and metadata. */
 .card-photo {
     position: relative;
     background: #e5dfd4;
@@ -462,6 +477,7 @@ button:disabled {
     color: var(--muted)
 }
 
+/* Paired editorial calls to action reused beneath collection pages. */
 .split-banner {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -489,6 +505,7 @@ button:disabled {
     margin-bottom: 25px
 }
 
+/* Shared footer sits outside the route content in App. */
 footer {
     background: var(--ink);
     color: var(--paper);
@@ -512,6 +529,7 @@ footer small {
     font-size: 10px
 }
 
+/* Interior-page headings and the Vault's URL-driven filter controls. */
 .page-heading {
     padding: 45px 0 30px;
     border-bottom: 1px solid var(--line);
@@ -559,6 +577,7 @@ footer small {
     color: white
 }
 
+/* Original ItemPage layout; FirstSight's inline PDP has its own product-detail.css. */
 .details {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -620,6 +639,7 @@ footer small {
     flex-wrap: wrap
 }
 
+/* Stories and About use the narrower long-form editorial layout. */
 .article {
     max-width: 760px;
     margin: 40px auto
@@ -645,6 +665,7 @@ footer small {
     margin-top: 35px
 }
 
+/* Base submission form patterns, extended by pages/submit.css. */
 .form-panel {
     max-width: 700px;
     margin: 35px auto 65px
@@ -700,6 +721,7 @@ footer small {
     color: var(--accent)
 }
 
+/* Supporting archive rows, timeline entries, and studio-style form layouts. */
 .row {
     border-top: 1px solid var(--line);
     padding: 22px 0;
@@ -780,6 +802,7 @@ footer small {
     height: 20px
 }
 
+/* Empty states, mobile navigation visibility, and global wardrobe notifications. */
 .empty {
     padding: 50px 0
 }
@@ -803,6 +826,7 @@ footer small {
     transition: opacity .2s
 }
 
+/* Keyboard skip link and shared loading indicator. */
 .skip {
     position: absolute;
     left: -999px
@@ -838,6 +862,7 @@ footer small {
     }
 }
 
+/* Wide displays: cap the shared shell width rather than stretching reading lines. */
 @media(min-width:1500px) {
 
     main,
@@ -847,6 +872,7 @@ footer small {
     }
 }
 
+/* Tablet/compact desktop: reduce shell spacing and simplify Discover's side rail. */
 @media(max-width:1100px) {
     header {
         gap: 25px
@@ -878,6 +904,7 @@ footer small {
     }
 }
 
+/* Mobile: stack page layouts, switch navigation, and leave space for the fixed bottom bar. */
 @media(max-width:760px) {
     .edition {
         font-size: 8px;
@@ -1139,6 +1166,7 @@ footer small {
     }
 }
 
+/* Respect the operating system's reduced-motion preference across original pages. */
 @media(prefers-reduced-motion:reduce) {
     * {
         animation: none !important;

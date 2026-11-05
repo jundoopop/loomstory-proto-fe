@@ -1,0 +1,46 @@
+feat(first-sight): integrate context discovery and opt-in style shopping
+
+Complete the P5-P12 archive-first consumer journey, separating
+cultural discovery and archive shopping from modern style-match
+recommendations.
+
+Introduce an injectable ContextContentProvider and prototype
+gateway to resolve authored cultural references in order.
+Preserve canonical study data, validate reference identities
+and normalise cancellation across concurrent operations.
+
+Add authored relationship metadata to all 44 cultural references
+without inferring exact product identity from styling context.
+
+Implement a visit-local Inspire drawer with independent SKU
+selection, style saves, partner previews and accessible modal
+lifecycle. Expose style matches only through explicit actions
+from the archive marketplace or product detail panel.
+
+Restrict marketplace and PDP commerce to canonical archive
+offers. Validate product identity, SKU membership and stock
+before bag actions. Preserve persistent wardrobe saves and
+coordinate modal hand-offs, focus restoration and cart dismissal.
+
+Complete cultural relationship labels, archive toolbar controls,
+responsive layouts and empty/failure states.
+
+Preserve the five studies, 18 unique offers and 44 references.
+Retain local image previews and deterministic recognition.
+Defer external APIs, authentication, checkout and P13-P17 work.
+
+Verification:
+- 35 tests passed in the final P8-P12 state
+- TypeScript, production build and diff checks passed
+- Five-study catalogue preservation audit passed
+- Chrome desktop, responsive and touch-emulation checks passed
+- Both Inspire entry points and archive action guards verified
+- No scoped marketplace/drawer axe violations at five widths
+- No application fetch/POST in exercised prototype flows
+
+Known limitations:
+- 45 existing contrast nodes remain outside the updated surfaces
+- Safari, Firefox, physical touch and screen readers not tested
+- External content validation and durable browser QA deferred
+
+See docs/plans/ for phase details, assessments and QA evidence.

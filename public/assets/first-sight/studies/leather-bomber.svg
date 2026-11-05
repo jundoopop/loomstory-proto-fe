@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" fill="none">
+  <title>Vintage leather bomber — original silhouette illustration</title>
+  <desc>A brown bomber study with a generous shoulder, zip fastening, ribbed cuffs and waistband.</desc>
+  <defs>
+    <linearGradient id="leather" x1="166" y1="115" x2="440" y2="479" gradientUnits="userSpaceOnUse"><stop stop-color="#8d6950"/><stop offset=".46" stop-color="#634737"/><stop offset="1" stop-color="#3f2d25"/></linearGradient>
+    <linearGradient id="sleeve" x1="99" y1="170" x2="208" y2="459" gradientUnits="userSpaceOnUse"><stop stop-color="#785741"/><stop offset=".56" stop-color="#594032"/><stop offset="1" stop-color="#3f2b23"/></linearGradient>
+    <linearGradient id="shine" x1="180" y1="145" x2="402" y2="421" gradientUnits="userSpaceOnUse"><stop stop-color="#cba07c" stop-opacity=".34"/><stop offset="1" stop-color="#cba07c" stop-opacity="0"/></linearGradient>
+    <pattern id="rib" width="5" height="6" patternUnits="userSpaceOnUse"><rect width="5" height="6" fill="#3e3029"/><path d="M2 0v6" stroke="#7b604b" stroke-opacity=".42"/></pattern>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="9"/></filter>
+  </defs>
+  <ellipse cx="300" cy="506" rx="163" ry="12" fill="#51402c" opacity=".12" filter="url(#shadow)"/>
+  <!-- Each sleeve is drawn separately so the roomy bomber silhouette stays legible. -->
+  <path d="M194 126 137 147Q111 161 101 208L68 411Q65 428 81 435L126 450Q144 454 149 435L181 310 210 226Z" fill="url(#sleeve)" stroke="#3a2b24" stroke-width="2"/>
+  <path d="M406 126 463 147Q489 161 499 208L532 411Q535 428 519 435L474 450Q456 454 451 435L419 310 390 226Z" fill="url(#sleeve)" stroke="#3a2b24" stroke-width="2"/>
+  <path d="m70 411 78 25-9 38-78-23Z" fill="url(#rib)" stroke="#3a2b24" stroke-width="2"/>
+  <path d="m530 411-78 25 9 38 78-23Z" fill="url(#rib)" stroke="#3a2b24" stroke-width="2"/>
+  <path d="m238 104-51 24q-24 53-19 137l13 185q4 32 39 38h160q35-6 39-38l13-185q5-84-19-137l-51-24Z" fill="url(#leather)" stroke="#39291f" stroke-width="2.5"/>
+  <path d="m239 112-41 24q-18 53-12 122l12 180q50 28 97 10V144Z" fill="url(#shine)"/>
+  <path d="M240 105q60-37 120 0l-21 59h-78Z" fill="#30241f" stroke="#3a2b24" stroke-width="2"/>
+  <path d="m240 99-15 25 47 67 28-52-40-44Z" fill="#79563d" stroke="#432f25" stroke-width="2"/>
+  <path d="m360 99 15 25-47 67-28-52 40-44Z" fill="#79563d" stroke="#432f25" stroke-width="2"/>
+  <path d="m241 110 30 61 21-33m67-28-30 61-21-33" stroke="#bb9271" stroke-opacity=".58" stroke-width="1.5"/>
+  <path d="M300 140v326" stroke="#372820" stroke-width="13"/><path d="M300 146v321" stroke="#b99a66" stroke-width="3" stroke-dasharray="2 2"/>
+  <rect x="296" y="200" width="9" height="18" rx="2" fill="#b99a66"/>
+  <path d="m215 322-13 76m183-76 13 76" stroke="#31251f" stroke-width="11"/><path d="m211 322-13 76m191-76 13 76" stroke="#ac8262" stroke-opacity=".55" stroke-width="2"/>
+  <path d="M179 442q120 24 242 0l-5 34q-3 14-27 17H211q-24-3-27-17Z" fill="url(#rib)" stroke="#39291f" stroke-width="2"/>
+  <path d="M180 223q33 16 72 9m96 0q39 7 72-9M180 414l33 14m207-14-33 14M105 266l27 11m-34 12 23 11m374-34-27 11m34 12-23 11" stroke="#d0a584" stroke-opacity=".2" stroke-width="2"/>
+  <path d="M156 162q-21 76-29 152m317-152q21 76 29 152" stroke="#bd9270" stroke-opacity=".24" stroke-width="3"/>
+  <text x="300" y="553" fill="#8d7968" font-family="Arial,sans-serif" font-size="10" letter-spacing="3" text-anchor="middle">SILHOUETTE STUDY · 01</text>
+</svg>
