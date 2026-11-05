@@ -1,16 +1,16 @@
 /**
- * FirstSight's continuous editorial → recognition → shopping journey.
+ * FirstSight's continuous photo → recognition → shopping journey.
  * Sections stay mounted while photo/selection state changes. The page owns
  * request cancellation, object URLs, archive wardrobe/bag actions and visit-local style saves.
  */
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { CollectionProps } from '../types';
-import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVariant } from '../features/first-sight/types';
+import type { CartLine, DiscoveryResult, PhotoInput, PurchaseOption, PurchaseVariant, SavedLookProps } from '../features/first-sight/types';
 import type { FirstSightGateway } from '../features/first-sight/services/contracts';
 import { prototypeGateway } from '../features/first-sight/services/prototype';
 import { chloePhoto } from '../features/first-sight/chloe';
 import { isArchiveOffer, isStyleMatchOffer, resolveArchivePurchase } from '../features/first-sight/commerce';
-import { TrendHero } from '../features/first-sight/components/TrendHero';
 import { PhotoUploadPanel } from '../features/first-sight/components/PhotoUploadPanel';
 import { RecognitionResults } from '../features/first-sight/components/RecognitionResults';
 import { FashionDossier } from '../features/first-sight/components/FashionDossier';
@@ -23,7 +23,11 @@ import './first-sight.css';
 import './first-sight-flow.css';
 
 /** A future server adapter can replace the local gateway without changing the presentation. */
-type Props = CollectionProps & { gateway?: FirstSightGateway };
+type Props = CollectionProps & SavedLookProps & {
+  gateway?: FirstSightGateway;
+  initialPhoto?: PhotoInput;
+  referenceUnavailable?: boolean;
+};
 
 /** Honor reduced motion for explicit section links and product-detail navigation. */
 function scrollToSection(element: HTMLElement | null) {
@@ -35,15 +39,16 @@ function scrollToSection(element: HTMLElement | null) {
 }
 
 /** Keep the user's photograph, selected study, shopping edit, and saved state coordinated. */
-export default function FirstSightPage({ savedIds, onToggleSave, gateway = prototypeGateway }: Props) {
-  const [photo, setPhoto] = useState<PhotoInput | null>(null);
+export default function FirstSightPage({ savedIds, onToggleSave, savedLookIds, onToggleSaveLook,
+  gateway = prototypeGateway, initialPhoto, referenceUnavailable = false }: Props) {
+  // App keys reference entries; do not resynchronise this prop and undo a removal/replacement.
+  const [photo, setPhoto] = useState<PhotoInput | null>(() => initialPhoto ?? null);
   const [result, setResult] = useState<DiscoveryResult | null>(null);
   const [selectedId, setSelectedId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [product, setProduct] = useState<PurchaseOption | null>(null);
   const [cart, setCart] = useState<CartLine[]>([]);
-  const [savedLookIds, setSavedLookIds] = useState<string[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [styleMatchOpen, setStyleMatchOpen] = useState(false);
   const [savedStyleMatchIds, setSavedStyleMatchIds] = useState<string[]>([]);
@@ -111,7 +116,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
     setProduct(null);
   }
 
-  /** Product details open within Section 3; every earlier section remains in the document. */
+  /** Product details open within shopping; analysis remains in the document. */
   function openProduct(nextProduct: PurchaseOption) {
     const archiveProduct = archiveProducts.find(candidate => candidate.id === nextProduct.id);
     if (!archiveProduct) return;
@@ -198,11 +203,7 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
   }
 
   const count = cart.reduce((total, line) => total + line.quantity, 0);
-  const lookSaveProps = {
-    savedLookIds,
-    onToggleSaveLook: (id: string) => setSavedLookIds(current => current.includes(id)
-      ? current.filter(value => value !== id) : [...current, id]),
-  };
+  const lookSaveProps = { savedLookIds, onToggleSaveLook };
 
   return <div className="first-sight fs-continuous">
     <div className="fs-page-top">
@@ -211,18 +212,17 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
     </div>
     <div className="fs-journey-bar">
       <nav aria-label="FirstSight sections">
-        <a href="#fs-trends">01 <span>Find inspiration</span></a>
-        <a href="#fs-recognition">02 <span>Discover the story</span></a>
-        <a href="#fs-similar-pieces">03 <span>Find your piece</span></a>
+        <a href="#fs-recognition">01 <span>Discover the story</span></a>
+        <a href="#fs-similar-pieces">02 <span>Find your piece</span></a>
+        <Link to="/" className="fs-discover-link">Find inspiration in Discover ↗</Link>
       </nav>
       <button className="fs-bag-button" onClick={openBag}>Your bag <span>{count}</span></button>
     </div>
 
-    <TrendHero {...lookSaveProps} />
-
-    {/* The grid itself defines the sticky boundary: the upload column ends with Section 2. */}
+    {/* The grid defines the sticky boundary; the upload column ends with the analysis chapter. */}
     <section id="fs-recognition" className="fs-recognition-section" ref={recognitionRef} tabIndex={-1} aria-labelledby="fs-recognition-title">
-      <div className="fs-chapter-label"><span>02 / A CLOSER LOOK</span><span>FROM INSPIRATION TO UNDERSTANDING</span></div>
+      <div className="fs-chapter-label"><span>01 / A CLOSER LOOK</span><span>FROM INSPIRATION TO UNDERSTANDING</span></div>
+      {referenceUnavailable && <p className="fs-reference-unavailable" role="status">That inspiration reference is unavailable. Choose a photograph or try the Chloé example below.</p>}
       <div className="fs-recognition-layout">
         <PhotoUploadPanel photo={photo} busy={loading} hasResults={Boolean(selected)}
           onPhotoChange={changePhoto} onAnalyze={() => void analyze()} onCancel={cancelAnalysis} />
@@ -250,16 +250,19 @@ export default function FirstSightPage({ savedIds, onToggleSave, gateway = proto
       </div>
     </section>
 
-    {/* This section is always present. Its edit follows the selected study, not a separate route. */}
+    {/* Shopping stays present; its edit follows the selected study rather than a separate route. */}
     <section id="fs-similar-pieces" className="fs-similar-section" ref={matchesRef} tabIndex={-1} aria-labelledby="fs-similar-title">
-      <div className="fs-chapter-label"><span>03 / THE NEXT CHAPTER</span><span>CURATED POSSIBILITIES</span></div>
+      <div className="fs-chapter-label"><span>02 / THE NEXT CHAPTER</span><span>CURATED POSSIBILITIES</span></div>
       <div className="fs-similar-heading"><div><span className="fs-section-kicker">FROM THE ARCHIVE TO YOUR WARDROBE</span><h2 id="fs-similar-title">Find Your Piece<span>.</span></h2><p>Explore vintage originals, designer reissues and archive studies with a story to tell.</p></div>{selected && <span className="fs-selected-edit">THE CURRENT EDIT<strong>{selected.name}</strong></span>}</div>
 
       {selected ? <>
         <div className="fs-shop-toolbar">
           <div className="fs-archive-toolbar-copy"><h3>The archive edit <span>{archiveProducts.length} {archiveProducts.length === 1 ? 'piece' : 'pieces'}</span></h3><p>Sample listings · Illustrative prices and availability</p></div>
           {styleMatchProducts.length > 0 && <button type="button" className="fs-style-match-trigger"
-            aria-haspopup="dialog" aria-expanded={inspireOpen} onClick={openStyleMatches}>
+            aria-haspopup="dialog" aria-expanded={inspireOpen} onClick={event => {
+              // WebKit does not focus a button on pointer activation; retain the actual opener.
+              event.currentTarget.focus({ preventScroll: true }); openStyleMatches();
+            }}>
             <span><small>THE INSPIRE</small>Explore similar styles</span>
             <span className="fs-style-match-count" aria-label={`${styleMatchProducts.length} similar ${styleMatchProducts.length === 1 ? 'style' : 'styles'}`}>{styleMatchProducts.length}</span>
             <span aria-hidden="true">↗</span>

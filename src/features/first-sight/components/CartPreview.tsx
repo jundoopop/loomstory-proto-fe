@@ -17,9 +17,10 @@ export function CartPreview({ open, lines, onClose, onChange }: { open: boolean;
   }, [open]);
   // Totals and quantity menus derive from the supplied fixtures; inventory is never reserved.
   const total = lines.reduce((sum, line) => sum + line.product.price * line.quantity, 0);
-  return <dialog ref={dialog} className="fs-cart-dialog" aria-labelledby="fs-cart-title" onCancel={onClose} onClose={event => {
-    // A queued close from the Inspire hand-off must not dismiss a newly reopened bag.
-    if (!event.currentTarget.open) onClose();
+  // Native close events reconcile the controlled prop; a queued event is not new user intent.
+  // Escape requests the host update explicitly, just like the visible close/backdrop controls.
+  return <dialog ref={dialog} className="fs-cart-dialog" aria-labelledby="fs-cart-title" onCancel={event => {
+    event.preventDefault(); onClose();
   }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <div className="fs-cart-content"><button className="fs-dialog-close" aria-label="Close bag preview" onClick={onClose}>×</button><span className="fs-section-kicker">THE NEXT CHAPTER / PROTOTYPE</span><h2 id="fs-cart-title">{finished ? 'A good choice. A new story.' : 'Your edit.'}</h2>
       {finished ? <div className="fs-cart-finished"><span aria-hidden="true">✓</span><p>You’ve reached the end of the shopping preview. No order was placed and no payment was taken.</p><button className="fs-button fs-primary" onClick={onClose}>Keep exploring ↗</button></div> : <>

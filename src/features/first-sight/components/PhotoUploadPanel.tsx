@@ -117,6 +117,7 @@ export function PhotoUploadPanel({ photo, busy, hasResults, onPhotoChange, onAna
   }
 
   const status = reading ? 'Opening your photograph…' : busy ? 'Finding the threads…' : hasResults ? 'Your story is ready to explore.' : photo ? 'Photo ready. Let’s look a little closer.' : 'JPG, PNG, WebP · up to 5 MB';
+  const reference = photo?.kind === 'reference' ? photo.reference : null;
 
   return <section className="fs-upload-panel fs-photo-workspace" data-state={busy ? 'analyzing' : hasResults ? 'result' : photo ? 'ready' : 'upload'} aria-labelledby="fs-upload-title" aria-busy={busy}>
     <div className="fs-section-kicker"><span>01 / YOUR PHOTO, YOUR STORY</span><span aria-hidden="true">✧</span></div>
@@ -126,7 +127,7 @@ export function PhotoUploadPanel({ photo, busy, hasResults, onPhotoChange, onAna
       onDragOver={event => { event.preventDefault(); setDragging(true); }}
       onDragLeave={event => { if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setDragging(false); }}
       onDrop={event => { event.preventDefault(); setDragging(false); void select(event.dataTransfer.files[0]); }}>
-      {photo ? <><img className="fs-workspace-preview" src={photo.url} alt={photo.kind === 'sample' ? 'Chloé Paddington bag selected for the sample journey' : 'Your selected fashion photograph'} /><span className="fs-workspace-photo-label">{photo.kind === 'sample' ? 'THE CHLOÉ STUDY' : 'YOUR PHOTOGRAPH'}</span></> : <>
+      {photo ? <><img className="fs-workspace-preview" src={photo.url} alt={reference ? `${reference.celebrity} — ${reference.title}` : photo.kind === 'sample' ? 'Chloé Paddington bag selected for the sample journey' : 'Your selected fashion photograph'} /><span className="fs-workspace-photo-label">{reference ? 'DISCOVER REFERENCE' : photo.kind === 'sample' ? 'THE CHLOÉ STUDY' : 'YOUR PHOTOGRAPH'}</span></> : <>
         <svg width="37" height="37" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="7" y="12" width="34" height="28" rx="3" stroke="currentColor" strokeWidth="1.4" /><path d="M16 12l3-5h10l3 5M24 22v12m-6-6h12" stroke="currentColor" strokeWidth="1.4" /></svg>
         <strong>Drop a photo here</strong><span>or choose one from your device</span>
       </>}
@@ -138,12 +139,20 @@ export function PhotoUploadPanel({ photo, busy, hasResults, onPhotoChange, onAna
       <label className={`fs-file-label fs-workspace-replace${reading ? ' is-disabled' : ''}`}>Replace<input className="fs-file-input" aria-label="Replace selected photograph" type="file" accept="image/jpeg,image/png,image/webp" disabled={reading} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; void select(file); }} aria-describedby="fs-photo-help" /></label>
       <button type="button" onClick={() => { cancelDecode(); onPhotoChange(null); }}>Remove</button>
     </div>}
+    {/* Authored references retain their identity and credits; they are not user uploads. */}
+    {reference && <div className="fs-workspace-reference-credit">
+      <strong>{reference.celebrity} — {reference.title}</strong>
+      <span>Photo: {reference.credit}</span>
+      {reference.sourceUrl && <a href={reference.sourceUrl} target="_blank" rel="noreferrer">{reference.sourceLabel} (opens in a new tab) ↗</a>}
+      {reference.license && reference.licenseUrl && <a href={reference.licenseUrl} target="_blank" rel="noreferrer">{reference.license} (opens in a new tab) ↗</a>}
+    </div>}
     <p className="fs-workspace-status" id="fs-photo-help" role="status">{status}</p>
     {error && <p className="fs-error fs-workspace-error" role="alert">{error}</p>}
     <div className="fs-workspace-analysis-controls">
       <button className="fs-button fs-primary fs-analyze-button" type="button" disabled={!photo || busy || reading} onClick={onAnalyze}>{busy ? 'Preparing your story…' : hasResults ? 'Analyze again' : 'Analyze photo'}<span aria-hidden="true">{busy ? '◌' : '↗'}</span></button>
       {busy && <button type="button" className="fs-workspace-cancel" onClick={onCancel}>Cancel</button>}
     </div>
+    {reference && <p className="fs-reference-disclosure">This reference opens the prepared five-study demonstration. Results are sample studies, not an identification of this outfit.</p>}
 
     <div className="fs-matching-explainer" ref={matchingRef} data-side={matchingSide}
       onPointerEnter={event => { if (event.pointerType === 'mouse') openMatching(); }}

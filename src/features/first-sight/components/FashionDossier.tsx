@@ -36,7 +36,8 @@ export function FashionDossier({ item, onExplore }: Props) {
   const canvasRef = useRef<HTMLDivElement>(null);
   const imagePlaneRef = useRef<HTMLDivElement>(null);
   const labelRefs = useRef(new Map<string, HTMLButtonElement>());
-  const activeId = hoveredAnnotation ?? focusedAnnotation ?? selectedAnnotation;
+  // Scrolling a keyboard-focused label under the pointer must not replace its explanation.
+  const activeId = focusedAnnotation ?? hoveredAnnotation ?? selectedAnnotation;
   const titleId = `fs-dossier-title-${item.id}`;
   const currency = new Intl.NumberFormat('en-IE', {
     style: 'currency', currency: item.analysis.resale.currency, maximumFractionDigits: 0,
@@ -83,8 +84,10 @@ export function FashionDossier({ item, onExplore }: Props) {
   /** Outside taps dismiss a pinned card; they never move the photo or the surrounding page. */
   useEffect(() => {
     const dismissOutside = (event: PointerEvent) => {
+      // A deliberate pointer action ends keyboard-preview ownership, including on this same label.
+      setFocusedAnnotation(null);
       if (event.target instanceof Element && !event.target.closest('.fs-dossier-callout, .fs-dossier-point')) {
-        setSelectedAnnotation(null); setHoveredAnnotation(null); setFocusedAnnotation(null);
+        setSelectedAnnotation(null); setHoveredAnnotation(null);
       }
     };
     document.addEventListener('pointerdown', dismissOutside);
@@ -142,6 +145,10 @@ export function FashionDossier({ item, onExplore }: Props) {
                 onBlur={() => setFocusedAnnotation(null)}
                 onClick={() => toggleAnnotation(annotation.id)}
               ><span aria-hidden="true" /></button>)}
+              {/* Narrow images use the equivalent large label buttons; preserve these visual anchors. */}
+              {item.annotations.map(annotation => <span key={annotation.id}
+                className={`fs-dossier-point-marker${activeId === annotation.id ? ' is-active' : ''}`} aria-hidden="true"
+                style={{ left: `${annotation.x}%`, top: `${annotation.y}%` }} />)}
             </div>
           </div>
         </figure>
@@ -172,7 +179,7 @@ export function FashionDossier({ item, onExplore }: Props) {
           </div>;
         })}
       </div>
-      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>Hover or tap a feature to look closer.</p></div>
+      <div className="fs-dossier-caption"><span>{item.analysis.image.endsWith('.svg') ? 'Illustrated study · representative silhouette' : 'Studio reference · every detail tells a story'}</span><p>Use a labelled feature to look closer.</p></div>
 
       {/* Preserve the full authored analysis without crowding the idle magazine view. */}
       <details className="fs-dossier-notes">

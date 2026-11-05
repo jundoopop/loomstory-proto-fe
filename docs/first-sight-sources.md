@@ -1,10 +1,42 @@
-# FirstSight image sources
+# FirstSight and Discover image sources
+
+## Cultural relationship metadata
+
+All forty-four active references carry an authored `OutfitLook.relationship`. The forty Commons
+references and the first two Chloé styling references use `styling-inspiration`; the two Chloé runway
+references use `runway-reference`. The initial library therefore has forty-two styling connections
+and two runway connections. `same-design` remains supported without being assigned by guesswork.
+
+| Relationship | Meaning in this prototype |
+| --- | --- |
+| `styling-inspiration` | A visual, silhouette or styling connection; no exact designer/product identification is implied |
+| `runway-reference` | Authored runway context; the photographed item is not automatically the same model or edition as the selected study |
+| `same-design` | A manually established design-family connection, not the same physical object, production edition or authentication result |
+
+The Style Journal, its detail dialogs and archive PDP notes use these relationship labels. The
+Discover inspiration board retains geographic labels, with its finite collection controls replacing regional filtering. Credits and relationships answer different
+questions: attribution identifies a photograph's source; the relationship states its authored use
+within the study. Neither establishes ownership, endorsement or the authenticity of an upload.
+
+`recognitionStudies` supplies ordered `contextReferenceIds`. The local content provider resolves
+those IDs and preserves the original source URL/label, credit, licence/link, dimensions, description
+and relationship. It returns fresh arrays while treating reference records as immutable. The
+gateway composes resolved `looks`; it does not infer stronger identity claims from visual similarity.
+See the [content-adapter guide](../src/features/first-sight/services/content/providers/README.md) for
+future source normalisation, server credential ownership and provider-specific rendering boundaries.
+No Instagram, YouTube or other live content API is connected. P18 moves presentation and reuses these records without adding or changing photographs. The `/first-sight?look=<id>` resolver carries canonical source metadata into the photo workspace; it does not identify the pictured garment.
+
+The repository browser tests substitute only ignored `/local-media/chloe/*` URLs with original test
+artwork so a fresh checkout needs no supplied photographs or download access. That substitution is
+test-only evidence for controls/layout, not verification of the exact Chloé photograph or its rights.
+Real-photo framing remains a separate local-media-present check. The tests do not change any source
+record, attribution table or tracked Commons asset below.
 
 ## Chloé analysis example
 
 The Chloé example uses the supplied product photograph and four available styling references. The exact floral-dress and dog-walking originals are in ignored `src/images/`; reviewed public copies supply the two runway references. Those copies can differ in framing or resolution from the attachments. The optional TV still remains unavailable and is excluded from the active flow.
 
-`chloePhoto`, `chloeAnalysis`, and `chloeLooks` in `src/features/first-sight/chloe.ts` retain the paths, captions, and actual image dimensions. Choosing the Chloé study shows these references in Section 3. The Tendances section stays available above; the other four studies draw their styling edits from the separate Commons library below.
+`chloePhoto`, `chloeAnalysis`, and `chloeLooks` in `src/features/first-sight/chloe.ts` retain the paths, captions, and actual image dimensions. Choosing the Chloé study shows these references in FirstSight's shopping chapter. Inspiration collections now belong to Discover; the other four studies draw their contextual styling edits from the separate Commons library below.
 
 Run `npm run setup:analysis-media` after cloning to restore available photographs into `public/local-media/chloe/`. The script first checks for supplied originals in `src/images/`, copies them while preserving source files, and uses reviewed download URLs as fallbacks. Both directories are ignored by Git: these photograph binaries are not included in GitHub. Browser paths begin `/local-media/chloe/`. Missing optional `styling-05.jpg` does not make setup fail. Keep screenshots containing supplied photos outside the repository as well.
 
@@ -62,7 +94,7 @@ The affordable bag concept at `public/assets/first-sight/chloe/soft-satchel.svg`
 
 ## Celebrity reference library
 
-This existing seed library contains 40 distinct reference photographs of 23 celebrities, selected for visible clothing and styling. It includes 22 Korea/K-pop cards, 11 Global cards, 3 Japan cards, and 4 China cards. “Korea” is the feed’s Korean-entertainment grouping; it includes K-pop artists of other nationalities. `TrendHero` selects six looks per collection, and `recognition.ts` selects four context references for each generic garment study. These earlier Commons assets retain their existing tracked paths under `public/assets/first-sight/looks/`.
+This existing seed library contains 40 distinct reference photographs of 23 celebrities, selected for visible clothing and styling. It includes 22 Korea/K-pop cards, 11 Global cards, 3 Japan cards, and 4 China cards. “Korea” is the feed’s Korean-entertainment grouping; it includes K-pop artists of other nationalities. `TrendHero`, now owned by `src/features/discover/components/`, selects six looks per collection through `src/features/discover/collections.ts`, and `recognition.ts` selects four context references for each generic garment study. These earlier Commons assets retain their existing tracked paths under `public/assets/first-sight/looks/`.
 
 The images are Wikimedia Commons thumbnails downloaded on 3 November 2026. Each source page identifies the subject and provides its attribution and reuse terms. The files retain the supplied thumbnail image data; no new crop, retouching or AI generation has been applied. Original sources may already be crops, video stills or edited photographs. Local file dimensions are recorded in `src/features/first-sight/looks.ts`.
 

@@ -1,0 +1,87 @@
+feat(discover): renew editorial discovery and add FirstSight photo hand-off
+
+Move the inspiration finder from FirstSight into the Discover homepage.
+Keep Discover's shopping and editorial destinations while making FirstSight
+begin with the photograph-to-analysis journey.
+
+A. Requirement
+
+Give inspiration browsing a dedicated editorial home. Retain the four curated
+collections and show each six-photo edit immediately below its cover.
+Connect a chosen photograph to FirstSight through an explicit reference action.
+
+B. Scope and assumptions
+
+Build on the delivered P17 checkpoint. Preserve all five recognition studies,
+eighteen offers, forty-four cultural references and their source metadata.
+Keep recognition, inventory, prices and valuations as prepared prototype data.
+Keep supplied photographs and generated browser artefacts outside Git.
+Defer live services, authentication, checkout and expressive animation.
+
+C. Technical approach
+
+Move TrendHero and its stylesheet into the Discover feature. Extract the four
+collection definitions and deterministic six-look ranking into a pure module.
+Separate reusable outfit-board and dialog styles from FirstSight page styles.
+
+Resolve /first-sight?look=<id> through authored references, never arbitrary URLs.
+Extend PhotoInput with canonical reference metadata and retain the gateway API.
+Key reference workspaces by ID so navigation cancels obsolete analysis while
+ordinary App rerenders preserve photograph removal and replacement.
+
+Lift inspiration saves into App-visit state for Discover and FirstSight.
+Validate all forty inspiration and four Chloé IDs; keep product wardrobe and
+Inspire saves independent. Reset inspiration saves on a full reload.
+
+D. Trade-offs and assessment
+
+Reuse the existing sourced library, native dialogs and local state architecture.
+Add no runtime dependency. Preserve collection selection through replacement
+query navigation so browser Back restores the selected editorial edit.
+Keep analysis explicit and disclose that results are prepared studies rather
+than an identification of the selected celebrity outfit.
+
+E. Implementation
+
+- Replace Discover's original hero with the editorial cover and visible board.
+- Retain Vault search, four featured products and Stories/submission links.
+- Add cover and photograph-dialog Explore in FirstSight actions.
+- Display reference identity, photographer, source and licence in the workspace.
+- Reduce FirstSight to analysis and shopping chapters with a Discover link.
+- Preserve the contextual journal, archive commerce and opt-in Inspire drawer.
+- Use three board columns above 1000 px, two at 600-1000 px and one below 600 px.
+- Provide 44 px Discover controls, text reflow and corrected idle-state contrast.
+- Preserve modal focus, Escape/backdrop dismissal and upload URL ownership.
+- Add independent collection/reference tests and real-route browser scenarios.
+- Move trend assertions to Discover and retain FirstSight regression coverage.
+- Include Discover in production-preview and accessibility commands.
+- Update guides, contracts, the phase ledger and verification evidence.
+
+F. Verification
+
+Record the completed final gates:
+
+- Clean installation and application/browser TypeScript checks: passed.
+- Node tests: 40 passed, including 35 retained contracts and five new cases.
+- Development browser matrix: 128 executions of 42 scenarios across nine projects.
+- Browser failures, skips, flakes and runner errors: zero in the final run.
+- Accessibility: 38 executions and 85 axe state scans; zero reported violations.
+- Use all six WCAG A/AA tag groups through 2.2 without rule exclusions.
+- Production preview: six checks passed against the current production build.
+- Build, data preservation, relative links and diff checks: passed.
+- Confirm unchanged studies, offers, references, source metadata and commerce.
+- Confirm no test-host controls in production assets or new runtime dependency.
+- Verify query-only navigation, all four Chloé saves and exact column boundaries.
+- Review local-photo desktop/mobile views and retain strict browser diagnostics.
+
+Retain incomplete contrast and icon-label checks for human judgement; automated
+passes do not certify accessibility. Disclose unperformed actual Safari,
+physical-device and named screen-reader sessions. Keep the existing Vite
+development-tool advisory and macOS temporary-folder cleanup note documented.
+
+G. Delivery
+
+Apply the user's explicit authorisation to commit and push P18, then integrate
+through new-home-page into main. Preserve the existing main merge history.
+Record the detailed workflow and evidence in docs/plans/discover-p18-plan.md
+and docs/discover-verification.md. Leave expressive animation for its next plan.

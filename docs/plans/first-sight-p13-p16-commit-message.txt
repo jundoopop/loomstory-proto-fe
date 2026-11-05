@@ -1,0 +1,107 @@
+test(first-sight): make browser checks repeatable and improve accessibility
+
+Complete P13-P16 verification and documentation for the archive-first FirstSight
+journey. Replace disposable workstation scripts with repository-owned browser
+tests and correct reproduced accessibility, modal and focus regressions.
+
+A. Requirement
+
+Make the five-study photo-to-dossier-to-shopping journey reproducible for another
+developer. Preserve archive commerce, opt-in Inspire, the cultural journal and
+the editorial interface while improving access across input modes and widths.
+
+B. Scope and assumptions
+
+Build on the delivered P5-P12 checkpoint. Keep the five studies, eighteen offers,
+forty-four references, source metadata and commerce membership unchanged.
+
+Retain deterministic recognition, local image previews and illustrative commerce.
+Keep supplied photographs outside Git. Keep authentication, live content, real
+inventory, checkout, global catalogue migration and hosted deployment deferred.
+
+C. Technical approach
+
+Add locked development-only Playwright/axe tooling, managed browser projects,
+owned servers, independent expected edits, typed test helpers and diagnostics.
+Separate application and browser-test typechecking. Keep the injected scenario
+host outside production imports and use original PNG/JPEG/WebP upload fixtures.
+
+Use the real App route for consumer flows and a typed StrictMode host for empty,
+failure, cancellation, stale-SKU and controlled-modal states. Substitute only
+ignored Chloé media in portable tests; inspect supplied photos separately.
+
+D. Trade-offs and assessment
+
+Retain the existing thirty-five meaningful Node tests instead of duplicating
+covered contracts. Execute twenty-nine authored browser scenarios across nine
+projects, with representative cross-engine and responsive coverage.
+
+Keep native dialog modality and local state. Fix explicit ownership boundaries
+rather than adding another state or UI framework. Preserve normal cover geometry
+while permitting enlarged content to grow vertically.
+
+Disclose incomplete image-backed axe checks and unperformed manual coverage.
+Automated passes do not establish complete accessibility conformance.
+
+E. Implementation
+
+- P13: add Playwright development/preview configs, browser tsconfig, flow and
+  resilience suites, helpers, fixtures, diagnostics and an isolated test host.
+- Keep Node tests independent of browsers and private photos. Add repeatable
+  commands and ignore generated reports, screenshots and traces.
+- Use disposable Firefox app data on macOS to avoid protected personal-profile
+  lookup. Report access-only temporary cleanup warnings explicitly.
+- Make CartPreview native close events reconciliation-only; keep Escape and
+  visible close/backdrop controls as explicit host requests.
+- Focus both real Inspire trigger buttons before opening, preserving return
+  focus under WebKit pointer activation.
+- P14: update architecture, code-location, prototype, source and verification
+  guides, plus the roadmap and engineering agreement.
+- P15: correct scoped chapter, trend, workspace, recognition, dossier and sold-out
+  text contrast; provide known backgrounds for text over photographs.
+- Allow cover captions, collection rows and purchase titles to reflow at doubled
+  text sizes without clipping or horizontal document overflow.
+- Replace overlapping narrow image hit areas with decorative anchors while
+  retaining all four actions through large labelled feature controls.
+- Give focused keyboard explanations priority over incidental hover, and return
+  preview ownership on deliberate pointer input.
+- Add strict full-page/open-state axe, keyboard, reduced-motion, text-enlargement
+  and touch-boundary checks without rule exclusions.
+- P16: repair optional lock entries for clean installation and isolate preview
+  config servers/projects; verify the production bundle and preserved data.
+- Record the complete activity ledger, measured ratios, deviations, environment
+  limitations and final A-G assessment in docs/plans and the verification record.
+
+F. Verification
+
+Record the final passing gates:
+
+- npm ci: passed after repairing the optional lock graph.
+- Application and browser TypeScript checks: passed.
+- Node tests: 35 passed, 0 failed or skipped.
+- Development browser matrix: 74 passed, 0 failed, skipped or flaky.
+- Accessibility subset: 19 project executions and 55 state scans; zero reported
+  violations with WCAG A/AA tags through 2.2 and no excluded contrast rule.
+- Production preview: 3 passed against the preview-only Chromium project.
+- Production build and git diff --check: passed.
+- Data comparison: five studies, eighteen offers and forty-four references
+  unchanged, including source and commerce data.
+- Runtime dependencies unchanged; production audit reports zero vulnerabilities.
+- Built assets exclude the development host and its controls.
+- Actual local photographs checked at 1440, 390 and 320 px with no broken images,
+  recorded page/HTTP failures, document overflow or application fetch/POST.
+
+Retain these limitations: actual Safari, physical touch and a named screen-reader
+session remain unperformed. WebKit and touch emulation are labelled as such.
+Text enlargement doubles computed sizes rather than browser zoom. Current gallery
+fixtures contain one image. Some image-backed axe checks need manual judgement.
+
+The existing Vite 8.0.13 development-tool audit entry remains documented; avoid an
+unrelated forced framework upgrade. macOS may retain disposable Firefox folders
+when it denies cleanup, without changing personal profiles or OS permissions.
+
+G. Handoff
+
+Provide reproducible commands, project counts, measured corrections and the
+remaining manual/dependency follow-ups in docs/first-sight-verification.md.
+Preserve the approved phase sequence and the user's separate Git delivery decision.

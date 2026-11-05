@@ -144,7 +144,10 @@ function ProductDetailContent({
           <span className="fs-pdp-small-label">THE INSPIRE</span>
           <h4>Another way to wear it.</h4>
           <p>Explore modern styles inspired by this study's silhouette and details.</p>
-          <button type="button" className="fs-style-match-trigger" aria-haspopup="dialog" onClick={onOpenStyleMatches}>
+          <button type="button" className="fs-style-match-trigger" aria-haspopup="dialog" onClick={event => {
+            // Preserve the real return destination even when pointer clicks do not focus buttons.
+            event.currentTarget.focus({ preventScroll: true }); onOpenStyleMatches();
+          }}>
             <span>Explore similar styles</span><span className="fs-style-match-count">{styleMatchCount}</span>
           </button>
         </div>}
